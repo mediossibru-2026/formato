@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de Manifestación CFF - Grupo SIBRÜ</title>
+<style>
+  :root {
+    --color-primario: #2e7d32; /* Verde corporativo elegante */
+    --color-secundario: #1a1a1a; /* Negro premium para texto */
+    --color-fondo: #f4f7f6;
+    --gradiente: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+  }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-secundario);
+    margin: 0;
+    padding: 20px;
+    line-height: 1.5;
+  }
+
+  /* --- VISTA DEL FORMULARIO (NO SE IMPRIME) --- */
+  .contenedor-formulario {
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border-top: 4px solid var(--color-primario);
+  }
+
+  .contenedor-formulario h2 {
+    margin-top: 0;
+    color: var(--color-primario);
+    font-size: 1.4rem;
+    text-align: center;
+  }
+
+  label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  input[type="text"], input[type="date"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+  }
+
+  input[type="text"]:focus, input[type="date"]:focus {
+    border-color: var(--color-primario);
+    outline: none;
+  }
+
+  .botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+  }
+
+  button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s;
+  }
+
+  .btn-generar {
+    background: var(--gradiente);
+    color: white;
+  }
+
+  .btn-imprimir {
+    background: var(--color-secundario);
+    color: white;
+  }
+
+  .btn-editar {
+    background: #e0e0e0;
+    color: #333;
+  }
+
+  button:hover {
+    opacity: 0.9;
+  }
+
+  /* --- VISTA DEL DOCUMENTO (HOJA TAMAÑO CARTA/A4) --- */
+  .hoja-documento {
+    max-width: 216mm; /* Tamaño carta */
+    min-height: 279mm;
+    margin: 0 auto;
+    background: white;
+    padding: 20mm;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    display: none; /* Oculto hasta generar */
+    position: relative;
+  }
+
+  .logo-empresa {
+    max-width: 180px;
+    height: auto;
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .titulo-documento {
+    text-align: center;
+    font-size: 14pt;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 25px;
+    color: var(--color-secundario);
+    letter-spacing: 0.5px;
+  }
+
+  .lugar-fecha {
+    text-align: right;
+    margin-bottom: 20px;
+    font-size: 11pt;
+  }
+
+  .destinatario {
+    font-weight: bold;
+    margin-bottom: 15px;
+    font-size: 11pt;
+  }
+
+  .parrafo {
+    text-align: justify;
+    margin-bottom: 15px;
+    font-size: 11pt;
+    text-indent: 30px;
+  }
+
+  .parrafo strong {
+    color: #000;
+  }
+
+  .cierre {
+    margin-top: 30px;
+    text-align: justify;
+    font-size: 11pt;
+  }
+
+  .firma-seccion {
+    margin-top: 60px;
+    text-align: center;
+    page-break-inside: avoid;
+  }
+
+  .linea-firma {
+    border-top: 1px solid #000;
+    width: 300px;
+    margin: 0 auto 10px auto;
+  }
+
+  .nombre-firma {
+    font-weight: bold;
+    font-size: 11pt;
+  }
+
+  .cargo-firma {
+    font-size: 10pt;
+    color: #555;
+  }
+
+  .footer-documento {
+    margin-top: 40px;
+    text-align: center;
+    font-size: 9pt;
+    color: #666;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+  }
+
+  /* --- ESTILOS DE IMPRESIÓN (GARANTIZA 1 SOLA HOJA) --- */
+  @media print {
+    @page {
+      size: letter; /* O A4 */
+      margin: 1.5cm;
+    }
+    
+    body {
+      background: white;
+      padding: 0;
+      margin: 0;
+    }
+
+    .contenedor-formulario, .botones, .no-print {
+      display: none !important;
+    }
+
+    .hoja-documento {
+      display: block !important;
+      box-shadow: none;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      max-width: 100%;
+      min-height: auto;
+    }
+
+    .logo-empresa {
+      max-width: 150px; /* Un poco más pequeño al imprimir para ahorrar espacio */
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- FORMULARIO DE CAPTURA -->
+<div class="contenedor-formulario" id="formulario">
+  <h2>Datos de la Manifestación</h2>
+  
+  <label>Lugar:</label>
+  <input type="text" id="inputLugar" value="Cuautitlán Izcalli, Estado de México">
+
+  <label>Fecha:</label>
+  <input type="date" id="inputFecha">
+
+  <label>Nombre del Representante Legal:</label>
+  <input type="text" id="inputRepresentante" placeholder="Ej. Juan Pérez García" required>
+
+  <label>Nombre de la Empresa Representada:</label>
+  <input type="text" id="inputEmpresa" placeholder="Ej. Grupo SIBRÜ S.A. de C.V." required>
+
+  <label>RFC de la Empresa:</label>
+  <input type="text" id="inputRFC" placeholder="Ej. GSI230101XXX" style="text-transform: uppercase;" required>
+
+  <div class="botones">
+    <button class="btn-generar" onclick="generarDocumento()">Generar Vista Previa</button>
+  </div>
+</div>
+
+<!-- DOCUMENTO FINAL (VISTA PREVIA E IMPRESIÓN) -->
+<div class="hoja-documento" id="documento">
+  
+  <!-- Logo: Se usa el enlace directo de Google Drive. 
+       NOTA: Para GitHub, se recomienda descargar la imagen, llamarla "logo.png" 
+       y cambiar el src a "logo.png" para evitar bloqueos de hotlinking. -->
+  <img src="https://drive.google.com/uc?export=view&id=1zkWWyGJEF2-HA7urIBkQkTllfrObOpI_" 
+       alt="Logo Grupo SIBRÜ" class="logo-empresa" 
+       onerror="this.style.display='none'; console.log('Error cargando logo. Considere usar archivo local.')">
+
+  <div class="titulo-documento">
+    Manifestación de no encontrarse en los listados previstos en los artículos 69, 69-B y 69-B Bis del Código Fiscal de la Federación
+  </div>
+
+  <div class="lugar-fecha">
+    <span id="docLugarFecha"></span>
+  </div>
+
+  <div class="destinatario">A QUIEN CORRESPONDA:</div>
+
+  <div class="parrafo">
+    Quien suscribe, <strong id="docRepresentante"></strong>, en mi carácter de representante legal de <strong id="docEmpresa"></strong>, con RFC <strong id="docRFC"></strong>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
+  </div>
+
+  <div class="parrafo">
+    <strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, mi representada no se encuentra incluida en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.
+  </div>
+
+  <div class="parrafo">
+    <strong>SEGUNDO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.
+  </div>
+
+  <div class="parrafo">
+    <strong>TERCERO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.
+  </div>
+
+  <div class="parrafo">
+    <strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en poder de mi representada y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.
+  </div>
+
+  <div class="cierre">
+    Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.
+  </div>
+
+  <div class="firma-seccion">
+    <div style="text-align: center; margin-bottom: 5px; font-weight: bold;">ATENTAMENTE</div>
+    <div class="linea-firma"></div>
+    <div class="nombre-firma" id="docFirmaNombre"></div>
+    <div class="cargo-firma">Representante Legal</div>
+  </div>
+
+  <div class="footer-documento">
+    Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+  </div>
+
+  <div class="botones no-print" style="margin-top: 30px; justify-content: center;">
+    <button class="btn-imprimir" onclick="window.print()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+  </div>
+</div>
+
+<script>
+  // Establecer la fecha de hoy por defecto
+  document.getElementById('inputFecha').valueAsDate = new Date();
+
+  function generarDocumento() {
+    // Validación básica
+    const representante = document.getElementById('inputRepresentante').value.trim();
+    const empresa = document.getElementById('inputEmpresa').value.trim();
+    const rfc = document.getElementById('inputRFC').value.trim();
+
+    if (!representante || !empresa || !rfc) {
+      alert('Por favor, complete los campos obligatorios (Representante, Empresa y RFC).');
+      return;
+    }
+
+    // Formatear fecha
+    const fechaInput = document.getElementById('inputFecha').value;
+    const lugar = document.getElementById('inputLugar').value.trim();
+    const fechaObj = new Date(fechaInput + 'T12:00:00'); // Evitar problemas de zona horaria
+    const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
+    const fechaFormateada = fechaObj.toLocaleDateString('es-MX', opcionesFecha);
+
+    // Inyectar datos en el documento
+    document.getElementById('docLugarFecha').textContent = `${lugar}, a ${fechaFormateada}`;
+    document.getElementById('docRepresentante').textContent = representante;
+    document.getElementById('docEmpresa').textContent = empresa;
+    document.getElementById('docRFC').textContent = rfc.toUpperCase();
+    document.getElementById('docFirmaNombre').textContent = representante;
+
+    // Cambiar vistas
+    document.getElementById('formulario').style.display = 'none';
+    document.getElementById('documento').style.display = 'block';
+    
+    // Scroll al inicio
+    window.scrollTo(0, 0);
+  }
+
+  function editarDocumento() {
+    document.getElementById('formulario').style.display = 'block';
+    document.getElementById('documento').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+</script>
+
+</body>
+</html>
