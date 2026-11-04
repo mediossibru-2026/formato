@@ -33,6 +33,19 @@
     border-top: 5px solid var(--verde-sibru);
   }
 
+  /* HERO LOGO EN FORMULARIO */
+  .hero-logo {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid var(--verde-sibru);
+  }
+
+  .hero-logo img {
+    max-height: 120px;
+    width: auto;
+  }
+
   .contenedor-formulario h2 {
     margin-top: 0;
     color: var(--negro);
@@ -103,7 +116,7 @@
     padding: 15mm 20mm 25mm 20mm;
   }
 
-  /* Logo centrado - DUPLICADO (de 110px a 220px) */
+  /* Logo centrado */
   .logo-centrado {
     text-align: center;
     margin-bottom: 15px;
@@ -200,7 +213,7 @@
     color: var(--gris-texto);
   }
 
-  /* Firma - MÁS ESPACIO (de 70px a 90px) */
+  /* Firma */
   .firma-seccion {
     margin-top: 90px;
     text-align: center;
@@ -282,7 +295,13 @@
 
 <!-- FORMULARIO -->
 <div class="contenedor-formulario" id="formulario">
-  <h2>Manifestación escrita</h2>
+  
+  <!-- HERO LOGO -->
+  <div class="hero-logo">
+    <img src="logo.png" alt="Grupo SIBRÜ">
+  </div>
+
+  <h2>MANISFESTACIÓN ESCRITA</h2>
   
   <label>Lugar y fecha:</label>
   <input type="text" id="inputLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
