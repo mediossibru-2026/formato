@@ -7,6 +7,7 @@
 <style>
   :root {
     --verde-sibru: #6BAE3E;
+    --verde-banda: #007A3D;
     --rojo-sibru: #D94F3D;
     --negro: #1a1a1a;
     --gris-texto: #333333;
@@ -99,11 +100,30 @@
     overflow: hidden;
   }
 
+  /* BARRAS SUPERIORES - PEGADAS ARRIBA SIN MARGEN */
+  .barras-superiores {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .barra-verde {
+    width: 100%;
+    height: 14px;
+    background-color: var(--verde-banda);
+  }
+
+  .barra-naranja {
+    width: 100%;
+    height: 6px;
+    background-color: var(--rojo-sibru);
+  }
+
   .contenido-documento {
     padding: 15mm 20mm 25mm 20mm;
   }
 
-  /* Logo centrado - DUPLICADO (de 110px a 220px) */
+  /* Logo centrado */
   .logo-centrado {
     text-align: center;
     margin-bottom: 15px;
@@ -200,7 +220,7 @@
     color: var(--gris-texto);
   }
 
-  /* Firma - MÁS ESPACIO (de 70px a 90px) */
+  /* Firma */
   .firma-seccion {
     margin-top: 90px;
     text-align: center;
@@ -304,6 +324,12 @@
 <!-- DOCUMENTO -->
 <div class="hoja-documento" id="documento">
   
+  <!-- BARRAS SUPERIORES PEGADAS AL BORDE -->
+  <div class="barras-superiores">
+    <div class="barra-verde"></div>
+    <div class="barra-naranja"></div>
+  </div>
+
   <div class="contenido-documento">
     
     <div class="logo-centrado">
