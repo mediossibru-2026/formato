@@ -91,7 +91,7 @@
   /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
-    min-height: 279mm;
+    height: 279mm;
     margin: 0 auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
@@ -100,7 +100,7 @@
     overflow: hidden;
   }
 
-  /* BARRAS SUPERIORES - PEGADAS ARRIBA SIN MARGEN */
+  /* BARRAS SUPERIORES */
   .barras-superiores {
     width: 100%;
     display: flex;
@@ -120,51 +120,51 @@
   }
 
   .contenido-documento {
-    padding: 15mm 20mm 25mm 20mm;
+    padding: 8mm 20mm 20mm 20mm;
   }
 
-  /* Logo centrado */
+  /* Logo centrado - tamaño equilibrado para que quepa todo */
   .logo-centrado {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
   }
 
   .logo-empresa {
-    max-height: 220px;
+    max-height: 140px;
     width: auto;
   }
 
   /* Título */
   .titulo-principal {
     text-align: center;
-    font-size: 16pt;
+    font-size: 15pt;
     font-weight: 800;
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
 
   .titulo-sub {
     text-align: center;
-    font-size: 10pt;
+    font-size: 9pt;
     font-weight: 700;
     color: var(--rojo-sibru);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .linea-verde {
     border: none;
     border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
 
   /* Lugar y fecha */
   .lugar-fecha {
     text-align: right;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     font-size: 10pt;
     color: var(--gris-texto);
   }
@@ -181,7 +181,7 @@
 
   .destinatario {
     font-weight: 700;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     font-size: 10.5pt;
     color: var(--negro);
     letter-spacing: 1px;
@@ -189,9 +189,9 @@
 
   .parrafo {
     text-align: justify;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-size: 10pt;
-    line-height: 1.6;
+    line-height: 1.5;
     color: var(--gris-texto);
   }
 
@@ -214,7 +214,7 @@
   .dato-linea.corto { min-width: 140px; }
 
   .cierre {
-    margin-top: 15px;
+    margin-top: 10px;
     text-align: justify;
     font-size: 10pt;
     color: var(--gris-texto);
@@ -222,7 +222,7 @@
 
   /* Firma */
   .firma-seccion {
-    margin-top: 90px;
+    margin-top: 50px;
     text-align: center;
     page-break-inside: avoid;
   }
@@ -232,7 +232,7 @@
     font-weight: 700;
     letter-spacing: 3px;
     color: var(--verde-sibru);
-    margin-bottom: 30px;
+    margin-bottom: 25px;
     text-transform: uppercase;
   }
 
@@ -294,6 +294,7 @@
       margin: 0;
       width: 100%;
       max-width: 100%;
+      height: 279mm;
     }
   }
 </style>
@@ -324,7 +325,7 @@
 <!-- DOCUMENTO -->
 <div class="hoja-documento" id="documento">
   
-  <!-- BARRAS SUPERIORES PEGADAS AL BORDE -->
+  <!-- BARRAS SUPERIORES -->
   <div class="barras-superiores">
     <div class="barra-verde"></div>
     <div class="barra-naranja"></div>
