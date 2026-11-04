@@ -7,7 +7,6 @@
 <style>
   :root {
     --verde-sibru: #6BAE3E;
-    --verde-banda: #007A3D;
     --rojo-sibru: #D94F3D;
     --negro: #1a1a1a;
     --gris-texto: #333333;
@@ -91,7 +90,7 @@
   /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
-    height: 279mm;
+    min-height: 279mm;
     margin: 0 auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
@@ -100,71 +99,52 @@
     overflow: hidden;
   }
 
-  /* BARRAS SUPERIORES */
-  .barras-superiores {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .barra-verde {
-    width: 100%;
-    height: 14px;
-    background-color: var(--verde-banda);
-  }
-
-  .barra-naranja {
-    width: 100%;
-    height: 6px;
-    background-color: var(--rojo-sibru);
-  }
-
   .contenido-documento {
-    padding: 8mm 20mm 20mm 20mm;
+    padding: 15mm 20mm 25mm 20mm;
   }
 
-  /* Logo centrado - tamaño equilibrado para que quepa todo */
+  /* Logo centrado - DUPLICADO (de 110px a 220px) */
   .logo-centrado {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
   }
 
   .logo-empresa {
-    max-height: 140px;
+    max-height: 220px;
     width: auto;
   }
 
   /* Título */
   .titulo-principal {
     text-align: center;
-    font-size: 15pt;
+    font-size: 16pt;
     font-weight: 800;
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 4px;
+    margin-bottom: 5px;
   }
 
   .titulo-sub {
     text-align: center;
-    font-size: 9pt;
+    font-size: 10pt;
     font-weight: 700;
     color: var(--rojo-sibru);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
   }
 
   .linea-verde {
     border: none;
     border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
 
   /* Lugar y fecha */
   .lugar-fecha {
     text-align: right;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     font-size: 10pt;
     color: var(--gris-texto);
   }
@@ -181,7 +161,7 @@
 
   .destinatario {
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 10.5pt;
     color: var(--negro);
     letter-spacing: 1px;
@@ -189,9 +169,9 @@
 
   .parrafo {
     text-align: justify;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     font-size: 10pt;
-    line-height: 1.5;
+    line-height: 1.6;
     color: var(--gris-texto);
   }
 
@@ -214,15 +194,15 @@
   .dato-linea.corto { min-width: 140px; }
 
   .cierre {
-    margin-top: 10px;
+    margin-top: 15px;
     text-align: justify;
     font-size: 10pt;
     color: var(--gris-texto);
   }
 
-  /* Firma */
+  /* Firma - MÁS ESPACIO (de 70px a 90px) */
   .firma-seccion {
-    margin-top: 50px;
+    margin-top: 90px;
     text-align: center;
     page-break-inside: avoid;
   }
@@ -232,7 +212,7 @@
     font-weight: 700;
     letter-spacing: 3px;
     color: var(--verde-sibru);
-    margin-bottom: 25px;
+    margin-bottom: 30px;
     text-transform: uppercase;
   }
 
@@ -294,7 +274,6 @@
       margin: 0;
       width: 100%;
       max-width: 100%;
-      height: 279mm;
     }
   }
 </style>
@@ -325,12 +304,6 @@
 <!-- DOCUMENTO -->
 <div class="hoja-documento" id="documento">
   
-  <!-- BARRAS SUPERIORES -->
-  <div class="barras-superiores">
-    <div class="barra-verde"></div>
-    <div class="barra-naranja"></div>
-  </div>
-
   <div class="contenido-documento">
     
     <div class="logo-centrado">
