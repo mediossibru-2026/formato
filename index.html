@@ -6,22 +6,18 @@
 <title>Manifestación CFF - Grupo SIBRÜ</title>
 <style>
   :root {
-    --verde-sibru: #7CB342;
-    --verde-oscuro: #558B2F;
-    --negro-premium: #1a1a1a;
+    --verde-sibru: #6BAE3E;
+    --rojo-sibru: #D94F3D;
+    --negro: #1a1a1a;
     --gris-texto: #333333;
-    --gris-claro: #f5f5f5;
-    --gradiente-header: linear-gradient(90deg, #1a1a1a 0%, #2e2e2e 50%, #7CB342 100%);
-    --gradiente-verde: linear-gradient(135deg, #7CB342 0%, #558B2F 100%);
   }
 
-  * { box-sizing: border-box; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    font-family: 'Segoe UI', Arial, sans-serif;
     background-color: #e8ecef;
-    color: var(--negro-premium);
-    margin: 0;
+    color: var(--negro);
     padding: 20px;
     line-height: 1.5;
   }
@@ -39,15 +35,10 @@
 
   .contenedor-formulario h2 {
     margin-top: 0;
-    color: var(--negro-premium);
+    color: var(--negro);
     font-size: 1.4rem;
     text-align: center;
     font-weight: 700;
-    letter-spacing: 0.5px;
-  }
-
-  .contenedor-formulario h2 span {
-    color: var(--verde-sibru);
   }
 
   label {
@@ -55,7 +46,7 @@
     margin-top: 15px;
     font-weight: 600;
     font-size: 0.85rem;
-    color: var(--negro-premium);
+    color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
@@ -67,13 +58,11 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
-    transition: border-color 0.3s, box-shadow 0.3s;
   }
 
   input[type="text"]:focus, input[type="date"]:focus {
     border-color: var(--verde-sibru);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(124, 179, 66, 0.2);
   }
 
   .botones {
@@ -90,28 +79,15 @@
     font-size: 0.95rem;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s;
-    letter-spacing: 0.3px;
   }
 
-  .btn-generar {
-    background: var(--gradiente-verde);
-    color: white;
-  }
+  .btn-generar { background: var(--verde-sibru); color: white; }
+  .btn-imprimir { background: var(--negro); color: white; }
+  .btn-editar { background: #e0e0e0; color: var(--negro); }
 
-  .btn-imprimir {
-    background: var(--negro-premium);
-    color: white;
-  }
+  button:hover { opacity: 0.9; }
 
-  .btn-editar {
-    background: #e0e0e0;
-    color: var(--negro-premium);
-  }
-
-  button:hover { transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
-
-  /* ============ DOCUMENTO CORPORATIVO ============ */
+  /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
@@ -123,83 +99,71 @@
     overflow: hidden;
   }
 
-  /* Barra superior corporativa */
-  .barra-superior {
-    height: 12px;
-    background: var(--gradiente-header);
-    width: 100%;
-  }
-
   .contenido-documento {
-    padding: 25mm 22mm 20mm 22mm;
+    padding: 15mm 20mm 25mm 20mm;
   }
 
-  /* Header con logo y título */
-  .header-doc {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 2px solid var(--verde-sibru);
-    padding-bottom: 15px;
-    margin-bottom: 25px;
+  /* Logo centrado */
+  .logo-centrado {
+    text-align: center;
+    margin-bottom: 15px;
   }
 
   .logo-empresa {
-    max-height: 60px;
+    max-height: 70px;
     width: auto;
   }
 
-  .header-titulo {
-    text-align: right;
-    flex: 1;
-    padding-left: 20px;
-  }
-
-  .header-titulo .empresa-nombre {
-    font-size: 18pt;
-    font-weight: 800;
-    color: var(--negro-premium);
-    letter-spacing: 1px;
-    margin: 0;
-  }
-
-  .header-titulo .empresa-tagline {
-    font-size: 8pt;
-    color: var(--verde-oscuro);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    margin: 2px 0 0 0;
-  }
-
-  /* Título del documento */
-  .titulo-documento {
+  /* Título */
+  .titulo-principal {
     text-align: center;
-    font-size: 11pt;
-    font-weight: 700;
+    font-size: 16pt;
+    font-weight: 800;
+    color: var(--negro);
     text-transform: uppercase;
-    margin: 20px 0 25px 0;
-    color: var(--negro-premium);
-    letter-spacing: 0.5px;
-    line-height: 1.4;
-    padding: 12px 20px;
-    background: linear-gradient(90deg, rgba(124,179,66,0.08) 0%, rgba(124,179,66,0.02) 100%);
-    border-left: 4px solid var(--verde-sibru);
-    border-right: 4px solid var(--verde-sibru);
+    letter-spacing: 1px;
+    margin-bottom: 5px;
   }
 
+  .titulo-sub {
+    text-align: center;
+    font-size: 10pt;
+    font-weight: 700;
+    color: var(--rojo-sibru);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  .linea-verde {
+    border: none;
+    border-top: 2px solid var(--verde-sibru);
+    margin-bottom: 20px;
+  }
+
+  /* Lugar y fecha */
   .lugar-fecha {
     text-align: right;
     margin-bottom: 20px;
     font-size: 10pt;
     color: var(--gris-texto);
-    font-style: italic;
+  }
+
+  .lugar-fecha .linea-lf {
+    display: inline-block;
+    border-bottom: 1px solid var(--negro);
+    min-width: 220px;
+    text-align: center;
+    padding: 0 5px;
+    color: var(--negro);
+    font-weight: 600;
   }
 
   .destinatario {
     font-weight: 700;
     margin-bottom: 15px;
     font-size: 10.5pt;
-    color: var(--negro-premium);
+    color: var(--negro);
     letter-spacing: 1px;
   }
 
@@ -212,84 +176,80 @@
   }
 
   .parrafo strong {
-    color: var(--negro-premium);
+    color: var(--negro);
     font-weight: 700;
   }
 
-  .parrafo .dato-inyectado {
-    color: var(--verde-oscuro);
+  .dato-linea {
+    display: inline-block;
+    border-bottom: 1px solid var(--negro);
+    min-width: 180px;
+    text-align: center;
+    padding: 0 5px;
+    color: var(--negro);
     font-weight: 600;
-    border-bottom: 1px dotted var(--verde-sibru);
-    padding: 0 2px;
   }
 
+  .dato-linea.largo { min-width: 280px; }
+  .dato-linea.corto { min-width: 140px; }
+
   .cierre {
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: justify;
     font-size: 10pt;
     color: var(--gris-texto);
-    font-style: italic;
   }
 
-  /* Firma corporativa */
+  /* Firma */
   .firma-seccion {
-    margin-top: 50px;
+    margin-top: 45px;
     text-align: center;
     page-break-inside: avoid;
   }
 
   .firma-atentamente {
-    font-size: 9pt;
+    font-size: 10pt;
     font-weight: 700;
     letter-spacing: 3px;
-    color: var(--verde-oscuro);
+    color: var(--verde-sibru);
     margin-bottom: 30px;
+    text-transform: uppercase;
   }
 
   .linea-firma {
-    border-top: 2px solid var(--negro-premium);
+    border-top: 1px solid var(--negro);
     width: 280px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 8px auto;
   }
 
   .nombre-firma {
     font-weight: 700;
-    font-size: 11pt;
-    color: var(--negro-premium);
-    letter-spacing: 0.5px;
+    font-size: 10pt;
+    color: var(--negro);
   }
 
   .cargo-firma {
     font-size: 9pt;
-    color: var(--verde-oscuro);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    margin-top: 3px;
+    color: var(--gris-texto);
+    margin-top: 2px;
   }
 
-  /* Footer corporativo */
+  /* Footer */
   .footer-documento {
-    margin-top: 30px;
-    padding-top: 12px;
-    text-align: center;
-    font-size: 8pt;
-    color: #666;
-    border-top: 1px solid #e0e0e0;
-    letter-spacing: 0.5px;
-  }
-
-  .barra-inferior {
-    height: 8px;
-    background: var(--gradiente-header);
-    width: 100%;
     position: absolute;
     bottom: 0;
     left: 0;
+    right: 0;
+    background: var(--verde-sibru);
+    color: white;
+    text-align: center;
+    font-size: 8pt;
+    padding: 6px 20mm;
+    letter-spacing: 0.5px;
   }
 
-  /* Botones en vista previa */
   .botones-doc {
-    padding: 20px 22mm;
+    padding: 20px;
     display: flex;
     gap: 10px;
     justify-content: center;
@@ -301,17 +261,14 @@
       size: letter;
       margin: 0;
     }
-    
     body {
       background: white;
       padding: 0;
       margin: 0;
     }
-
     .contenedor-formulario, .botones-doc, .no-print {
       display: none !important;
     }
-
     .hoja-documento {
       display: block !important;
       box-shadow: none;
@@ -326,13 +283,10 @@
 
 <!-- FORMULARIO -->
 <div class="contenedor-formulario" id="formulario">
-  <h2>Generador de <span>Manifestación CFF</span></h2>
+  <h2>Generador de Manifestación CFF</h2>
   
-  <label>Lugar:</label>
-  <input type="text" id="inputLugar" value="Cuautitlán Izcalli, Estado de México">
-
-  <label>Fecha:</label>
-  <input type="date" id="inputFecha">
+  <label>Lugar y fecha:</label>
+  <input type="text" id="inputLugarFecha" value="Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
 
   <label>Nombre del Representante Legal:</label>
   <input type="text" id="inputRepresentante" placeholder="Ej. Sergio Álvarez" required>
@@ -348,35 +302,27 @@
   </div>
 </div>
 
-<!-- DOCUMENTO CORPORATIVO -->
+<!-- DOCUMENTO -->
 <div class="hoja-documento" id="documento">
   
-  <div class="barra-superior"></div>
-
   <div class="contenido-documento">
     
-    <div class="header-doc">
-      <img src="https://drive.google.com/uc?export=view&id=1zkWWyGJEF2-HA7urIBkQkTllfrObOpI_" 
-           alt="Grupo SIBRÜ" class="logo-empresa"
-           onerror="this.style.display='none'">
-      <div class="header-titulo">
-        <h1 class="empresa-nombre">GRUPO SIBRÜ</h1>
-        <p class="empresa-tagline">Soluciones Integrales</p>
-      </div>
+    <div class="logo-centrado">
+      <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
     </div>
 
-    <div class="titulo-documento">
-      Manifestación de no encontrarse en los listados previstos en los artículos 69, 69-B y 69-B Bis del Código Fiscal de la Federación
-    </div>
+    <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
+    <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
+    <hr class="linea-verde">
 
     <div class="lugar-fecha">
-      <span id="docLugarFecha"></span>
+      Lugar y fecha: <span class="linea-lf" id="docLugarFecha"></span>
     </div>
 
     <div class="destinatario">A QUIEN CORRESPONDA:</div>
 
     <div class="parrafo">
-      Quien suscribe, <span class="dato-inyectado" id="docRepresentante"></span>, en mi carácter de representante legal de <span class="dato-inyectado" id="docEmpresa"></span>, con RFC <span class="dato-inyectado" id="docRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
+      Quien suscribe, <span class="dato-linea largo" id="docRepresentante"></span>, en mi carácter de representante legal de <span class="dato-linea largo" id="docEmpresa"></span>, con RFC <span class="dato-linea corto" id="docRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
     </div>
 
     <div class="parrafo">
@@ -406,13 +352,11 @@
       <div class="cargo-firma">Representante Legal</div>
     </div>
 
-    <div class="footer-documento">
-      Cuautitlán Izcalli, Edo. Méx. C.P. 54740 &nbsp;|&nbsp; Grupo SIBRÜ
-    </div>
-
   </div>
 
-  <div class="barra-inferior"></div>
+  <div class="footer-documento">
+    GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+  </div>
 
   <div class="botones-doc no-print">
     <button class="btn-imprimir" onclick="window.print()">Imprimir / Guardar como PDF</button>
@@ -421,25 +365,18 @@
 </div>
 
 <script>
-  document.getElementById('inputFecha').valueAsDate = new Date();
-
   function generarDocumento() {
     const representante = document.getElementById('inputRepresentante').value.trim();
     const empresa = document.getElementById('inputEmpresa').value.trim();
     const rfc = document.getElementById('inputRFC').value.trim();
+    const lugarFecha = document.getElementById('inputLugarFecha').value.trim();
 
-    if (!representante || !empresa || !rfc) {
-      alert('Por favor, complete los campos obligatorios (Representante, Empresa y RFC).');
+    if (!representante || !empresa || !rfc || !lugarFecha) {
+      alert('Por favor, complete todos los campos.');
       return;
     }
 
-    const fechaInput = document.getElementById('inputFecha').value;
-    const lugar = document.getElementById('inputLugar').value.trim();
-    const fechaObj = new Date(fechaInput + 'T12:00:00');
-    const opcionesFecha = { year: 'numeric', month: 'long', day: 'numeric' };
-    const fechaFormateada = fechaObj.toLocaleDateString('es-MX', opcionesFecha);
-
-    document.getElementById('docLugarFecha').textContent = `${lugar}, a ${fechaFormateada}`;
+    document.getElementById('docLugarFecha').textContent = lugarFecha;
     document.getElementById('docRepresentante').textContent = representante;
     document.getElementById('docEmpresa').textContent = empresa;
     document.getElementById('docRFC').textContent = rfc.toUpperCase();
