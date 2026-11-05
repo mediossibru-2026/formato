@@ -129,7 +129,7 @@
     outline: none;
   }
 
-  input[type="text"].error {
+  input[type="text"].error, input[type="email"].error {
     border-color: var(--rojo-sibru);
     background: #fff5f5;
   }
@@ -143,28 +143,6 @@
   }
 
   .mensaje-error.visible { display: block; }
-
-  .checkbox-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    margin-top: 10px;
-  }
-
-  .checkbox-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 0.9rem;
-    color: var(--gris-texto);
-  }
-
-  .checkbox-item input[type="checkbox"] {
-    width: 16px;
-    height: 16px;
-    accent-color: var(--verde-sibru);
-    cursor: pointer;
-  }
 
   .botones {
     display: flex;
@@ -186,11 +164,25 @@
   .btn-imprimir { background: var(--negro); color: white; }
   .btn-editar { background: #e0e0e0; color: var(--negro); }
   .btn-borrar { background: var(--rojo-sibru); color: white; }
+  .btn-guardar { background: #1976D2; color: white; }
 
   button:hover { opacity: 0.9; }
+  button:disabled { background: #ccc; cursor: not-allowed; }
 
   .formulario-tipo { display: none; }
   .formulario-tipo.activo { display: block; }
+
+  .mensaje-guardado {
+    background: #4CAF50;
+    color: white;
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 15px;
+    text-align: center;
+    display: none;
+  }
+
+  .mensaje-guardado.visible { display: block; }
 
   /* ============ DOCUMENTOS ============ */
   .hoja-documento {
@@ -595,7 +587,7 @@
       <label>Nombre:</label>
       <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
 
-      <label>RFC (13 caracteres):</label>
+      <label>RFC (12 persona moral / 13 persona física):</label>
       <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="validarRFCFisica()" required>
       <div class="mensaje-error" id="errorFisicaRFC">El RFC debe tener exactamente 13 caracteres.</div>
     </div>
@@ -621,10 +613,8 @@
       <input type="text" id="fisicaMetodoPago" placeholder="Ej. PUE - Pago en una sola exhibición">
 
       <label>Correo para envío de facturas:</label>
-      <input type="email" id="fisicaCorreo" placeholder="Ej. correo@ejemplo.com">
-
-      <label>Confirmación de correo validado (Sí/No):</label>
-      <input type="text" id="fisicaConfirmacionCorreo" placeholder="Sí">
+      <input type="email" id="fisicaCorreo" placeholder="Ej. correo@ejemplo.com" onblur="validarEmailFisica()">
+      <div class="mensaje-error" id="errorFisicaEmail">Formato de correo electrónico inválido.</div>
     </div>
 
     <div class="seccion-form">
@@ -643,20 +633,12 @@
       <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre registrado en el RFC.</div>
     </div>
 
-    <div class="seccion-form">
-      <h3>Documentación Obligatoria</h3>
-      <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" id="fisicaDocConstancia"> Constancia de Situación Fiscal (mes actual)</label>
-        <label class="checkbox-item"><input type="checkbox" id="fisicaDocOpinion"> Opinión de cumplimiento positivo</label>
-        <label class="checkbox-item"><input type="checkbox" id="fisicaDocComprobante"> Comprobante de domicilio vigente</label>
-        <label class="checkbox-item"><input type="checkbox" id="fisicaDocIdentificacion"> Identificación oficial vigente</label>
-      </div>
-    </div>
-
     <div class="botones">
       <button class="btn-generar" onclick="generarDocumentosFisica()">Generar Documentos</button>
+      <button class="btn-guardar" onclick="guardarClienteFisica()">Guardar Cliente</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
+    <div class="mensaje-guardado" id="mensajeGuardadoFisica"></div>
   </div>
 
   <!-- FORMULARIO PERSONA MORAL -->
@@ -673,7 +655,7 @@
       <label>Razón Social:</label>
       <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required>
 
-      <label>RFC (12 caracteres):</label>
+      <label>RFC (12 persona moral / 13 persona física):</label>
       <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="validarRFCMoral()" required>
       <div class="mensaje-error" id="errorMoralRFC">El RFC debe tener exactamente 12 caracteres.</div>
     </div>
@@ -699,10 +681,8 @@
       <input type="text" id="moralMetodoPago" placeholder="Ej. PUE - Pago en una sola exhibición">
 
       <label>Correo para envío de facturas:</label>
-      <input type="email" id="moralCorreo" placeholder="Ej. correo@empresa.com">
-
-      <label>Confirmación de correo validado (Sí/No):</label>
-      <input type="text" id="moralConfirmacionCorreo" placeholder="Sí">
+      <input type="email" id="moralCorreo" placeholder="Ej. correo@empresa.com" onblur="validarEmailMoral()">
+      <div class="mensaje-error" id="errorMoralEmail">Formato de correo electrónico inválido.</div>
     </div>
 
     <div class="seccion-form">
@@ -721,23 +701,12 @@
       <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con la razón social registrada en el RFC.</div>
     </div>
 
-    <div class="seccion-form">
-      <h3>Documentación Obligatoria</h3>
-      <div class="checkbox-group">
-        <label class="checkbox-item"><input type="checkbox" id="moralDocConstancia"> Constancia de Situación Fiscal (mes actual)</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocOpinion"> Opinión de cumplimiento positivo</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocComprobante"> Comprobante de domicilio vigente</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocActa"> Acta constitutiva (si aplica)</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocPoder"> Poder notarial del representante legal (si aplica)</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocIdentificacion"> Identificación oficial vigente</label>
-        <label class="checkbox-item"><input type="checkbox" id="moralDocCaratula"> Carátula de estado de cuenta (CLABE visible y mismo RFC)</label>
-      </div>
-    </div>
-
     <div class="botones">
       <button class="btn-generar" onclick="generarDocumentosMoral()">Generar Documentos</button>
+      <button class="btn-guardar" onclick="guardarClienteMoral()">Guardar Cliente</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
+    <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
   </div>
 </div>
 
@@ -831,7 +800,7 @@
       </div>
       <div class="header-alta-cliente">
         <strong>ALTA DE CLIENTE</strong>
-        <span>N° DE CLIENTE: ____________</span>
+        <span>N° DE CLIENTE: <span id="aFisicaID"></span></span>
       </div>
     </div>
 
@@ -847,7 +816,7 @@
       <div class="seccion-alta-titulo verde">Datos Fiscales (Conforme a Constancia de Situación Fiscal)</div>
       <table class="tabla-alta">
         <tr><td class="label">Nombre</td><td class="valor" id="aFisicaNombre"></td></tr>
-        <tr><td class="label">RFC (13 persona moral / 13 persona física)</td><td class="valor" id="aFisicaRFC"></td></tr>
+        <tr><td class="label">RFC (12 persona moral / 13 persona física)</td><td class="valor" id="aFisicaRFC"></td></tr>
         <tr><td class="label">Régimen Fiscal</td><td class="valor" id="aFisicaRegimen"></td></tr>
         <tr><td class="label">Código Postal del domicilio fiscal</td><td class="valor" id="aFisicaCP"></td></tr>
         <tr><td class="label">Uso de CFDI</td><td class="valor" id="aFisicaUsoCFDI"></td></tr>
@@ -926,7 +895,7 @@
       </div>
       <div class="header-alta-cliente">
         <strong>ALTA DE CLIENTE</strong>
-        <span>N° DE CLIENTE: ____________</span>
+        <span>N° DE CLIENTE: <span id="aMoralID"></span></span>
       </div>
     </div>
 
@@ -1004,6 +973,9 @@
 </div>
 
 <script>
+  // URL del Google Apps Script Web App
+  const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/exec';
+  
   let tipoSeleccionado = null;
 
   function cambiarTipoPersona() {
@@ -1051,6 +1023,191 @@
     }
   }
 
+  function validarEmailFisica() {
+    const input = document.getElementById('fisicaCorreo');
+    const error = document.getElementById('errorFisicaEmail');
+    const valor = input.value.trim().toLowerCase();
+    input.value = valor;
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (valor.length > 0 && !emailRegex.test(valor)) {
+      input.classList.add('error');
+      error.classList.add('visible');
+      return false;
+    } else {
+      input.classList.remove('error');
+      error.classList.remove('visible');
+      return true;
+    }
+  }
+
+  function validarEmailMoral() {
+    const input = document.getElementById('moralCorreo');
+    const error = document.getElementById('errorMoralEmail');
+    const valor = input.value.trim().toLowerCase();
+    input.value = valor;
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (valor.length > 0 && !emailRegex.test(valor)) {
+      input.classList.add('error');
+      error.classList.add('visible');
+      return false;
+    } else {
+      input.classList.remove('error');
+      error.classList.remove('visible');
+      return true;
+    }
+  }
+
+  function generarIDCliente(rfc) {
+    const fecha = new Date();
+    const anio = fecha.getFullYear().toString().slice(-2);
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    return `${rfc}-${anio}${mes}${dia}-${random}`;
+  }
+
+  async function guardarClienteFisica() {
+    const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
+    const nombre = document.getElementById('fisicaNombre').value.trim();
+    
+    if (!rfc || !nombre) {
+      alert('Por favor, complete al menos el RFC y el Nombre.');
+      return;
+    }
+    
+    if (rfc.length !== 13) {
+      alert('El RFC debe tener exactamente 13 caracteres.');
+      return;
+    }
+    
+    if (!validarEmailFisica()) {
+      alert('El correo electrónico no tiene un formato válido.');
+      return;
+    }
+
+    const btnGuardar = event.target;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
+
+    const idCliente = generarIDCliente(rfc);
+    const fechaGuardado = new Date().toISOString();
+
+    const datos = {
+      action: 'guardar',
+      tipo: 'fisica',
+      idCliente: idCliente,
+      rfc: rfc,
+      nombre: nombre,
+      lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(),
+      regimen: document.getElementById('fisicaRegimen').value.trim(),
+      cp: document.getElementById('fisicaCP').value.trim(),
+      usoCFDI: document.getElementById('fisicaUsoCFDI').value.trim(),
+      formaPago: document.getElementById('fisicaFormaPago').value.trim(),
+      metodoPago: document.getElementById('fisicaMetodoPago').value.trim(),
+      correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
+      banco: document.getElementById('fisicaBanco').value.trim(),
+      clabe: document.getElementById('fisicaCLABE').value.trim(),
+      cuenta: document.getElementById('fisicaCuenta').value.trim(),
+      titularCuenta: document.getElementById('fisicaTitularCuenta').value.trim(),
+      fechaGuardado: fechaGuardado
+    };
+
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(datos)
+      });
+      const result = await response.json();
+      
+      if (result.result === 'success') {
+        const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
+        mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
+        mensajeDiv.classList.add('visible');
+        setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
+      } else {
+        alert('Error al guardar: ' + result.message);
+      }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+    }
+  }
+
+  async function guardarClienteMoral() {
+    const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
+    const razonSocial = document.getElementById('moralRazonSocial').value.trim();
+    const representante = document.getElementById('moralRepresentante').value.trim();
+    
+    if (!rfc || !razonSocial || !representante) {
+      alert('Por favor, complete al menos el RFC, Razón Social y Representante.');
+      return;
+    }
+    
+    if (rfc.length !== 12) {
+      alert('El RFC debe tener exactamente 12 caracteres.');
+      return;
+    }
+    
+    if (!validarEmailMoral()) {
+      alert('El correo electrónico no tiene un formato válido.');
+      return;
+    }
+
+    const btnGuardar = event.target;
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Guardando...';
+
+    const idCliente = generarIDCliente(rfc);
+    const fechaGuardado = new Date().toISOString();
+
+    const datos = {
+      action: 'guardar',
+      tipo: 'moral',
+      idCliente: idCliente,
+      rfc: rfc,
+      razonSocial: razonSocial,
+      representante: representante,
+      lugarFecha: document.getElementById('moralLugarFecha').value.trim(),
+      regimen: document.getElementById('moralRegimen').value.trim(),
+      cp: document.getElementById('moralCP').value.trim(),
+      usoCFDI: document.getElementById('moralUsoCFDI').value.trim(),
+      formaPago: document.getElementById('moralFormaPago').value.trim(),
+      metodoPago: document.getElementById('moralMetodoPago').value.trim(),
+      correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
+      banco: document.getElementById('moralBanco').value.trim(),
+      clabe: document.getElementById('moralCLABE').value.trim(),
+      cuenta: document.getElementById('moralCuenta').value.trim(),
+      titularCuenta: document.getElementById('moralTitularCuenta').value.trim(),
+      fechaGuardado: fechaGuardado
+    };
+
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify(datos)
+      });
+      const result = await response.json();
+      
+      if (result.result === 'success') {
+        const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
+        mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
+        mensajeDiv.classList.add('visible');
+        setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
+      } else {
+        alert('Error al guardar: ' + result.message);
+      }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+    }
+  }
+
   function generarDocumentosFisica() {
     const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
     const nombre = document.getElementById('fisicaNombre').value.trim();
@@ -1064,6 +1221,12 @@
       alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
       return;
     }
+    if (!validarEmailFisica()) {
+      alert('El correo electrónico no tiene un formato válido.');
+      return;
+    }
+
+    const idCliente = generarIDCliente(rfc);
 
     // Manifestación
     document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
@@ -1072,6 +1235,7 @@
     document.getElementById('mFisicaFirmaNombre').textContent = nombre;
 
     // Alta de Cliente
+    document.getElementById('aFisicaID').textContent = idCliente;
     document.getElementById('aFisicaNombre').textContent = nombre;
     document.getElementById('aFisicaRFC').textContent = rfc;
     document.getElementById('aFisicaRegimen').textContent = document.getElementById('fisicaRegimen').value.trim();
@@ -1079,19 +1243,13 @@
     document.getElementById('aFisicaUsoCFDI').textContent = document.getElementById('fisicaUsoCFDI').value.trim();
     document.getElementById('aFisicaFormaPago').textContent = document.getElementById('fisicaFormaPago').value.trim();
     document.getElementById('aFisicaMetodoPago').textContent = document.getElementById('fisicaMetodoPago').value.trim();
-    document.getElementById('aFisicaCorreo').textContent = document.getElementById('fisicaCorreo').value.trim();
-    document.getElementById('aFisicaConfirmacionCorreo').textContent = document.getElementById('fisicaConfirmacionCorreo').value.trim();
+    document.getElementById('aFisicaCorreo').textContent = document.getElementById('fisicaCorreo').value.trim().toLowerCase();
+    document.getElementById('aFisicaConfirmacionCorreo').textContent = '';
     document.getElementById('aFisicaBanco').textContent = document.getElementById('fisicaBanco').value.trim();
     document.getElementById('aFisicaCLABE').textContent = document.getElementById('fisicaCLABE').value.trim();
     document.getElementById('aFisicaCuenta').textContent = document.getElementById('fisicaCuenta').value.trim();
     document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
-
-    // Sincronizar checkboxes
-    document.getElementById('aFisicaDocConstancia').checked = document.getElementById('fisicaDocConstancia').checked;
-    document.getElementById('aFisicaDocOpinion').checked = document.getElementById('fisicaDocOpinion').checked;
-    document.getElementById('aFisicaDocComprobante').checked = document.getElementById('fisicaDocComprobante').checked;
-    document.getElementById('aFisicaDocIdentificacion').checked = document.getElementById('fisicaDocIdentificacion').checked;
 
     // Mostrar documentos
     document.getElementById('formulario').style.display = 'none';
@@ -1116,6 +1274,12 @@
       alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
       return;
     }
+    if (!validarEmailMoral()) {
+      alert('El correo electrónico no tiene un formato válido.');
+      return;
+    }
+
+    const idCliente = generarIDCliente(rfc);
 
     // Manifestación
     document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
@@ -1125,6 +1289,7 @@
     document.getElementById('mMoralFirmaNombre').textContent = representante;
 
     // Alta de Cliente
+    document.getElementById('aMoralID').textContent = idCliente;
     document.getElementById('aMoralRazonSocial').textContent = razonSocial;
     document.getElementById('aMoralRFC').textContent = rfc;
     document.getElementById('aMoralRegimen').textContent = document.getElementById('moralRegimen').value.trim();
@@ -1132,22 +1297,13 @@
     document.getElementById('aMoralUsoCFDI').textContent = document.getElementById('moralUsoCFDI').value.trim();
     document.getElementById('aMoralFormaPago').textContent = document.getElementById('moralFormaPago').value.trim();
     document.getElementById('aMoralMetodoPago').textContent = document.getElementById('moralMetodoPago').value.trim();
-    document.getElementById('aMoralCorreo').textContent = document.getElementById('moralCorreo').value.trim();
-    document.getElementById('aMoralConfirmacionCorreo').textContent = document.getElementById('moralConfirmacionCorreo').value.trim();
+    document.getElementById('aMoralCorreo').textContent = document.getElementById('moralCorreo').value.trim().toLowerCase();
+    document.getElementById('aMoralConfirmacionCorreo').textContent = '';
     document.getElementById('aMoralBanco').textContent = document.getElementById('moralBanco').value.trim();
     document.getElementById('aMoralCLABE').textContent = document.getElementById('moralCLABE').value.trim();
     document.getElementById('aMoralCuenta').textContent = document.getElementById('moralCuenta').value.trim();
     document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
-
-    // Sincronizar checkboxes
-    document.getElementById('aMoralDocConstancia').checked = document.getElementById('moralDocConstancia').checked;
-    document.getElementById('aMoralDocOpinion').checked = document.getElementById('moralDocOpinion').checked;
-    document.getElementById('aMoralDocComprobante').checked = document.getElementById('moralDocComprobante').checked;
-    document.getElementById('aMoralDocActa').checked = document.getElementById('moralDocActa').checked;
-    document.getElementById('aMoralDocPoder').checked = document.getElementById('moralDocPoder').checked;
-    document.getElementById('aMoralDocIdentificacion').checked = document.getElementById('moralDocIdentificacion').checked;
-    document.getElementById('aMoralDocCaratula').checked = document.getElementById('moralDocCaratula').checked;
 
     // Mostrar documentos
     document.getElementById('formulario').style.display = 'none';
@@ -1174,10 +1330,9 @@
   function borrarFormulario() {
     const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
     inputs.forEach(input => input.value = '');
-    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    checkboxes.forEach(cb => cb.checked = false);
     document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     document.querySelectorAll('.mensaje-error.visible').forEach(el => el.classList.remove('visible'));
+    document.querySelectorAll('.mensaje-guardado.visible').forEach(el => el.classList.remove('visible'));
     const radios = document.getElementsByName('tipoPersona');
     radios.forEach(radio => radio.checked = false);
     document.getElementById('formFisica').classList.remove('activo');
