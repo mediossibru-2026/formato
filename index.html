@@ -347,8 +347,9 @@
 
   .firmas-alta {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     margin-top: 40px;
+    gap: 30px;
   }
 
   .firma-alta-box {
@@ -919,6 +920,11 @@
         <div class="firma-alta-nombre" id="aFisicaFirmaCliente"></div>
         <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
       </div>
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre">ISRAEL SILVA ZAMORA</div>
+        <div class="firma-alta-titulo">NOMBRE DEL VENDEDOR</div>
+      </div>
     </div>
   </div>
 </div>
@@ -1008,6 +1014,11 @@
         <div class="firma-alta-linea"></div>
         <div class="firma-alta-nombre" id="aMoralFirmaCliente"></div>
         <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
+      </div>
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre">ISRAEL SILVA ZAMORA</div>
+        <div class="firma-alta-titulo">NOMBRE DEL VENDEDOR</div>
       </div>
     </div>
   </div>
@@ -1140,7 +1151,6 @@
         const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
         mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
         mensajeDiv.classList.add('visible');
-        // MOSTRAR BOTÓN GENERAR DOCUMENTOS
         document.getElementById('btnGenerarFisica').classList.remove('oculto');
         setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
       } else {
@@ -1190,7 +1200,6 @@
         const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
         mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
         mensajeDiv.classList.add('visible');
-        // MOSTRAR BOTÓN GENERAR DOCUMENTOS
         document.getElementById('btnGenerarMoral').classList.remove('oculto');
         setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
       } else {
@@ -1236,11 +1245,15 @@
     document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
+    // OCULTAR documentos de persona moral
+    document.getElementById('docManifestacionMoral').style.display = 'none';
+    document.getElementById('docAltaMoral').style.display = 'none';
+    
+    // MOSTRAR solo documentos de persona física
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('docManifestacionFisica').style.display = 'block';
     document.getElementById('docAltaFisica').style.display = 'block';
-    document.getElementById('docManifestacionMoral').style.display = 'none';
-    document.getElementById('docAltaMoral').style.display = 'none';
+    
     window.scrollTo(0, 0);
   }
 
@@ -1278,11 +1291,15 @@
     document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
+    // OCULTAR documentos de persona física
+    document.getElementById('docManifestacionFisica').style.display = 'none';
+    document.getElementById('docAltaFisica').style.display = 'none';
+    
+    // MOSTRAR solo documentos de persona moral
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('docManifestacionMoral').style.display = 'block';
     document.getElementById('docAltaMoral').style.display = 'block';
-    document.getElementById('docManifestacionFisica').style.display = 'none';
-    document.getElementById('docAltaFisica').style.display = 'none';
+    
     window.scrollTo(0, 0);
   }
 
@@ -1320,7 +1337,6 @@
     document.getElementById('docManifestacionMoral').style.display = 'none';
     document.getElementById('docAltaMoral').style.display = 'none';
     
-    // OCULTAR BOTONES DE GENERAR AL BORRAR
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
     
