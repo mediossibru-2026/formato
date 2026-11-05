@@ -355,6 +355,39 @@
     print-color-adjust: exact;
   }
 
+  .referencia-pagos {
+    background: #f0f7ec;
+    border: 2px solid var(--verde-sibru);
+    border-radius: 6px;
+    padding: 15px;
+    margin: 12px 0;
+    text-align: center;
+  }
+
+  .referencia-pagos .ref-titulo {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--verde-banda);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .referencia-pagos .ref-numero {
+    font-size: 18pt;
+    font-weight: 800;
+    color: var(--negro);
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .referencia-pagos .ref-mensaje {
+    font-size: 8pt;
+    color: var(--gris-texto);
+    line-height: 1.5;
+  }
+
   .firmas-alta {
     display: flex;
     justify-content: space-between;
@@ -565,7 +598,7 @@
     .header-alta-logo img {
       max-height: 45px;
     }
-    .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta {
+    .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta, .referencia-pagos {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
       color-adjust: exact !important;
@@ -674,19 +707,6 @@
       <div class="mensaje-error" id="errorFisicaEmail">Formato de correo electrónico inválido.</div>
     </div>
 
-    <div class="seccion-form">
-      <h3>Datos Bancarios</h3>
-      <label>Banco:</label>
-      <input type="text" id="fisicaBanco" placeholder="Ej. BBVA">
-      <label>CLABE Interbancaria:</label>
-      <input type="text" id="fisicaCLABE" placeholder="Ej. 012345678901234567" maxlength="18">
-      <label>Número de cuenta:</label>
-      <input type="text" id="fisicaCuenta" placeholder="Ej. 1234567890">
-      <label>Titular de la cuenta:</label>
-      <input type="text" id="fisicaTitularCuenta" placeholder="Ej. Juan Pérez García">
-      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre registrado en el RFC.</div>
-    </div>
-
     <div class="botones">
       <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
       <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
@@ -775,19 +795,6 @@
       <div class="mensaje-error" id="errorMoralEmail">Formato de correo electrónico inválido.</div>
     </div>
 
-    <div class="seccion-form">
-      <h3>Datos Bancarios</h3>
-      <label>Banco:</label>
-      <input type="text" id="moralBanco" placeholder="Ej. BBVA">
-      <label>CLABE Interbancaria:</label>
-      <input type="text" id="moralCLABE" placeholder="Ej. 012345678901234567" maxlength="18">
-      <label>Número de cuenta:</label>
-      <input type="text" id="moralCuenta" placeholder="Ej. 1234567890">
-      <label>Titular de la cuenta:</label>
-      <input type="text" id="moralTitularCuenta" placeholder="Ej. EMPRESA SA DE CV">
-      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con la razón social registrada en el RFC.</div>
-    </div>
-
     <div class="botones">
       <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
       <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
@@ -874,7 +881,7 @@
       </div>
       <div class="header-alta-cliente">
         <strong>ALTA DE CLIENTE</strong>
-        <span>N° DE CLIENTE: __________________________</span>
+        <span>N° DE CLIENTE: <span id="aFisicaID"></span></span>
       </div>
     </div>
 
@@ -908,13 +915,12 @@
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Datos Bancarios</div>
-      <table class="tabla-alta">
-        <tr><td class="label">Banco</td><td class="valor" id="aFisicaBanco"></td></tr>
-        <tr><td class="label">CLABE</td><td class="valor" id="aFisicaCLABE"></td></tr>
-        <tr><td class="label">Número cuenta</td><td class="valor" id="aFisicaCuenta"></td></tr>
-        <tr><td class="label">Titular</td><td class="valor" id="aFisicaTitularCuenta"></td></tr>
-      </table>
+      <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
+      <div class="referencia-pagos">
+        <div class="ref-titulo">Este es tu número de referencia</div>
+        <div class="ref-numero" id="aFisicaReferencia"></div>
+        <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu número de factura para la correcta aplicación de tus pagos.</div>
+      </div>
     </div>
 
     <div class="seccion-alta">
@@ -964,7 +970,7 @@
       </div>
       <div class="header-alta-cliente">
         <strong>ALTA DE CLIENTE</strong>
-        <span>N° DE CLIENTE: __________________________</span>
+        <span>N° DE CLIENTE: <span id="aMoralID"></span></span>
       </div>
     </div>
 
@@ -1001,13 +1007,12 @@
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Datos Bancarios</div>
-      <table class="tabla-alta">
-        <tr><td class="label">Banco</td><td class="valor" id="aMoralBanco"></td></tr>
-        <tr><td class="label">CLABE</td><td class="valor" id="aMoralCLABE"></td></tr>
-        <tr><td class="label">Número cuenta</td><td class="valor" id="aMoralCuenta"></td></tr>
-        <tr><td class="label">Titular</td><td class="valor" id="aMoralTitularCuenta"></td></tr>
-      </table>
+      <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
+      <div class="referencia-pagos">
+        <div class="ref-titulo">Este es tu número de referencia</div>
+        <div class="ref-numero" id="aMoralReferencia"></div>
+        <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu número de factura para la correcta aplicación de tus pagos.</div>
+      </div>
     </div>
 
     <div class="seccion-alta">
@@ -1042,6 +1047,14 @@
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   let tipoSeleccionado = null;
+
+  // ID AUTOINCREMENTABLE - empieza en 1000
+  function generarNuevoID() {
+    let contador = parseInt(localStorage.getItem('sibru_id_counter') || '999');
+    contador++;
+    localStorage.setItem('sibru_id_counter', contador.toString());
+    return contador.toString();
+  }
 
   function cambiarTipoPersona() {
     const radios = document.getElementsByName('tipoPersona');
@@ -1122,15 +1135,6 @@
     }
   }
 
-  function generarIDCliente(rfc) {
-    const fecha = new Date();
-    const anio = fecha.getFullYear().toString().slice(-2);
-    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
-    const dia = fecha.getDate().toString().padStart(2, '0');
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    return rfc + '-' + anio + mes + dia + '-' + random;
-  }
-
   async function guardarClienteFisica() {
     const btnGuardar = document.getElementById('btnGuardarFisica');
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
@@ -1142,7 +1146,7 @@
     btnGuardar.disabled = true;
     btnGuardar.textContent = 'Guardando...';
 
-    const idCliente = generarIDCliente(rfc);
+    const idCliente = generarNuevoID();
     const datos = {
       action: 'guardar', tipo: 'fisica', idCliente: idCliente, rfc: rfc, nombre: nombre,
       lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(),
@@ -1152,10 +1156,6 @@
       formaPago: document.getElementById('fisicaFormaPago').value,
       metodoPago: document.getElementById('fisicaMetodoPago').value,
       correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
-      banco: document.getElementById('fisicaBanco').value.trim(),
-      clabe: document.getElementById('fisicaCLABE').value.trim(),
-      cuenta: document.getElementById('fisicaCuenta').value.trim(),
-      titularCuenta: document.getElementById('fisicaTitularCuenta').value.trim(),
       fechaGuardado: new Date().toISOString()
     };
 
@@ -1191,7 +1191,7 @@
     btnGuardar.disabled = true;
     btnGuardar.textContent = 'Guardando...';
 
-    const idCliente = generarIDCliente(rfc);
+    const idCliente = generarNuevoID();
     const datos = {
       action: 'guardar', tipo: 'moral', idCliente: idCliente, rfc: rfc, razonSocial: razonSocial, representante: representante,
       lugarFecha: document.getElementById('moralLugarFecha').value.trim(),
@@ -1201,10 +1201,6 @@
       formaPago: document.getElementById('moralFormaPago').value,
       metodoPago: document.getElementById('moralMetodoPago').value,
       correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
-      banco: document.getElementById('moralBanco').value.trim(),
-      clabe: document.getElementById('moralCLABE').value.trim(),
-      cuenta: document.getElementById('moralCuenta').value.trim(),
-      titularCuenta: document.getElementById('moralTitularCuenta').value.trim(),
       fechaGuardado: new Date().toISOString()
     };
 
@@ -1237,11 +1233,15 @@
     if (rfc.length !== 13) { alert('El RFC debe tener 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('Correo inválido.'); return; }
 
+    const idCliente = generarNuevoID();
+
     document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
     document.getElementById('mFisicaNombre').textContent = nombre;
     document.getElementById('mFisicaRFC').textContent = rfc;
     document.getElementById('mFisicaFirmaNombre').textContent = nombre;
 
+    document.getElementById('aFisicaID').textContent = idCliente;
+    document.getElementById('aFisicaReferencia').textContent = idCliente;
     document.getElementById('aFisicaNombre').textContent = nombre;
     document.getElementById('aFisicaRFC').textContent = rfc;
     document.getElementById('aFisicaRegimen').textContent = document.getElementById('fisicaRegimen').value;
@@ -1251,10 +1251,6 @@
     document.getElementById('aFisicaMetodoPago').textContent = document.getElementById('fisicaMetodoPago').value;
     document.getElementById('aFisicaCorreo').textContent = document.getElementById('fisicaCorreo').value.trim().toLowerCase();
     document.getElementById('aFisicaConfirmacionCorreo').textContent = '';
-    document.getElementById('aFisicaBanco').textContent = document.getElementById('fisicaBanco').value.trim();
-    document.getElementById('aFisicaCLABE').textContent = document.getElementById('fisicaCLABE').value.trim();
-    document.getElementById('aFisicaCuenta').textContent = document.getElementById('fisicaCuenta').value.trim();
-    document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
@@ -1275,12 +1271,16 @@
     if (rfc.length !== 12) { alert('El RFC debe tener 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('Correo inválido.'); return; }
 
+    const idCliente = generarNuevoID();
+
     document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
     document.getElementById('mMoralRepresentante').textContent = representante;
     document.getElementById('mMoralRazonSocial').textContent = razonSocial;
     document.getElementById('mMoralRFC').textContent = rfc;
     document.getElementById('mMoralFirmaNombre').textContent = representante;
 
+    document.getElementById('aMoralID').textContent = idCliente;
+    document.getElementById('aMoralReferencia').textContent = idCliente;
     document.getElementById('aMoralRazonSocial').textContent = razonSocial;
     document.getElementById('aMoralRFC').textContent = rfc;
     document.getElementById('aMoralRegimen').textContent = document.getElementById('moralRegimen').value;
@@ -1290,10 +1290,6 @@
     document.getElementById('aMoralMetodoPago').textContent = document.getElementById('moralMetodoPago').value;
     document.getElementById('aMoralCorreo').textContent = document.getElementById('moralCorreo').value.trim().toLowerCase();
     document.getElementById('aMoralConfirmacionCorreo').textContent = '';
-    document.getElementById('aMoralBanco').textContent = document.getElementById('moralBanco').value.trim();
-    document.getElementById('aMoralCLABE').textContent = document.getElementById('moralCLABE').value.trim();
-    document.getElementById('aMoralCuenta').textContent = document.getElementById('moralCuenta').value.trim();
-    document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
