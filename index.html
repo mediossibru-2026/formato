@@ -689,7 +689,7 @@
 
     <div class="botones">
       <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
-      <button class="btn-guardar" onclick="guardarClienteFisica()">Guardar Cliente</button>
+      <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
     <div class="mensaje-guardado" id="mensajeGuardadoFisica"></div>
@@ -790,7 +790,7 @@
 
     <div class="botones">
       <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
-      <button class="btn-guardar" onclick="guardarClienteMoral()">Guardar Cliente</button>
+      <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
     <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
@@ -1128,17 +1128,17 @@
     const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
     const dia = fecha.getDate().toString().padStart(2, '0');
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    return `${rfc}-${anio}${mes}${dia}-${random}`;
+    return rfc + '-' + anio + mes + dia + '-' + random;
   }
 
   async function guardarClienteFisica() {
+    const btnGuardar = document.getElementById('btnGuardarFisica');
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
     const nombre = document.getElementById('fisicaNombre').value.trim();
     if (!rfc || !nombre) { alert('Por favor, complete al menos el RFC y el Nombre.'); return; }
     if (rfc.length !== 13) { alert('El RFC debe tener exactamente 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('El correo electrónico no tiene un formato válido.'); return; }
 
-    const btnGuardar = event.target;
     btnGuardar.disabled = true;
     btnGuardar.textContent = 'Guardando...';
 
@@ -1164,10 +1164,10 @@
       const result = await response.json();
       if (result.result === 'success') {
         const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
-        mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
+        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarFisica').classList.remove('oculto');
-        setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
+        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
       } else {
         alert('Error al guardar: ' + result.message);
       }
@@ -1180,6 +1180,7 @@
   }
 
   async function guardarClienteMoral() {
+    const btnGuardar = document.getElementById('btnGuardarMoral');
     const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
     const razonSocial = document.getElementById('moralRazonSocial').value.trim();
     const representante = document.getElementById('moralRepresentante').value.trim();
@@ -1187,7 +1188,6 @@
     if (rfc.length !== 12) { alert('El RFC debe tener exactamente 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('El correo electrónico no tiene un formato válido.'); return; }
 
-    const btnGuardar = event.target;
     btnGuardar.disabled = true;
     btnGuardar.textContent = 'Guardando...';
 
@@ -1213,10 +1213,10 @@
       const result = await response.json();
       if (result.result === 'success') {
         const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
-        mensajeDiv.textContent = `Cliente guardado exitosamente. ID: ${idCliente}`;
+        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarMoral').classList.remove('oculto');
-        setTimeout(() => mensajeDiv.classList.remove('visible'), 5000);
+        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
       } else {
         alert('Error al guardar: ' + result.message);
       }
@@ -1236,8 +1236,6 @@
     if (!lugarFecha || !nombre || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
     if (rfc.length !== 13) { alert('El RFC debe tener 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('Correo inválido.'); return; }
-
-    const idCliente = generarIDCliente(rfc);
 
     document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
     document.getElementById('mFisicaNombre').textContent = nombre;
@@ -1276,8 +1274,6 @@
     if (!lugarFecha || !representante || !razonSocial || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
     if (rfc.length !== 12) { alert('El RFC debe tener 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('Correo inválido.'); return; }
-
-    const idCliente = generarIDCliente(rfc);
 
     document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
     document.getElementById('mMoralRepresentante').textContent = representante;
