@@ -186,7 +186,6 @@
 
   .oculto { display: none !important; }
 
-  /* DOCUMENTOS */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
@@ -481,8 +480,9 @@
     color: var(--gris-texto);
   }
 
+  /* CAMBIO: Se aumentó el margin-top para bajar la firma en la Manifestación */
   .firma-seccion {
-    margin-top: 50px;
+    margin-top: 95px;
     text-align: center;
     page-break-inside: avoid;
   }
@@ -559,13 +559,13 @@
     .logo-empresa {
       max-height: 120px;
     }
+    /* CAMBIO: Se aumentó el margin-top para impresión también */
     .firma-seccion {
-      margin-top: 40px;
+      margin-top: 75px;
     }
     .header-alta-logo img {
       max-height: 45px;
     }
-    /* FORZAR COLORES EN IMPRESIÓN */
     .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta {
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
@@ -1261,7 +1261,6 @@
     document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
-    // NUEVO ENFOQUE: Ocultar TODOS y mostrar solo los de Física
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
     document.getElementById('docManifestacionFisica').classList.add('activo');
     document.getElementById('docAltaFisica').classList.add('activo');
@@ -1304,7 +1303,6 @@
     document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
-    // NUEVO ENFOQUE: Ocultar TODOS y mostrar solo los de Moral
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
     document.getElementById('docManifestacionMoral').classList.add('activo');
     document.getElementById('docAltaMoral').classList.add('activo');
