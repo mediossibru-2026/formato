@@ -50,6 +50,7 @@
   }
   .btn-agregar { background: var(--verde-sibru); color: white; }
   .btn-actualizar { background: var(--gris-texto); color: white; }
+  .btn-reset { background: var(--rojo-sibru); color: white; }
 
   .admin-main {
     display: flex;
@@ -311,6 +312,7 @@
   .btn-modal-secondary { background: var(--gris-texto); color: white; }
   .btn-modal-print { background: var(--negro); color: white; }
   .btn-modal-email { background: var(--naranja-accion); color: white; }
+  .btn-modal-danger { background: var(--rojo-sibru); color: white; }
 </style>
 </head>
 <body>
@@ -323,6 +325,7 @@
     </div>
     <div class="admin-header-right">
       <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button>
+      <button class="btn-header btn-reset" onclick="abrirModalReset()">⚙️ Resetear Contador</button>
       <button class="btn-header btn-actualizar" onclick="cargarClientes()">🔄 Actualizar</button>
     </div>
   </div>
@@ -403,7 +406,6 @@
   </div>
 </div>
 
-<!-- MODAL AGREGAR/EDITAR -->
 <div class="modal-overlay" id="modalCliente">
   <div class="modal-content">
     <div class="modal-header">
@@ -551,7 +553,6 @@
   </div>
 </div>
 
-<!-- MODAL IMPRIMIR/EMAIL -->
 <div class="modal-overlay" id="modalAccion">
   <div class="modal-content small">
     <div class="modal-header">
@@ -580,20 +581,35 @@
   </div>
 </div>
 
+<div class="modal-overlay" id="modalReset">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>Resetear Contador de ID</h2>
+      <button class="modal-close" onclick="cerrarModal('modalReset')">&times;</button>
+    </div>
+    <div>
+      <p style="margin-bottom: 15px; color: var(--gris-texto);">
+        <strong>⚠️ Atención:</strong> Esta acción reseteará el contador global de IDs de clientes.
+        El próximo cliente registrado obtendrá el ID que indiques a continuación.
+      </p>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Nuevo valor del contador (el próximo ID será este valor + 1)</label>
+        <input type="number" id="resetContadorValor" value="1000" min="1000" max="9999">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalReset')">Cancelar</button>
+        <button type="button" class="btn-modal btn-modal-danger" onclick="confirmarReset()">⚠️ Resetear Contador</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   const LOGO_URL = 'https://mediossibru-2026.github.io/formato/logo.png';
   
   let clientesData = [];
   let clientesFiltrados = [];
-
-  // ID AUTOINCREMENTABLE - empieza en 1000
-  function generarNuevoID() {
-    let contador = parseInt(localStorage.getItem('sibru_id_counter') || '999');
-    contador++;
-    localStorage.setItem('sibru_id_counter', contador.toString());
-    return contador.toString();
-  }
 
   window.onload = function() {
     cargarClientes();
@@ -768,6 +784,25 @@
     document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
   }
 
+  async function obtenerNuevoID() {
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'obtenerSiguienteID' })
+      });
+      const result = await response.json();
+      if (result.result === 'success') {
+        return result.idCliente;
+      } else {
+        alert('Error al obtener ID: ' + result.message);
+        return null;
+      }
+    } catch (error) {
+      alert('Error de conexión al obtener ID: ' + error.message);
+      return null;
+    }
+  }
+
   document.getElementById('formCliente').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -783,10 +818,18 @@
       return;
     }
     
+    const clientId = document.getElementById('clientId').value;
+    let idCliente = clientId;
+    
+    if (!idCliente) {
+      idCliente = await obtenerNuevoID();
+      if (!idCliente) return;
+    }
+    
     const datos = {
       action: 'guardar',
       tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
-      idCliente: document.getElementById('clientId').value || generarNuevoID(),
+      idCliente: idCliente,
       rfc: rfc,
       nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
       razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
@@ -807,7 +850,7 @@
       const result = await res.json();
       
       if (result.result === 'success') {
-        alert('Cliente guardado correctamente');
+        alert('Cliente guardado correctamente. ID: ' + idCliente);
         cerrarModal('modalCliente');
         cargarClientes();
       } else {
@@ -895,6 +938,35 @@
     document.getElementById('accionEmail').value = cliente['Correo Electrónico'] || '';
     document.getElementById('modalAccionTitle').textContent = tipoAccion === 'imprimir' ? 'Imprimir Documento' : 'Enviar Documento por Mail';
     document.getElementById('modalAccion').classList.add('activo');
+  }
+
+  function abrirModalReset() {
+    document.getElementById('resetContadorValor').value = '1000';
+    document.getElementById('modalReset').classList.add('activo');
+  }
+
+  async function confirmarReset() {
+    const nuevoValor = document.getElementById('resetContadorValor').value;
+    if (!confirm('¿Está seguro de resetear el contador a ' + nuevoValor + '?\n\nEl próximo cliente registrado tendrá el ID ' + (parseInt(nuevoValor) + 1) + '.')) {
+      return;
+    }
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'resetearContador', nuevoValor: nuevoValor })
+      });
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        alert('Contador reseteado exitosamente. Próximo ID: ' + (parseInt(nuevoValor) + 1));
+        cerrarModal('modalReset');
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (e) {
+      alert('Error de conexión');
+    }
   }
 
   function ejecutarImpresion() {
