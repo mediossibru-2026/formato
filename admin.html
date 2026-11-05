@@ -803,63 +803,84 @@
     }
   }
 
-  document.getElementById('formCliente').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    
-    const tipo = document.getElementById('clientTipo').value;
-    const rfc = document.getElementById('clientRFC').value.toUpperCase().trim();
-    
-    if (tipo === 'Persona Física' && rfc.length !== 13) {
-      alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
-      return;
-    }
-    if (tipo === 'Persona Moral' && rfc.length !== 12) {
-      alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
-      return;
-    }
-    
-    const clientId = document.getElementById('clientId').value;
-    let idCliente = clientId;
-    
-    if (!idCliente) {
-      idCliente = await obtenerNuevoID();
-      if (!idCliente) return;
-    }
-    
-    const datos = {
-      action: 'guardar',
-      tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
-      idCliente: idCliente,
-      rfc: rfc,
-      nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
-      razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
-      representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
-      lugarFecha: document.getElementById('clientLugarFecha').value,
-      regimen: document.getElementById('clientRegimen').value,
-      cp: document.getElementById('clientCP').value,
-      usoCFDI: document.getElementById('clientUsoCFDI').value,
-      formaPago: document.getElementById('clientFormaPago').value,
-      metodoPago: document.getElementById('clientMetodoPago').value,
-      correo: document.getElementById('clientCorreo').value.toLowerCase().trim(),
-      status: document.getElementById('clientStatus').value,
-      fechaGuardado: new Date().toISOString()
-    };
-    
+document.getElementById('formCliente').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  
+  const tipo = document.getElementById('clientTipo').value;
+  const rfc = document.getElementById('clientRFC').value.toUpperCase().trim();
+  
+  if (tipo === 'Persona Física' && rfc.length !== 13) {
+    alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
+    return;
+  }
+  if (tipo === 'Persona Moral' && rfc.length !== 12) {
+    alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
+    return;
+  }
+  
+  const clientId = document.getElementById('clientId').value;
+  let idCliente = clientId;
+  
+  // Si NO hay clientId (es un cliente nuevo), verificar si el RFC ya existe
+  if (!idCliente) {
     try {
-      const res = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
-      const result = await res.json();
+      const verifRes = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+      });
+      const verifResult = await verifRes.json();
       
-      if (result.result === 'success') {
-        alert('Cliente guardado correctamente. ID: ' + idCliente);
-        cerrarModal('modalCliente');
-        cargarClientes();
+      if (verifResult.result === 'success' && verifResult.existe) {
+        // El RFC ya existe, usar su ID original
+        idCliente = verifResult.idCliente;
       } else {
-        alert('Error: ' + result.message);
+        // Cliente completamente nuevo, generar ID
+        idCliente = await obtenerNuevoID();
+        if (!idCliente) return;
       }
-    } catch (e) {
-      alert('Error de conexión');
+    } catch (err) {
+      alert('Error al verificar RFC: ' + err.message);
+      return;
     }
-  });
+  }
+  
+  const datos = {
+    action: 'guardar',
+    tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
+    idCliente: idCliente,
+    rfc: rfc,
+    nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
+    razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
+    representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
+    lugarFecha: document.getElementById('clientLugarFecha').value,
+    regimen: document.getElementById('clientRegimen').value,
+    cp: document.getElementById('clientCP').value,
+    usoCFDI: document.getElementById('clientUsoCFDI').value,
+    formaPago: document.getElementById('clientFormaPago').value,
+    metodoPago: document.getElementById('clientMetodoPago').value,
+    correo: document.getElementById('clientCorreo').value.toLowerCase().trim(),
+    status: document.getElementById('clientStatus').value,
+    fechaGuardado: new Date().toISOString()
+  };
+  
+  try {
+    const res = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+    const result = await res.json();
+    
+    if (result.result === 'success') {
+      const mensaje = result.esActualizacion 
+        ? 'Cliente actualizado correctamente. ID conservado: ' + idCliente
+        : 'Cliente guardado correctamente. ID: ' + idCliente;
+      alert(mensaje);
+      cerrarModal('modalCliente');
+      cargarClientes();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (e) {
+    alert('Error de conexión');
+  }
+});
 
   function abrirModalAgregar() {
     document.getElementById('modalTitle').textContent = 'Agregar Cliente';
