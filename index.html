@@ -3,13 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manifestación - Grupo SIBRÜ</title>
+<title>Manifestación y Alta de Cliente - Grupo SIBRÜ</title>
 <style>
   :root {
     --verde-sibru: #6BAE3E;
+    --verde-banda: #007A3D;
     --rojo-sibru: #D94F3D;
     --negro: #1a1a1a;
     --gris-texto: #333333;
+    --gris-claro: #f5f5f5;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +26,7 @@
 
   /* ============ FORMULARIO ============ */
   .contenedor-formulario {
-    max-width: 600px;
+    max-width: 700px;
     margin: 0 auto 30px auto;
     background: white;
     padding: 35px;
@@ -33,7 +35,6 @@
     border-top: 5px solid var(--verde-sibru);
   }
 
-  /* HERO */
   .hero-logo {
     text-align: center;
     margin-bottom: 20px;
@@ -56,14 +57,13 @@
     margin-bottom: 25px;
   }
 
-  /* Selector de tipo de persona */
   .selector-tipo {
     display: flex;
     gap: 20px;
     justify-content: center;
     margin-bottom: 25px;
     padding: 15px;
-    background: #f9f9f9;
+    background: var(--gris-claro);
     border-radius: 6px;
   }
 
@@ -84,30 +84,47 @@
     cursor: pointer;
   }
 
-  .opcion-tipo:hover {
-    color: var(--verde-sibru);
+  .opcion-tipo:hover { color: var(--verde-sibru); }
+
+  .seccion-form {
+    margin-top: 25px;
+    padding: 20px;
+    background: var(--gris-claro);
+    border-radius: 6px;
+    border-left: 4px solid var(--verde-sibru);
+  }
+
+  .seccion-form h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--negro);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #ddd;
   }
 
   label {
     display: block;
-    margin-top: 15px;
+    margin-top: 12px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
 
-  input[type="text"] {
+  input[type="text"], input[type="email"], select {
     width: 100%;
     padding: 10px 12px;
     margin-top: 5px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: 0.95rem;
   }
 
-  input[type="text"]:focus {
+  input[type="text"]:focus, input[type="email"]:focus, select:focus {
     border-color: var(--verde-sibru);
     outline: none;
   }
@@ -125,8 +142,28 @@
     font-weight: 600;
   }
 
-  .mensaje-error.visible {
-    display: block;
+  .mensaje-error.visible { display: block; }
+
+  .checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+    color: var(--gris-texto);
+  }
+
+  .checkbox-item input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--verde-sibru);
+    cursor: pointer;
   }
 
   .botones {
@@ -152,19 +189,14 @@
 
   button:hover { opacity: 0.9; }
 
-  .formulario-tipo {
-    display: none;
-  }
+  .formulario-tipo { display: none; }
+  .formulario-tipo.activo { display: block; }
 
-  .formulario-tipo.activo {
-    display: block;
-  }
-
-  /* ============ DOCUMENTO ============ */
+  /* ============ DOCUMENTOS ============ */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
-    margin: 0 auto;
+    margin: 0 auto 30px auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
     display: none;
@@ -172,32 +204,21 @@
     overflow: visible;
   }
 
-  /* BARRAS SUPERIORES */
   .barras-superiores {
     width: 100%;
     display: flex;
     flex-direction: column;
   }
 
-  .barra-verde {
-    width: 100%;
-    height: 14px;
-    background-color: #007A3D;
-  }
+  .barra-verde { width: 100%; height: 14px; background-color: var(--verde-banda); }
+  .barra-naranja { width: 100%; height: 6px; background-color: var(--rojo-sibru); }
 
-  .barra-naranja {
-    width: 100%;
-    height: 6px;
-    background-color: var(--rojo-sibru);
-  }
-
-  /* BOTONES EN PARTE ALTA DEL DOCUMENTO */
   .botones-doc-top {
     padding: 15px 20mm;
     display: flex;
     gap: 10px;
     justify-content: center;
-    background: #f9f9f9;
+    background: var(--gris-claro);
     border-bottom: 1px solid #e0e0e0;
   }
 
@@ -205,6 +226,163 @@
     padding: 10mm 20mm 20mm 20mm;
   }
 
+  /* Header Alta de Cliente */
+  .header-alta {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--verde-sibru);
+  }
+
+  .header-alta-logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .header-alta-logo img {
+    max-height: 60px;
+    width: auto;
+  }
+
+  .header-alta-info h2 {
+    font-size: 14pt;
+    font-weight: 800;
+    color: var(--negro);
+    margin: 0;
+  }
+
+  .header-alta-info p {
+    font-size: 10pt;
+    color: var(--gris-texto);
+    margin: 2px 0 0 0;
+  }
+
+  .header-alta-cliente {
+    text-align: right;
+    font-size: 9pt;
+    color: var(--gris-texto);
+  }
+
+  .header-alta-cliente strong {
+    display: block;
+    color: var(--negro);
+    font-size: 10pt;
+  }
+
+  /* Secciones Alta de Cliente */
+  .seccion-alta {
+    margin-bottom: 12px;
+  }
+
+  .seccion-alta-titulo {
+    background: var(--negro);
+    color: white;
+    padding: 6px 12px;
+    font-size: 9pt;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .seccion-alta-titulo.verde {
+    background: var(--verde-banda);
+  }
+
+  .tabla-alta {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9pt;
+  }
+
+  .tabla-alta td {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    vertical-align: middle;
+  }
+
+  .tabla-alta td.label {
+    font-weight: 600;
+    color: var(--negro);
+    width: 40%;
+    background: var(--gris-claro);
+  }
+
+  .tabla-alta td.valor {
+    color: var(--gris-texto);
+    min-height: 20px;
+  }
+
+  .tabla-alta td.valor.vacio {
+    height: 25px;
+    background: white;
+  }
+
+  .checkbox-doc {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 9pt;
+  }
+
+  .checkbox-doc input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: var(--verde-sibru);
+  }
+
+  .nota-alta {
+    font-size: 8pt;
+    color: #666;
+    font-style: italic;
+    margin-top: 5px;
+  }
+
+  .declaracion-alta {
+    text-align: justify;
+    font-size: 9pt;
+    color: var(--gris-texto);
+    margin: 15px 0;
+    padding: 10px;
+    background: var(--gris-claro);
+    border-left: 3px solid var(--verde-sibru);
+  }
+
+  .firmas-alta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 40px;
+    gap: 30px;
+  }
+
+  .firma-alta-box {
+    flex: 1;
+    text-align: center;
+  }
+
+  .firma-alta-linea {
+    border-top: 1px solid var(--negro);
+    margin-bottom: 8px;
+    padding-top: 8px;
+  }
+
+  .firma-alta-nombre {
+    font-size: 9pt;
+    font-weight: 700;
+    color: var(--negro);
+  }
+
+  .firma-alta-titulo {
+    font-size: 8pt;
+    color: var(--gris-texto);
+    text-transform: uppercase;
+  }
+
+  /* Manifestación estilos */
   .logo-centrado {
     text-align: center;
     margin-bottom: 15px;
@@ -364,21 +542,22 @@
       max-width: 100%;
       height: 279mm;
       overflow: hidden;
+      page-break-after: always;
     }
-    .hoja-documento.no-activo {
-      display: none !important;
-    }
-    .hoja-documento.activo {
-      display: block !important;
+    .hoja-documento:last-child {
+      page-break-after: auto;
     }
     .contenido-documento {
-      padding: 8mm 20mm 15mm 20mm;
+      padding: 8mm 18mm 15mm 18mm;
     }
     .logo-empresa {
       max-height: 140px;
     }
     .firma-seccion {
       margin-top: 50px;
+    }
+    .header-alta-logo img {
+      max-height: 50px;
     }
   }
 </style>
@@ -392,9 +571,8 @@
     <img src="logo.png" alt="Grupo SIBRÜ">
   </div>
 
-  <div class="titulo-formulario">MANIFESTACIÓN ESCRITA</div>
+  <div class="titulo-formulario">Manifestación y Alta de Cliente</div>
 
-  <!-- Selector de tipo de persona -->
   <div class="selector-tipo">
     <label class="opcion-tipo">
       <input type="radio" name="tipoPersona" value="fisica" onchange="cambiarTipoPersona()">
@@ -408,56 +586,171 @@
 
   <!-- FORMULARIO PERSONA FÍSICA -->
   <div class="formulario-tipo" id="formFisica">
-    <label>Lugar y fecha:</label>
-    <input type="text" id="fisicaLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+    
+    <div class="seccion-form">
+      <h3>Datos Generales</h3>
+      <label>Lugar y fecha:</label>
+      <input type="text" id="fisicaLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
 
-    <label>Nombre:</label>
-    <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
+      <label>Nombre:</label>
+      <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
 
-    <label>RFC (13 caracteres):</label>
-    <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="validarRFCFisica()" required>
-    <div class="mensaje-error" id="errorFisicaRFC">El RFC debe tener exactamente 13 caracteres.</div>
+      <label>RFC (13 caracteres):</label>
+      <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="validarRFCFisica()" required>
+      <div class="mensaje-error" id="errorFisicaRFC">El RFC debe tener exactamente 13 caracteres.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos Fiscales</h3>
+      <label>Régimen Fiscal:</label>
+      <input type="text" id="fisicaRegimen" placeholder="Ej. 612 - Personas Físicas con Actividades Empresariales">
+
+      <label>Código Postal del domicilio fiscal:</label>
+      <input type="text" id="fisicaCP" placeholder="Ej. 54740" maxlength="5">
+
+      <label>Uso de CFDI:</label>
+      <input type="text" id="fisicaUsoCFDI" placeholder="Ej. G03 - Gastos en general">
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos para Facturación</h3>
+      <label>Forma de pago:</label>
+      <input type="text" id="fisicaFormaPago" placeholder="Ej. 03 - Transferencia electrónica">
+
+      <label>Método de pago:</label>
+      <input type="text" id="fisicaMetodoPago" placeholder="Ej. PUE - Pago en una sola exhibición">
+
+      <label>Correo para envío de facturas:</label>
+      <input type="email" id="fisicaCorreo" placeholder="Ej. correo@ejemplo.com">
+
+      <label>Confirmación de correo validado (Sí/No):</label>
+      <input type="text" id="fisicaConfirmacionCorreo" placeholder="Sí">
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos Bancarios</h3>
+      <label>Banco:</label>
+      <input type="text" id="fisicaBanco" placeholder="Ej. BBVA">
+
+      <label>CLABE Interbancaria:</label>
+      <input type="text" id="fisicaCLABE" placeholder="Ej. 012345678901234567" maxlength="18">
+
+      <label>Número de cuenta:</label>
+      <input type="text" id="fisicaCuenta" placeholder="Ej. 1234567890">
+
+      <label>Titular de la cuenta:</label>
+      <input type="text" id="fisicaTitularCuenta" placeholder="Ej. Juan Pérez García">
+      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre registrado en el RFC.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Documentación Obligatoria</h3>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" id="fisicaDocConstancia"> Constancia de Situación Fiscal (mes actual)</label>
+        <label class="checkbox-item"><input type="checkbox" id="fisicaDocOpinion"> Opinión de cumplimiento positivo</label>
+        <label class="checkbox-item"><input type="checkbox" id="fisicaDocComprobante"> Comprobante de domicilio vigente</label>
+        <label class="checkbox-item"><input type="checkbox" id="fisicaDocIdentificacion"> Identificación oficial vigente</label>
+      </div>
+    </div>
 
     <div class="botones">
-      <button class="btn-generar" onclick="generarDocumentoFisica()">Generar Documento</button>
+      <button class="btn-generar" onclick="generarDocumentosFisica()">Generar Documentos</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
   </div>
 
   <!-- FORMULARIO PERSONA MORAL -->
   <div class="formulario-tipo" id="formMoral">
-    <label>Lugar y fecha:</label>
-    <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+    
+    <div class="seccion-form">
+      <h3>Datos Generales</h3>
+      <label>Lugar y fecha:</label>
+      <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
 
-    <label>Nombre del Representante Legal:</label>
-    <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required>
+      <label>Nombre del Representante Legal:</label>
+      <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required>
 
-    <label>Razón Social:</label>
-    <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required>
+      <label>Razón Social:</label>
+      <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required>
 
-    <label>RFC (12 caracteres):</label>
-    <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="validarRFCMoral()" required>
-    <div class="mensaje-error" id="errorMoralRFC">El RFC debe tener exactamente 12 caracteres.</div>
+      <label>RFC (12 caracteres):</label>
+      <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="validarRFCMoral()" required>
+      <div class="mensaje-error" id="errorMoralRFC">El RFC debe tener exactamente 12 caracteres.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos Fiscales</h3>
+      <label>Régimen Fiscal:</label>
+      <input type="text" id="moralRegimen" placeholder="Ej. 601 - General de Ley Personas Morales">
+
+      <label>Código Postal del domicilio fiscal:</label>
+      <input type="text" id="moralCP" placeholder="Ej. 54740" maxlength="5">
+
+      <label>Uso de CFDI:</label>
+      <input type="text" id="moralUsoCFDI" placeholder="Ej. G03 - Gastos en general">
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos para Facturación</h3>
+      <label>Forma de pago:</label>
+      <input type="text" id="moralFormaPago" placeholder="Ej. 03 - Transferencia electrónica">
+
+      <label>Método de pago:</label>
+      <input type="text" id="moralMetodoPago" placeholder="Ej. PUE - Pago en una sola exhibición">
+
+      <label>Correo para envío de facturas:</label>
+      <input type="email" id="moralCorreo" placeholder="Ej. correo@empresa.com">
+
+      <label>Confirmación de correo validado (Sí/No):</label>
+      <input type="text" id="moralConfirmacionCorreo" placeholder="Sí">
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos Bancarios</h3>
+      <label>Banco:</label>
+      <input type="text" id="moralBanco" placeholder="Ej. BBVA">
+
+      <label>CLABE Interbancaria:</label>
+      <input type="text" id="moralCLABE" placeholder="Ej. 012345678901234567" maxlength="18">
+
+      <label>Número de cuenta:</label>
+      <input type="text" id="moralCuenta" placeholder="Ej. 1234567890">
+
+      <label>Titular de la cuenta:</label>
+      <input type="text" id="moralTitularCuenta" placeholder="Ej. EMPRESA SA DE CV">
+      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con la razón social registrada en el RFC.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Documentación Obligatoria</h3>
+      <div class="checkbox-group">
+        <label class="checkbox-item"><input type="checkbox" id="moralDocConstancia"> Constancia de Situación Fiscal (mes actual)</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocOpinion"> Opinión de cumplimiento positivo</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocComprobante"> Comprobante de domicilio vigente</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocActa"> Acta constitutiva (si aplica)</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocPoder"> Poder notarial del representante legal (si aplica)</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocIdentificacion"> Identificación oficial vigente</label>
+        <label class="checkbox-item"><input type="checkbox" id="moralDocCaratula"> Carátula de estado de cuenta (CLABE visible y mismo RFC)</label>
+      </div>
+    </div>
 
     <div class="botones">
-      <button class="btn-generar" onclick="generarDocumentoMoral()">Generar Documento</button>
+      <button class="btn-generar" onclick="generarDocumentosMoral()">Generar Documentos</button>
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
   </div>
 </div>
 
-<!-- DOCUMENTO PERSONA FÍSICA -->
-<div class="hoja-documento" id="documentoFisica">
+<!-- DOCUMENTO 1: MANIFESTACIÓN FÍSICA -->
+<div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores">
     <div class="barra-verde"></div>
     <div class="barra-naranja"></div>
   </div>
-
   <div class="botones-doc-top no-print">
-    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
-    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+    <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumentos()">Editar Datos</button>
   </div>
-
   <div class="contenido-documento">
     <div class="logo-centrado">
       <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
@@ -465,108 +758,247 @@
     <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
     <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
     <hr class="linea-verde">
-
-    <div class="lugar-fecha">
-      Lugar y fecha: <span class="linea-lf" id="docFisicaLugarFecha"></span>
-    </div>
-
+    <div class="lugar-fecha">Lugar y fecha: <span class="linea-lf" id="mFisicaLugarFecha"></span></div>
     <div class="destinatario">A QUIEN CORRESPONDA:</div>
-
-    <div class="parrafo">
-      Quien suscribe, <span class="dato-linea largo" id="docFisicaNombre"></span>, con RFC <span class="dato-linea corto" id="docFisicaRFC"></span>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
-    </div>
-
-    <div class="parrafo">
-      <strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, no me encuentro incluido en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.
-    </div>
-
-    <div class="parrafo">
-      <strong>SEGUNDO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.
-    </div>
-
-    <div class="parrafo">
-      <strong>TERCERO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.
-    </div>
-
-    <div class="parrafo">
-      <strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en mi poder y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.
-    </div>
-
-    <div class="cierre">
-      Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.
-    </div>
-
+    <div class="parrafo">Quien suscribe, <span class="dato-linea largo" id="mFisicaNombre"></span>, con RFC <span class="dato-linea corto" id="mFisicaRFC"></span>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>
+    <div class="parrafo"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, no me encuentro incluido en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</div>
+    <div class="parrafo"><strong>SEGUNDO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</div>
+    <div class="parrafo"><strong>TERCERO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</div>
+    <div class="parrafo"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en mi poder y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</div>
+    <div class="cierre">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</div>
     <div class="firma-seccion">
       <div class="firma-atentamente">ATENTAMENTE</div>
       <div class="linea-firma"></div>
-      <div class="nombre-firma" id="docFisicaFirmaNombre"></div>
+      <div class="nombre-firma" id="mFisicaFirmaNombre"></div>
+    </div>
+    <div class="footer-documento">GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740</div>
+  </div>
+</div>
+
+<!-- DOCUMENTO 1: MANIFESTACIÓN MORAL -->
+<div class="hoja-documento" id="docManifestacionMoral">
+  <div class="barras-superiores">
+    <div class="barra-verde"></div>
+    <div class="barra-naranja"></div>
+  </div>
+  <div class="botones-doc-top no-print">
+    <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumentos()">Editar Datos</button>
+  </div>
+  <div class="contenido-documento">
+    <div class="logo-centrado">
+      <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
+    </div>
+    <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
+    <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
+    <hr class="linea-verde">
+    <div class="lugar-fecha">Lugar y fecha: <span class="linea-lf" id="mMoralLugarFecha"></span></div>
+    <div class="destinatario">A QUIEN CORRESPONDA:</div>
+    <div class="parrafo">Quien suscribe, <span class="dato-linea largo" id="mMoralRepresentante"></span>, en mi carácter de representante legal de <span class="dato-linea largo" id="mMoralRazonSocial"></span>, con RFC <span class="dato-linea corto" id="mMoralRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>
+    <div class="parrafo"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, mi representada no se encuentra incluida en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</div>
+    <div class="parrafo"><strong>SEGUNDO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</div>
+    <div class="parrafo"><strong>TERCERO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</div>
+    <div class="parrafo"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en poder de mi representada y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</div>
+    <div class="cierre">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</div>
+    <div class="firma-seccion">
+      <div class="firma-atentamente">ATENTAMENTE</div>
+      <div class="linea-firma"></div>
+      <div class="nombre-firma" id="mMoralFirmaNombre"></div>
+      <div class="cargo-firma">Representante Legal</div>
+    </div>
+    <div class="footer-documento">GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740</div>
+  </div>
+</div>
+
+<!-- DOCUMENTO 2: ALTA DE CLIENTE FÍSICA -->
+<div class="hoja-documento" id="docAltaFisica">
+  <div class="barras-superiores">
+    <div class="barra-verde"></div>
+    <div class="barra-naranja"></div>
+  </div>
+  <div class="botones-doc-top no-print">
+    <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumentos()">Editar Datos</button>
+  </div>
+  <div class="contenido-documento">
+    <div class="header-alta">
+      <div class="header-alta-logo">
+        <img src="logo.png" alt="Grupo SIBRÜ">
+        <div class="header-alta-info">
+          <h2>GRUPO SIBRÜ</h2>
+          <p>ISRAEL SILVA ZAMORA</p>
+        </div>
+      </div>
+      <div class="header-alta-cliente">
+        <strong>ALTA DE CLIENTE</strong>
+        <span>N° DE CLIENTE: ____________</span>
+      </div>
     </div>
 
-    <div class="footer-documento">
-      GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Documentación Obligatoria para Alta (Marcar y Adjuntar)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocConstancia"> Constancia de Situación Fiscal (mes actual)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocOpinion"> Opinión de cumplimiento positivo</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocComprobante"> Comprobante de domicilio vigente</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocIdentificacion"> Identificación oficial vigente</div>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos Fiscales (Conforme a Constancia de Situación Fiscal)</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Nombre</td><td class="valor" id="aFisicaNombre"></td></tr>
+        <tr><td class="label">RFC (13 persona moral / 13 persona física)</td><td class="valor" id="aFisicaRFC"></td></tr>
+        <tr><td class="label">Régimen Fiscal</td><td class="valor" id="aFisicaRegimen"></td></tr>
+        <tr><td class="label">Código Postal del domicilio fiscal</td><td class="valor" id="aFisicaCP"></td></tr>
+        <tr><td class="label">Uso de CFDI</td><td class="valor" id="aFisicaUsoCFDI"></td></tr>
+      </table>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Datos para Facturación</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Forma de pago</td><td class="valor" id="aFisicaFormaPago"></td></tr>
+        <tr><td class="label">Método de pago</td><td class="valor" id="aFisicaMetodoPago"></td></tr>
+        <tr><td class="label">Correo para envío de facturas</td><td class="valor" id="aFisicaCorreo"></td></tr>
+        <tr><td class="label">Confirmación de correo validado (Sí/No)</td><td class="valor" id="aFisicaConfirmacionCorreo"></td></tr>
+      </table>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Datos Bancarios</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Banco</td><td class="valor" id="aFisicaBanco"></td></tr>
+        <tr><td class="label">CLABE Interbancaria</td><td class="valor" id="aFisicaCLABE"></td></tr>
+        <tr><td class="label">Número de cuenta</td><td class="valor" id="aFisicaCuenta"></td></tr>
+        <tr><td class="label">Titular de la cuenta</td><td class="valor" id="aFisicaTitularCuenta"></td></tr>
+      </table>
+      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre o razón social registrada en el RFC.</div>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos de Crédito (Espacio exclusivo para Grupo)</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Línea de crédito solicitada</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Días de crédito solicitados</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Fecha de autorización</td><td class="valor vacio"></td></tr>
+      </table>
+    </div>
+
+    <div class="declaracion-alta">
+      <strong>DECLARACIÓN</strong><br>
+      El cliente declara que la información y documentación proporcionada es verídica, actual y corresponde a su situación fiscal vigente. La empresa se reserva el derecho de verificar la información proporcionada.
+    </div>
+
+    <div class="firmas-alta">
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre" id="aFisicaFirmaCliente"></div>
+        <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
+      </div>
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre">ISRAEL SILVA ZAMORA</div>
+        <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL VENDEDOR</div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- DOCUMENTO PERSONA MORAL -->
-<div class="hoja-documento" id="documentoMoral">
+<!-- DOCUMENTO 2: ALTA DE CLIENTE MORAL -->
+<div class="hoja-documento" id="docAltaMoral">
   <div class="barras-superiores">
     <div class="barra-verde"></div>
     <div class="barra-naranja"></div>
   </div>
-
   <div class="botones-doc-top no-print">
-    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
-    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+    <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumentos()">Editar Datos</button>
   </div>
-
   <div class="contenido-documento">
-    <div class="logo-centrado">
-      <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
-    </div>
-    <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
-    <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
-    <hr class="linea-verde">
-
-    <div class="lugar-fecha">
-      Lugar y fecha: <span class="linea-lf" id="docMoralLugarFecha"></span>
-    </div>
-
-    <div class="destinatario">A QUIEN CORRESPONDA:</div>
-
-    <div class="parrafo">
-      Quien suscribe, <span class="dato-linea largo" id="docMoralRepresentante"></span>, en mi carácter de representante legal de <span class="dato-linea largo" id="docMoralRazonSocial"></span>, con RFC <span class="dato-linea corto" id="docMoralRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
+    <div class="header-alta">
+      <div class="header-alta-logo">
+        <img src="logo.png" alt="Grupo SIBRÜ">
+        <div class="header-alta-info">
+          <h2>GRUPO SIBRÜ</h2>
+          <p>ISRAEL SILVA ZAMORA</p>
+        </div>
+      </div>
+      <div class="header-alta-cliente">
+        <strong>ALTA DE CLIENTE</strong>
+        <span>N° DE CLIENTE: ____________</span>
+      </div>
     </div>
 
-    <div class="parrafo">
-      <strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, mi representada no se encuentra incluida en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Documentación Obligatoria para Alta (Marcar y Adjuntar)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocConstancia"> Constancia de Situación Fiscal (mes actual)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocOpinion"> Opinión de cumplimiento positivo</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocComprobante"> Comprobante de domicilio vigente</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocActa"> Acta constitutiva (si aplica)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocPoder"> Poder notarial del representante legal (si aplica)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocIdentificacion"> Identificación oficial vigente</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocCaratula"> Carátula de estado de cuenta (CLABE visible y mismo RFC)</div>
     </div>
 
-    <div class="parrafo">
-      <strong>SEGUNDO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos Fiscales (Conforme a Constancia de Situación Fiscal)</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Nombre o Razón Social</td><td class="valor" id="aMoralRazonSocial"></td></tr>
+        <tr><td class="label">RFC (12 persona moral / 13 persona física)</td><td class="valor" id="aMoralRFC"></td></tr>
+        <tr><td class="label">Régimen Fiscal</td><td class="valor" id="aMoralRegimen"></td></tr>
+        <tr><td class="label">Código Postal del domicilio fiscal</td><td class="valor" id="aMoralCP"></td></tr>
+        <tr><td class="label">Uso de CFDI</td><td class="valor" id="aMoralUsoCFDI"></td></tr>
+      </table>
     </div>
 
-    <div class="parrafo">
-      <strong>TERCERO.</strong> Que mi representada no se encuentra incluida en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Datos para Facturación</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Forma de pago</td><td class="valor" id="aMoralFormaPago"></td></tr>
+        <tr><td class="label">Método de pago</td><td class="valor" id="aMoralMetodoPago"></td></tr>
+        <tr><td class="label">Correo para envío de facturas</td><td class="valor" id="aMoralCorreo"></td></tr>
+        <tr><td class="label">Confirmación de correo validado (Sí/No)</td><td class="valor" id="aMoralConfirmacionCorreo"></td></tr>
+      </table>
     </div>
 
-    <div class="parrafo">
-      <strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en poder de mi representada y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Datos Bancarios</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Banco</td><td class="valor" id="aMoralBanco"></td></tr>
+        <tr><td class="label">CLABE Interbancaria</td><td class="valor" id="aMoralCLABE"></td></tr>
+        <tr><td class="label">Número de cuenta</td><td class="valor" id="aMoralCuenta"></td></tr>
+        <tr><td class="label">Titular de la cuenta</td><td class="valor" id="aMoralTitularCuenta"></td></tr>
+      </table>
+      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre o razón social registrada en el RFC.</div>
     </div>
 
-    <div class="cierre">
-      Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos de Crédito (Espacio exclusivo para Grupo)</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Línea de crédito solicitada</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Días de crédito solicitados</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Fecha de autorización</td><td class="valor vacio"></td></tr>
+      </table>
     </div>
 
-    <div class="firma-seccion">
-      <div class="firma-atentamente">ATENTAMENTE</div>
-      <div class="linea-firma"></div>
-      <div class="nombre-firma" id="docMoralFirmaNombre"></div>
-      <div class="cargo-firma">Representante Legal</div>
+    <div class="declaracion-alta">
+      <strong>DECLARACIÓN</strong><br>
+      El cliente declara que la información y documentación proporcionada es verídica, actual y corresponde a su situación fiscal vigente. La empresa se reserva el derecho de verificar la información proporcionada.
     </div>
 
-    <div class="footer-documento">
-      GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+    <div class="firmas-alta">
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre" id="aMoralFirmaCliente"></div>
+        <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
+      </div>
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre">ISRAEL SILVA ZAMORA</div>
+        <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL VENDEDOR</div>
+      </div>
     </div>
   </div>
 </div>
@@ -582,10 +1014,8 @@
         break;
       }
     }
-
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-
     if (tipoSeleccionado === 'fisica') {
       document.getElementById('formFisica').classList.add('activo');
     } else if (tipoSeleccionado === 'moral') {
@@ -598,7 +1028,6 @@
     const error = document.getElementById('errorFisicaRFC');
     const valor = input.value.trim().toUpperCase();
     input.value = valor;
-
     if (valor.length > 0 && valor.length !== 13) {
       input.classList.add('error');
       error.classList.add('visible');
@@ -613,7 +1042,6 @@
     const error = document.getElementById('errorMoralRFC');
     const valor = input.value.trim().toUpperCase();
     input.value = valor;
-
     if (valor.length > 0 && valor.length !== 12) {
       input.classList.add('error');
       error.classList.add('visible');
@@ -623,115 +1051,141 @@
     }
   }
 
-  function generarDocumentoFisica() {
+  function generarDocumentosFisica() {
     const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
     const nombre = document.getElementById('fisicaNombre').value.trim();
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
 
     if (!lugarFecha || !nombre || !rfc) {
-      alert('Por favor, complete todos los campos.');
+      alert('Por favor, complete los campos obligatorios: Lugar y fecha, Nombre y RFC.');
       return;
     }
-
     if (rfc.length !== 13) {
       alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
-      document.getElementById('fisicaRFC').classList.add('error');
-      document.getElementById('errorFisicaRFC').classList.add('visible');
       return;
     }
 
-    document.getElementById('docFisicaLugarFecha').textContent = lugarFecha;
-    document.getElementById('docFisicaNombre').textContent = nombre;
-    document.getElementById('docFisicaRFC').textContent = rfc;
-    document.getElementById('docFisicaFirmaNombre').textContent = nombre;
+    // Manifestación
+    document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
+    document.getElementById('mFisicaNombre').textContent = nombre;
+    document.getElementById('mFisicaRFC').textContent = rfc;
+    document.getElementById('mFisicaFirmaNombre').textContent = nombre;
 
+    // Alta de Cliente
+    document.getElementById('aFisicaNombre').textContent = nombre;
+    document.getElementById('aFisicaRFC').textContent = rfc;
+    document.getElementById('aFisicaRegimen').textContent = document.getElementById('fisicaRegimen').value.trim();
+    document.getElementById('aFisicaCP').textContent = document.getElementById('fisicaCP').value.trim();
+    document.getElementById('aFisicaUsoCFDI').textContent = document.getElementById('fisicaUsoCFDI').value.trim();
+    document.getElementById('aFisicaFormaPago').textContent = document.getElementById('fisicaFormaPago').value.trim();
+    document.getElementById('aFisicaMetodoPago').textContent = document.getElementById('fisicaMetodoPago').value.trim();
+    document.getElementById('aFisicaCorreo').textContent = document.getElementById('fisicaCorreo').value.trim();
+    document.getElementById('aFisicaConfirmacionCorreo').textContent = document.getElementById('fisicaConfirmacionCorreo').value.trim();
+    document.getElementById('aFisicaBanco').textContent = document.getElementById('fisicaBanco').value.trim();
+    document.getElementById('aFisicaCLABE').textContent = document.getElementById('fisicaCLABE').value.trim();
+    document.getElementById('aFisicaCuenta').textContent = document.getElementById('fisicaCuenta').value.trim();
+    document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
+    document.getElementById('aFisicaFirmaCliente').textContent = nombre;
+
+    // Sincronizar checkboxes
+    document.getElementById('aFisicaDocConstancia').checked = document.getElementById('fisicaDocConstancia').checked;
+    document.getElementById('aFisicaDocOpinion').checked = document.getElementById('fisicaDocOpinion').checked;
+    document.getElementById('aFisicaDocComprobante').checked = document.getElementById('fisicaDocComprobante').checked;
+    document.getElementById('aFisicaDocIdentificacion').checked = document.getElementById('fisicaDocIdentificacion').checked;
+
+    // Mostrar documentos
     document.getElementById('formulario').style.display = 'none';
-    document.getElementById('documentoFisica').style.display = 'block';
-    document.getElementById('documentoFisica').classList.add('activo');
-    document.getElementById('documentoMoral').classList.remove('activo');
-    document.getElementById('documentoMoral').style.display = 'none';
+    document.getElementById('docManifestacionFisica').style.display = 'block';
+    document.getElementById('docAltaFisica').style.display = 'block';
+    document.getElementById('docManifestacionMoral').style.display = 'none';
+    document.getElementById('docAltaMoral').style.display = 'none';
     window.scrollTo(0, 0);
   }
 
-  function generarDocumentoMoral() {
+  function generarDocumentosMoral() {
     const lugarFecha = document.getElementById('moralLugarFecha').value.trim();
     const representante = document.getElementById('moralRepresentante').value.trim();
     const razonSocial = document.getElementById('moralRazonSocial').value.trim();
     const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
 
     if (!lugarFecha || !representante || !razonSocial || !rfc) {
-      alert('Por favor, complete todos los campos.');
+      alert('Por favor, complete los campos obligatorios: Lugar y fecha, Representante, Razón Social y RFC.');
       return;
     }
-
     if (rfc.length !== 12) {
       alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
-      document.getElementById('moralRFC').classList.add('error');
-      document.getElementById('errorMoralRFC').classList.add('visible');
       return;
     }
 
-    document.getElementById('docMoralLugarFecha').textContent = lugarFecha;
-    document.getElementById('docMoralRepresentante').textContent = representante;
-    document.getElementById('docMoralRazonSocial').textContent = razonSocial;
-    document.getElementById('docMoralRFC').textContent = rfc;
-    document.getElementById('docMoralFirmaNombre').textContent = representante;
+    // Manifestación
+    document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
+    document.getElementById('mMoralRepresentante').textContent = representante;
+    document.getElementById('mMoralRazonSocial').textContent = razonSocial;
+    document.getElementById('mMoralRFC').textContent = rfc;
+    document.getElementById('mMoralFirmaNombre').textContent = representante;
 
+    // Alta de Cliente
+    document.getElementById('aMoralRazonSocial').textContent = razonSocial;
+    document.getElementById('aMoralRFC').textContent = rfc;
+    document.getElementById('aMoralRegimen').textContent = document.getElementById('moralRegimen').value.trim();
+    document.getElementById('aMoralCP').textContent = document.getElementById('moralCP').value.trim();
+    document.getElementById('aMoralUsoCFDI').textContent = document.getElementById('moralUsoCFDI').value.trim();
+    document.getElementById('aMoralFormaPago').textContent = document.getElementById('moralFormaPago').value.trim();
+    document.getElementById('aMoralMetodoPago').textContent = document.getElementById('moralMetodoPago').value.trim();
+    document.getElementById('aMoralCorreo').textContent = document.getElementById('moralCorreo').value.trim();
+    document.getElementById('aMoralConfirmacionCorreo').textContent = document.getElementById('moralConfirmacionCorreo').value.trim();
+    document.getElementById('aMoralBanco').textContent = document.getElementById('moralBanco').value.trim();
+    document.getElementById('aMoralCLABE').textContent = document.getElementById('moralCLABE').value.trim();
+    document.getElementById('aMoralCuenta').textContent = document.getElementById('moralCuenta').value.trim();
+    document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
+    document.getElementById('aMoralFirmaCliente').textContent = representante;
+
+    // Sincronizar checkboxes
+    document.getElementById('aMoralDocConstancia').checked = document.getElementById('moralDocConstancia').checked;
+    document.getElementById('aMoralDocOpinion').checked = document.getElementById('moralDocOpinion').checked;
+    document.getElementById('aMoralDocComprobante').checked = document.getElementById('moralDocComprobante').checked;
+    document.getElementById('aMoralDocActa').checked = document.getElementById('moralDocActa').checked;
+    document.getElementById('aMoralDocPoder').checked = document.getElementById('moralDocPoder').checked;
+    document.getElementById('aMoralDocIdentificacion').checked = document.getElementById('moralDocIdentificacion').checked;
+    document.getElementById('aMoralDocCaratula').checked = document.getElementById('moralDocCaratula').checked;
+
+    // Mostrar documentos
     document.getElementById('formulario').style.display = 'none';
-    document.getElementById('documentoMoral').style.display = 'block';
-    document.getElementById('documentoMoral').classList.add('activo');
-    document.getElementById('documentoFisica').classList.remove('activo');
-    document.getElementById('documentoFisica').style.display = 'none';
+    document.getElementById('docManifestacionMoral').style.display = 'block';
+    document.getElementById('docAltaMoral').style.display = 'block';
+    document.getElementById('docManifestacionFisica').style.display = 'none';
+    document.getElementById('docAltaFisica').style.display = 'none';
     window.scrollTo(0, 0);
   }
 
-  function imprimirDocumento() {
-    const docFisica = document.getElementById('documentoFisica');
-    const docMoral = document.getElementById('documentoMoral');
-    
-    if (docFisica.classList.contains('activo')) {
-      docFisica.classList.add('activo');
-      docMoral.classList.add('no-activo');
-    } else if (docMoral.classList.contains('activo')) {
-      docMoral.classList.add('activo');
-      docFisica.classList.add('no-activo');
-    }
-    
+  function imprimirDocumentos() {
     window.print();
   }
 
-  function editarDocumento() {
+  function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
-    document.getElementById('documentoFisica').style.display = 'none';
-    document.getElementById('documentoMoral').style.display = 'none';
-    document.getElementById('documentoFisica').classList.remove('activo', 'no-activo');
-    document.getElementById('documentoMoral').classList.remove('activo', 'no-activo');
+    document.getElementById('docManifestacionFisica').style.display = 'none';
+    document.getElementById('docAltaFisica').style.display = 'none';
+    document.getElementById('docManifestacionMoral').style.display = 'none';
+    document.getElementById('docAltaMoral').style.display = 'none';
     window.scrollTo(0, 0);
   }
 
   function borrarFormulario() {
-    document.getElementById('fisicaLugarFecha').value = '';
-    document.getElementById('fisicaNombre').value = '';
-    document.getElementById('fisicaRFC').value = '';
-    document.getElementById('moralLugarFecha').value = '';
-    document.getElementById('moralRepresentante').value = '';
-    document.getElementById('moralRazonSocial').value = '';
-    document.getElementById('moralRFC').value = '';
-
+    const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
+    inputs.forEach(input => input.value = '');
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
     document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     document.querySelectorAll('.mensaje-error.visible').forEach(el => el.classList.remove('visible'));
-
     const radios = document.getElementsByName('tipoPersona');
     radios.forEach(radio => radio.checked = false);
-
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-
-    document.getElementById('documentoFisica').style.display = 'none';
-    document.getElementById('documentoMoral').style.display = 'none';
-    document.getElementById('documentoFisica').classList.remove('activo', 'no-activo');
-    document.getElementById('documentoMoral').classList.remove('activo', 'no-activo');
-
+    document.getElementById('docManifestacionFisica').style.display = 'none';
+    document.getElementById('docAltaFisica').style.display = 'none';
+    document.getElementById('docManifestacionMoral').style.display = 'none';
+    document.getElementById('docAltaMoral').style.display = 'none';
     document.getElementById('formulario').style.display = 'block';
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
