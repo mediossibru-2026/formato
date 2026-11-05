@@ -148,6 +148,7 @@
   .btn-generar { background: var(--verde-sibru); color: white; }
   .btn-imprimir { background: var(--negro); color: white; }
   .btn-editar { background: #e0e0e0; color: var(--negro); }
+  .btn-borrar { background: var(--rojo-sibru); color: white; }
 
   button:hover { opacity: 0.9; }
 
@@ -162,7 +163,7 @@
   /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
-    min-height: 279mm;
+    height: 279mm;
     margin: 0 auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
@@ -335,11 +336,18 @@
       display: none !important;
     }
     .hoja-documento {
-      display: block !important;
       box-shadow: none;
       margin: 0;
       width: 100%;
       max-width: 100%;
+      height: 279mm;
+      overflow: hidden;
+    }
+    .hoja-documento.no-activo {
+      display: none !important;
+    }
+    .hoja-documento.activo {
+      display: block !important;
     }
   }
 </style>
@@ -381,6 +389,7 @@
 
     <div class="botones">
       <button class="btn-generar" onclick="generarDocumentoFisica()">Generar Documento</button>
+      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
   </div>
 
@@ -401,6 +410,7 @@
 
     <div class="botones">
       <button class="btn-generar" onclick="generarDocumentoMoral()">Generar Documento</button>
+      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
     </div>
   </div>
 </div>
@@ -457,7 +467,7 @@
   </div>
 
   <div class="botones-doc no-print">
-    <button class="btn-imprimir" onclick="window.print()">Imprimir / Guardar como PDF</button>
+    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
     <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
   </div>
 </div>
@@ -515,7 +525,7 @@
   </div>
 
   <div class="botones-doc no-print">
-    <button class="btn-imprimir" onclick="window.print()">Imprimir / Guardar como PDF</button>
+    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
     <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
   </div>
 </div>
@@ -596,6 +606,9 @@
 
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('documentoFisica').style.display = 'block';
+    document.getElementById('documentoFisica').classList.add('activo');
+    document.getElementById('documentoMoral').classList.remove('activo');
+    document.getElementById('documentoMoral').style.display = 'none';
     window.scrollTo(0, 0);
   }
 
@@ -625,13 +638,68 @@
 
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('documentoMoral').style.display = 'block';
+    document.getElementById('documentoMoral').classList.add('activo');
+    document.getElementById('documentoFisica').classList.remove('activo');
+    document.getElementById('documentoFisica').style.display = 'none';
     window.scrollTo(0, 0);
+  }
+
+  function imprimirDocumento() {
+    // Asegurar que solo el documento activo se imprima
+    const docFisica = document.getElementById('documentoFisica');
+    const docMoral = document.getElementById('documentoMoral');
+    
+    if (docFisica.classList.contains('activo')) {
+      docFisica.classList.add('activo');
+      docMoral.classList.add('no-activo');
+    } else if (docMoral.classList.contains('activo')) {
+      docMoral.classList.add('activo');
+      docFisica.classList.add('no-activo');
+    }
+    
+    window.print();
   }
 
   function editarDocumento() {
     document.getElementById('formulario').style.display = 'block';
     document.getElementById('documentoFisica').style.display = 'none';
     document.getElementById('documentoMoral').style.display = 'none';
+    document.getElementById('documentoFisica').classList.remove('activo', 'no-activo');
+    document.getElementById('documentoMoral').classList.remove('activo', 'no-activo');
+    window.scrollTo(0, 0);
+  }
+
+  function borrarFormulario() {
+    // Limpiar todos los inputs
+    document.getElementById('fisicaLugarFecha').value = '';
+    document.getElementById('fisicaNombre').value = '';
+    document.getElementById('fisicaRFC').value = '';
+    document.getElementById('moralLugarFecha').value = '';
+    document.getElementById('moralRepresentante').value = '';
+    document.getElementById('moralRazonSocial').value = '';
+    document.getElementById('moralRFC').value = '';
+
+    // Quitar errores
+    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('.mensaje-error.visible').forEach(el => el.classList.remove('visible'));
+
+    // Desmarcar radio buttons
+    const radios = document.getElementsByName('tipoPersona');
+    radios.forEach(radio => radio.checked = false);
+
+    // Ocultar formularios tipo
+    document.getElementById('formFisica').classList.remove('activo');
+    document.getElementById('formMoral').classList.remove('activo');
+
+    // Ocultar documentos
+    document.getElementById('documentoFisica').style.display = 'none';
+    document.getElementById('documentoMoral').style.display = 'none';
+    document.getElementById('documentoFisica').classList.remove('activo', 'no-activo');
+    document.getElementById('documentoMoral').classList.remove('activo', 'no-activo');
+
+    // Mostrar formulario principal
+    document.getElementById('formulario').style.display = 'block';
+    tipoSeleccionado = null;
     window.scrollTo(0, 0);
   }
 </script>
