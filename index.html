@@ -33,7 +33,7 @@
     border-top: 5px solid var(--verde-sibru);
   }
 
-  /* HERO LOGO EN FORMULARIO */
+  /* HERO */
   .hero-logo {
     text-align: center;
     margin-bottom: 20px;
@@ -46,12 +46,46 @@
     width: auto;
   }
 
-  .contenedor-formulario h2 {
-    margin-top: 0;
-    color: var(--negro);
-    font-size: 1.4rem;
+  .titulo-formulario {
     text-align: center;
-    font-weight: 700;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--negro);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 25px;
+  }
+
+  /* Selector de tipo de persona */
+  .selector-tipo {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 6px;
+  }
+
+  .opcion-tipo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--negro);
+  }
+
+  .opcion-tipo input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--verde-sibru);
+    cursor: pointer;
+  }
+
+  .opcion-tipo:hover {
+    color: var(--verde-sibru);
   }
 
   label {
@@ -64,7 +98,7 @@
     letter-spacing: 0.5px;
   }
 
-  input[type="text"], input[type="date"] {
+  input[type="text"] {
     width: 100%;
     padding: 10px 12px;
     margin-top: 5px;
@@ -73,9 +107,26 @@
     font-size: 1rem;
   }
 
-  input[type="text"]:focus, input[type="date"]:focus {
+  input[type="text"]:focus {
     border-color: var(--verde-sibru);
     outline: none;
+  }
+
+  input[type="text"].error {
+    border-color: var(--rojo-sibru);
+    background: #fff5f5;
+  }
+
+  .mensaje-error {
+    color: var(--rojo-sibru);
+    font-size: 0.8rem;
+    margin-top: 4px;
+    display: none;
+    font-weight: 600;
+  }
+
+  .mensaje-error.visible {
+    display: block;
   }
 
   .botones {
@@ -100,6 +151,14 @@
 
   button:hover { opacity: 0.9; }
 
+  .formulario-tipo {
+    display: none;
+  }
+
+  .formulario-tipo.activo {
+    display: block;
+  }
+
   /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
@@ -116,7 +175,6 @@
     padding: 15mm 20mm 25mm 20mm;
   }
 
-  /* Logo centrado */
   .logo-centrado {
     text-align: center;
     margin-bottom: 15px;
@@ -127,7 +185,6 @@
     width: auto;
   }
 
-  /* Título */
   .titulo-principal {
     text-align: center;
     font-size: 16pt;
@@ -154,7 +211,6 @@
     margin-bottom: 20px;
   }
 
-  /* Lugar y fecha */
   .lugar-fecha {
     text-align: right;
     margin-bottom: 20px;
@@ -213,7 +269,6 @@
     color: var(--gris-texto);
   }
 
-  /* Firma */
   .firma-seccion {
     margin-top: 90px;
     text-align: center;
@@ -247,7 +302,6 @@
     margin-top: 2px;
   }
 
-  /* Footer */
   .footer-documento {
     position: absolute;
     bottom: 0;
@@ -267,7 +321,6 @@
     justify-content: center;
   }
 
-  /* ============ IMPRESIÓN ============ */
   @media print {
     @page {
       size: letter;
@@ -296,51 +349,137 @@
 <!-- FORMULARIO -->
 <div class="contenedor-formulario" id="formulario">
   
-  <!-- HERO LOGO -->
   <div class="hero-logo">
     <img src="logo.png" alt="Grupo SIBRÜ">
   </div>
 
-  <h2>MANIFESTACIÓN ESCRITA</h2>
-  
-  <label>Lugar y fecha:</label>
-  <input type="text" id="inputLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+  <div class="titulo-formulario">MANIFESTACIÓN ESCRITA</div>
 
-  <label>Nombre del Representante Legal:</label>
-  <input type="text" id="inputRepresentante" placeholder="Ej. Juan Pérez" required>
+  <!-- Selector de tipo de persona -->
+  <div class="selector-tipo">
+    <label class="opcion-tipo">
+      <input type="radio" name="tipoPersona" value="fisica" onchange="cambiarTipoPersona()">
+      Persona Física
+    </label>
+    <label class="opcion-tipo">
+      <input type="radio" name="tipoPersona" value="moral" onchange="cambiarTipoPersona()">
+      Persona Moral
+    </label>
+  </div>
 
-  <label>Nombre de la Empresa Representada:</label>
-  <input type="text" id="inputEmpresa" placeholder="Ej. EMPRESA SA DE CV" required>
+  <!-- FORMULARIO PERSONA FÍSICA -->
+  <div class="formulario-tipo" id="formFisica">
+    <label>Lugar y fecha:</label>
+    <input type="text" id="fisicaLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
 
-  <label>RFC de la Empresa:</label>
-  <input type="text" id="inputRFC" placeholder="Ej. AABBCC010101ABC" style="text-transform: uppercase;" required>
+    <label>Nombre:</label>
+    <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
 
-  <div class="botones">
-    <button class="btn-generar" onclick="generarDocumento()">Generar Documento</button>
+    <label>RFC (13 caracteres):</label>
+    <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="validarRFCFisica()" required>
+    <div class="mensaje-error" id="errorFisicaRFC">El RFC debe tener exactamente 13 caracteres.</div>
+
+    <div class="botones">
+      <button class="btn-generar" onclick="generarDocumentoFisica()">Generar Documento</button>
+    </div>
+  </div>
+
+  <!-- FORMULARIO PERSONA MORAL -->
+  <div class="formulario-tipo" id="formMoral">
+    <label>Lugar y fecha:</label>
+    <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+
+    <label>Nombre del Representante Legal:</label>
+    <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required>
+
+    <label>Razón Social:</label>
+    <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required>
+
+    <label>RFC (12 caracteres):</label>
+    <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="validarRFCMoral()" required>
+    <div class="mensaje-error" id="errorMoralRFC">El RFC debe tener exactamente 12 caracteres.</div>
+
+    <div class="botones">
+      <button class="btn-generar" onclick="generarDocumentoMoral()">Generar Documento</button>
+    </div>
   </div>
 </div>
 
-<!-- DOCUMENTO -->
-<div class="hoja-documento" id="documento">
-  
+<!-- DOCUMENTO PERSONA FÍSICA -->
+<div class="hoja-documento" id="documentoFisica">
   <div class="contenido-documento">
-    
     <div class="logo-centrado">
       <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
     </div>
-
     <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
     <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
     <hr class="linea-verde">
 
     <div class="lugar-fecha">
-      Lugar y fecha: <span class="linea-lf" id="docLugarFecha"></span>
+      Lugar y fecha: <span class="linea-lf" id="docFisicaLugarFecha"></span>
     </div>
 
     <div class="destinatario">A QUIEN CORRESPONDA:</div>
 
     <div class="parrafo">
-      Quien suscribe, <span class="dato-linea largo" id="docRepresentante"></span>, en mi carácter de representante legal de <span class="dato-linea largo" id="docEmpresa"></span>, con RFC <span class="dato-linea corto" id="docRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
+      Quien suscribe, <span class="dato-linea largo" id="docFisicaNombre"></span>, con RFC <span class="dato-linea corto" id="docFisicaRFC"></span>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
+    </div>
+
+    <div class="parrafo">
+      <strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, no me encuentro incluido en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.
+    </div>
+
+    <div class="parrafo">
+      <strong>SEGUNDO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.
+    </div>
+
+    <div class="parrafo">
+      <strong>TERCERO.</strong> Que no me encuentro incluido en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.
+    </div>
+
+    <div class="parrafo">
+      <strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en mi poder y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.
+    </div>
+
+    <div class="cierre">
+      Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.
+    </div>
+
+    <div class="firma-seccion">
+      <div class="firma-atentamente">ATENTAMENTE</div>
+      <div class="linea-firma"></div>
+      <div class="nombre-firma" id="docFisicaFirmaNombre"></div>
+    </div>
+  </div>
+
+  <div class="footer-documento">
+    GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+  </div>
+
+  <div class="botones-doc no-print">
+    <button class="btn-imprimir" onclick="window.print()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+  </div>
+</div>
+
+<!-- DOCUMENTO PERSONA MORAL -->
+<div class="hoja-documento" id="documentoMoral">
+  <div class="contenido-documento">
+    <div class="logo-centrado">
+      <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
+    </div>
+    <div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>
+    <div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>
+    <hr class="linea-verde">
+
+    <div class="lugar-fecha">
+      Lugar y fecha: <span class="linea-lf" id="docMoralLugarFecha"></span>
+    </div>
+
+    <div class="destinatario">A QUIEN CORRESPONDA:</div>
+
+    <div class="parrafo">
+      Quien suscribe, <span class="dato-linea largo" id="docMoralRepresentante"></span>, en mi carácter de representante legal de <span class="dato-linea largo" id="docMoralRazonSocial"></span>, con RFC <span class="dato-linea corto" id="docMoralRFC"></span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:
     </div>
 
     <div class="parrafo">
@@ -366,10 +505,9 @@
     <div class="firma-seccion">
       <div class="firma-atentamente">ATENTAMENTE</div>
       <div class="linea-firma"></div>
-      <div class="nombre-firma" id="docFirmaNombre"></div>
+      <div class="nombre-firma" id="docMoralFirmaNombre"></div>
       <div class="cargo-firma">Representante Legal</div>
     </div>
-
   </div>
 
   <div class="footer-documento">
@@ -383,31 +521,117 @@
 </div>
 
 <script>
-  function generarDocumento() {
-    const representante = document.getElementById('inputRepresentante').value.trim();
-    const empresa = document.getElementById('inputEmpresa').value.trim();
-    const rfc = document.getElementById('inputRFC').value.trim();
-    const lugarFecha = document.getElementById('inputLugarFecha').value.trim();
+  let tipoSeleccionado = null;
 
-    if (!representante || !empresa || !rfc || !lugarFecha) {
+  function cambiarTipoPersona() {
+    const radios = document.getElementsByName('tipoPersona');
+    for (const radio of radios) {
+      if (radio.checked) {
+        tipoSeleccionado = radio.value;
+        break;
+      }
+    }
+
+    document.getElementById('formFisica').classList.remove('activo');
+    document.getElementById('formMoral').classList.remove('activo');
+
+    if (tipoSeleccionado === 'fisica') {
+      document.getElementById('formFisica').classList.add('activo');
+    } else if (tipoSeleccionado === 'moral') {
+      document.getElementById('formMoral').classList.add('activo');
+    }
+  }
+
+  function validarRFCFisica() {
+    const input = document.getElementById('fisicaRFC');
+    const error = document.getElementById('errorFisicaRFC');
+    const valor = input.value.trim().toUpperCase();
+    input.value = valor;
+
+    if (valor.length > 0 && valor.length !== 13) {
+      input.classList.add('error');
+      error.classList.add('visible');
+    } else {
+      input.classList.remove('error');
+      error.classList.remove('visible');
+    }
+  }
+
+  function validarRFCMoral() {
+    const input = document.getElementById('moralRFC');
+    const error = document.getElementById('errorMoralRFC');
+    const valor = input.value.trim().toUpperCase();
+    input.value = valor;
+
+    if (valor.length > 0 && valor.length !== 12) {
+      input.classList.add('error');
+      error.classList.add('visible');
+    } else {
+      input.classList.remove('error');
+      error.classList.remove('visible');
+    }
+  }
+
+  function generarDocumentoFisica() {
+    const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
+    const nombre = document.getElementById('fisicaNombre').value.trim();
+    const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
+
+    if (!lugarFecha || !nombre || !rfc) {
       alert('Por favor, complete todos los campos.');
       return;
     }
 
-    document.getElementById('docLugarFecha').textContent = lugarFecha;
-    document.getElementById('docRepresentante').textContent = representante;
-    document.getElementById('docEmpresa').textContent = empresa;
-    document.getElementById('docRFC').textContent = rfc.toUpperCase();
-    document.getElementById('docFirmaNombre').textContent = representante;
+    if (rfc.length !== 13) {
+      alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
+      document.getElementById('fisicaRFC').classList.add('error');
+      document.getElementById('errorFisicaRFC').classList.add('visible');
+      return;
+    }
+
+    document.getElementById('docFisicaLugarFecha').textContent = lugarFecha;
+    document.getElementById('docFisicaNombre').textContent = nombre;
+    document.getElementById('docFisicaRFC').textContent = rfc;
+    document.getElementById('docFisicaFirmaNombre').textContent = nombre;
 
     document.getElementById('formulario').style.display = 'none';
-    document.getElementById('documento').style.display = 'block';
+    document.getElementById('documentoFisica').style.display = 'block';
+    window.scrollTo(0, 0);
+  }
+
+  function generarDocumentoMoral() {
+    const lugarFecha = document.getElementById('moralLugarFecha').value.trim();
+    const representante = document.getElementById('moralRepresentante').value.trim();
+    const razonSocial = document.getElementById('moralRazonSocial').value.trim();
+    const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
+
+    if (!lugarFecha || !representante || !razonSocial || !rfc) {
+      alert('Por favor, complete todos los campos.');
+      return;
+    }
+
+    if (rfc.length !== 12) {
+      alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
+      document.getElementById('moralRFC').classList.add('error');
+      document.getElementById('errorMoralRFC').classList.add('visible');
+      return;
+    }
+
+    document.getElementById('docMoralLugarFecha').textContent = lugarFecha;
+    document.getElementById('docMoralRepresentante').textContent = representante;
+    document.getElementById('docMoralRazonSocial').textContent = razonSocial;
+    document.getElementById('docMoralRFC').textContent = rfc;
+    document.getElementById('docMoralFirmaNombre').textContent = representante;
+
+    document.getElementById('formulario').style.display = 'none';
+    document.getElementById('documentoMoral').style.display = 'block';
     window.scrollTo(0, 0);
   }
 
   function editarDocumento() {
     document.getElementById('formulario').style.display = 'block';
-    document.getElementById('documento').style.display = 'none';
+    document.getElementById('documentoFisica').style.display = 'none';
+    document.getElementById('documentoMoral').style.display = 'none';
     window.scrollTo(0, 0);
   }
 </script>
