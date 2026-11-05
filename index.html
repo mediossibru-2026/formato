@@ -144,11 +144,19 @@
 
   .mensaje-error.visible { display: block; }
 
-  .botones {
-    display: flex;
-    gap: 10px;
-    margin-top: 25px;
-  }
+.botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+  justify-content: space-between;
+}
+
+.botones-derecha {
+  display: flex;
+  gap: 10px;
+  flex: 1;
+  justify-content: flex-end;
+}
 
   button {
     flex: 1;
@@ -706,9 +714,13 @@
     </div>
 
     <div class="botones">
-      <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
-      <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
-      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+<div class="botones">
+  <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+  <div class="botones-derecha">
+    <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
+    <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
+  </div>
+</div>
     </div>
     <div class="mensaje-guardado" id="mensajeGuardadoFisica"></div>
   </div>
@@ -792,11 +804,13 @@
       <div class="mensaje-error" id="errorMoralEmail">Formato de correo electrónico inválido.</div>
     </div>
 
-    <div class="botones">
-      <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
-      <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
-      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
-    </div>
+<div class="botones">
+  <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+  <div class="botones-derecha">
+    <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
+    <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
+  </div>
+</div>
     <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
   </div>
 </div>
