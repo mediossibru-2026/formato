@@ -419,13 +419,13 @@
   .linea-verde {
     border: none;
     border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 15px;
+    margin-bottom: 18px;
   }
 
   .lugar-fecha {
     text-align: right;
-    margin-bottom: 15px;
-    font-size: 9.5pt;
+    margin-bottom: 18px;
+    font-size: 10pt;
     color: var(--gris-texto);
   }
 
@@ -441,17 +441,18 @@
 
   .destinatario {
     font-weight: 700;
-    margin-bottom: 12px;
-    font-size: 10pt;
+    margin-bottom: 15px;
+    font-size: 10.5pt;
     color: var(--negro);
     letter-spacing: 1px;
   }
 
+  /* CAMBIOS PARA MANIFESTACIÓN: más espacio y fuente más grande */
   .parrafo {
     text-align: justify;
-    margin-bottom: 8px;
-    font-size: 9.5pt;
-    line-height: 1.5;
+    margin-bottom: 14px;
+    font-size: 10.5pt;
+    line-height: 1.7;
     color: var(--gris-texto);
   }
 
@@ -474,21 +475,22 @@
   .dato-linea.corto { min-width: 120px; }
 
   .cierre {
-    margin-top: 10px;
+    margin-top: 15px;
     text-align: justify;
-    font-size: 9.5pt;
+    font-size: 10.5pt;
+    line-height: 1.7;
     color: var(--gris-texto);
   }
 
-  /* CAMBIO: Se aumentó el margin-top para bajar la firma en la Manifestación */
+  /* Firma de manifestación: margen reducido porque los párrafos ya ocupan más espacio */
   .firma-seccion {
-    margin-top: 95px;
+    margin-top: 50px;
     text-align: center;
     page-break-inside: avoid;
   }
 
   .firma-atentamente {
-    font-size: 9.5pt;
+    font-size: 10pt;
     font-weight: 700;
     letter-spacing: 3px;
     color: var(--verde-sibru);
@@ -504,12 +506,12 @@
 
   .nombre-firma {
     font-weight: 700;
-    font-size: 9.5pt;
+    font-size: 10pt;
     color: var(--negro);
   }
 
   .cargo-firma {
-    font-size: 8.5pt;
+    font-size: 9pt;
     color: var(--gris-texto);
     margin-top: 2px;
   }
@@ -559,9 +561,8 @@
     .logo-empresa {
       max-height: 120px;
     }
-    /* CAMBIO: Se aumentó el margin-top para impresión también */
     .firma-seccion {
-      margin-top: 75px;
+      margin-top: 40px;
     }
     .header-alta-logo img {
       max-height: 45px;
