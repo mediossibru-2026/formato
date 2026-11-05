@@ -186,16 +186,20 @@
 
   .oculto { display: none !important; }
 
-  /* DOCUMENTOS - OCULTOS POR DEFECTO */
+  /* DOCUMENTOS */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
     margin: 0 auto 30px auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-    display: none; /* OCULTO POR DEFECTO */
+    display: none;
     position: relative;
     overflow: hidden;
+  }
+
+  .hoja-documento.activo {
+    display: block !important;
   }
 
   .barras-superiores {
@@ -217,81 +221,85 @@
   }
 
   .contenido-documento {
-    padding: 8mm 15mm 15mm 15mm; /* REDUCIDO */
+    padding: 8mm 15mm 15mm 15mm;
   }
 
   .header-alta {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 10px; /* REDUCIDO */
-    padding-bottom: 8px; /* REDUCIDO */
+    margin-bottom: 10px;
+    padding-bottom: 8px;
     border-bottom: 2px solid var(--verde-sibru);
   }
 
   .header-alta-logo {
     display: flex;
     align-items: center;
-    gap: 12px; /* REDUCIDO */
+    gap: 12px;
   }
 
   .header-alta-logo img {
-    max-height: 50px; /* REDUCIDO */
+    max-height: 50px;
     width: auto;
   }
 
   .header-alta-info h2 {
-    font-size: 13pt; /* REDUCIDO */
+    font-size: 13pt;
     font-weight: 800;
     color: var(--negro);
     margin: 0;
   }
 
   .header-alta-info p {
-    font-size: 9pt; /* REDUCIDO */
+    font-size: 9pt;
     color: var(--gris-texto);
     margin: 2px 0 0 0;
   }
 
   .header-alta-cliente {
     text-align: right;
-    font-size: 8pt; /* REDUCIDO */
+    font-size: 8pt;
     color: var(--gris-texto);
   }
 
   .header-alta-cliente strong {
     display: block;
     color: var(--negro);
-    font-size: 9pt; /* REDUCIDO */
+    font-size: 9pt;
   }
 
   .seccion-alta {
-    margin-bottom: 8px; /* REDUCIDO */
+    margin-bottom: 8px;
   }
 
   .seccion-alta-titulo {
     background: var(--negro);
     color: white;
-    padding: 5px 10px; /* REDUCIDO */
-    font-size: 8.5pt; /* REDUCIDO */
+    padding: 5px 10px;
+    font-size: 8.5pt;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 6px; /* REDUCIDO */
+    margin-bottom: 6px;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .seccion-alta-titulo.verde {
     background: var(--verde-banda);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .tabla-alta {
     width: 100%;
     border-collapse: collapse;
-    font-size: 8.5pt; /* REDUCIDO */
+    font-size: 8.5pt;
   }
 
   .tabla-alta td {
-    padding: 4px 8px; /* REDUCIDO */
+    padding: 4px 8px;
     border: 1px solid #ddd;
     vertical-align: middle;
   }
@@ -301,127 +309,131 @@
     color: var(--negro);
     width: 40%;
     background: var(--gris-claro);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .tabla-alta td.valor {
     color: var(--gris-texto);
-    min-height: 18px; /* REDUCIDO */
+    min-height: 18px;
   }
 
   .tabla-alta td.valor.vacio {
-    height: 20px; /* REDUCIDO */
+    height: 20px;
     background: white;
   }
 
   .checkbox-doc {
     display: flex;
     align-items: center;
-    gap: 6px; /* REDUCIDO */
-    padding: 3px 0; /* REDUCIDO */
-    font-size: 8.5pt; /* REDUCIDO */
+    gap: 6px;
+    padding: 3px 0;
+    font-size: 8.5pt;
   }
 
   .checkbox-doc input[type="checkbox"] {
-    width: 12px; /* REDUCIDO */
-    height: 12px; /* REDUCIDO */
+    width: 12px;
+    height: 12px;
     accent-color: var(--verde-sibru);
   }
 
   .nota-alta {
-    font-size: 7.5pt; /* REDUCIDO */
+    font-size: 7.5pt;
     color: #666;
     font-style: italic;
-    margin-top: 3px; /* REDUCIDO */
+    margin-top: 3px;
   }
 
   .declaracion-alta {
     text-align: justify;
-    font-size: 8.5pt; /* REDUCIDO */
+    font-size: 8.5pt;
     color: var(--gris-texto);
-    margin: 10px 0; /* REDUCIDO */
-    padding: 8px; /* REDUCIDO */
+    margin: 12px 0;
+    padding: 8px;
     background: var(--gris-claro);
     border-left: 3px solid var(--verde-sibru);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
   .firmas-alta {
     display: flex;
     justify-content: space-between;
-    margin-top: 25px; /* REDUCIDO */
-    gap: 20px; /* REDUCIDO */
+    margin-top: 35px;
+    gap: 20px;
   }
 
   .firma-alta-box {
     flex: 1;
-    max-width: 250px; /* REDUCIDO */
+    max-width: 250px;
     text-align: center;
   }
 
   .firma-alta-linea {
     border-top: 1px solid var(--negro);
-    margin-bottom: 6px; /* REDUCIDO */
-    padding-top: 6px; /* REDUCIDO */
+    margin-bottom: 6px;
+    padding-top: 6px;
   }
 
   .firma-alta-nombre {
-    font-size: 8.5pt; /* REDUCIDO */
+    font-size: 8.5pt;
     font-weight: 700;
     color: var(--negro);
   }
 
   .firma-alta-titulo {
-    font-size: 7.5pt; /* REDUCIDO */
+    font-size: 7.5pt;
     color: var(--gris-texto);
     text-transform: uppercase;
   }
 
   .logo-centrado {
     text-align: center;
-    margin-bottom: 12px; /* REDUCIDO */
+    margin-bottom: 12px;
   }
 
   .logo-empresa {
-    max-height: 140px; /* REDUCIDO */
+    max-height: 140px;
     width: auto;
   }
 
   .titulo-principal {
     text-align: center;
-    font-size: 15pt; /* REDUCIDO */
+    font-size: 15pt;
     font-weight: 800;
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 4px; /* REDUCIDO */
+    margin-bottom: 4px;
   }
 
   .titulo-sub {
     text-align: center;
-    font-size: 9.5pt; /* REDUCIDO */
+    font-size: 9.5pt;
     font-weight: 700;
     color: var(--rojo-sibru);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 10px; /* REDUCIDO */
+    margin-bottom: 10px;
   }
 
   .linea-verde {
     border: none;
     border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 15px; /* REDUCIDO */
+    margin-bottom: 15px;
   }
 
   .lugar-fecha {
     text-align: right;
-    margin-bottom: 15px; /* REDUCIDO */
-    font-size: 9.5pt; /* REDUCIDO */
+    margin-bottom: 15px;
+    font-size: 9.5pt;
     color: var(--gris-texto);
   }
 
   .lugar-fecha .linea-lf {
     display: inline-block;
     border-bottom: 1px solid var(--negro);
-    min-width: 200px; /* REDUCIDO */
+    min-width: 200px;
     text-align: center;
     padding: 0 5px;
     color: var(--negro);
@@ -430,17 +442,17 @@
 
   .destinatario {
     font-weight: 700;
-    margin-bottom: 12px; /* REDUCIDO */
-    font-size: 10pt; /* REDUCIDO */
+    margin-bottom: 12px;
+    font-size: 10pt;
     color: var(--negro);
     letter-spacing: 1px;
   }
 
   .parrafo {
     text-align: justify;
-    margin-bottom: 8px; /* REDUCIDO */
-    font-size: 9.5pt; /* REDUCIDO */
-    line-height: 1.5; /* REDUCIDO */
+    margin-bottom: 8px;
+    font-size: 9.5pt;
+    line-height: 1.5;
     color: var(--gris-texto);
   }
 
@@ -452,61 +464,61 @@
   .dato-linea {
     display: inline-block;
     border-bottom: 1px solid var(--negro);
-    min-width: 160px; /* REDUCIDO */
+    min-width: 160px;
     text-align: center;
     padding: 0 5px;
     color: var(--negro);
     font-weight: 600;
   }
 
-  .dato-linea.largo { min-width: 240px; /* REDUCIDO */ }
-  .dato-linea.corto { min-width: 120px; /* REDUCIDO */ }
+  .dato-linea.largo { min-width: 240px; }
+  .dato-linea.corto { min-width: 120px; }
 
   .cierre {
-    margin-top: 10px; /* REDUCIDO */
+    margin-top: 10px;
     text-align: justify;
-    font-size: 9.5pt; /* REDUCIDO */
+    font-size: 9.5pt;
     color: var(--gris-texto);
   }
 
   .firma-seccion {
-    margin-top: 50px; /* REDUCIDO */
+    margin-top: 50px;
     text-align: center;
     page-break-inside: avoid;
   }
 
   .firma-atentamente {
-    font-size: 9.5pt; /* REDUCIDO */
+    font-size: 9.5pt;
     font-weight: 700;
     letter-spacing: 3px;
     color: var(--verde-sibru);
-    margin-bottom: 25px; /* REDUCIDO */
+    margin-bottom: 25px;
     text-transform: uppercase;
   }
 
   .linea-firma {
     border-top: 1px solid var(--negro);
-    width: 260px; /* REDUCIDO */
-    margin: 0 auto 6px auto; /* REDUCIDO */
+    width: 260px;
+    margin: 0 auto 6px auto;
   }
 
   .nombre-firma {
     font-weight: 700;
-    font-size: 9.5pt; /* REDUCIDO */
+    font-size: 9.5pt;
     color: var(--negro);
   }
 
   .cargo-firma {
-    font-size: 8.5pt; /* REDUCIDO */
+    font-size: 8.5pt;
     color: var(--gris-texto);
     margin-top: 2px;
   }
 
   .footer-documento {
-    margin-top: 20px; /* REDUCIDO */
+    margin-top: 20px;
     text-align: center;
-    font-size: 7.5pt; /* REDUCIDO */
-    padding: 4px 0; /* REDUCIDO */
+    font-size: 7.5pt;
+    padding: 4px 0;
     letter-spacing: 0.5px;
     color: #999;
     border-top: 1px solid #e0e0e0;
@@ -526,7 +538,7 @@
       display: none !important;
     }
     .hoja-documento {
-      display: block !important;
+      display: none;
       box-shadow: none;
       margin: 0;
       width: 100%;
@@ -535,20 +547,29 @@
       overflow: hidden;
       page-break-after: always;
     }
+    .hoja-documento.activo {
+      display: block !important;
+    }
     .hoja-documento:last-child {
       page-break-after: auto;
     }
     .contenido-documento {
-      padding: 6mm 12mm 10mm 12mm; /* REDUCIDO PARA IMPRESIÓN */
+      padding: 6mm 12mm 10mm 12mm;
     }
     .logo-empresa {
-      max-height: 120px; /* REDUCIDO */
+      max-height: 120px;
     }
     .firma-seccion {
-      margin-top: 40px; /* REDUCIDO */
+      margin-top: 40px;
     }
     .header-alta-logo img {
-      max-height: 45px; /* REDUCIDO */
+      max-height: 45px;
+    }
+    /* FORZAR COLORES EN IMPRESIÓN */
+    .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
     }
   }
 </style>
@@ -1240,16 +1261,11 @@
     document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
-    // OCULTAR TODOS PRIMERO
-    document.getElementById('docManifestacionFisica').style.display = 'none';
-    document.getElementById('docAltaFisica').style.display = 'none';
-    document.getElementById('docManifestacionMoral').style.display = 'none';
-    document.getElementById('docAltaMoral').style.display = 'none';
-    
-    // MOSTRAR SOLO FÍSICA
+    // NUEVO ENFOQUE: Ocultar TODOS y mostrar solo los de Física
+    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.getElementById('docManifestacionFisica').classList.add('activo');
+    document.getElementById('docAltaFisica').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
-    document.getElementById('docManifestacionFisica').style.display = 'block';
-    document.getElementById('docAltaFisica').style.display = 'block';
     
     window.scrollTo(0, 0);
   }
@@ -1288,16 +1304,11 @@
     document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
-    // OCULTAR TODOS PRIMERO
-    document.getElementById('docManifestacionFisica').style.display = 'none';
-    document.getElementById('docAltaFisica').style.display = 'none';
-    document.getElementById('docManifestacionMoral').style.display = 'none';
-    document.getElementById('docAltaMoral').style.display = 'none';
-    
-    // MOSTRAR SOLO MORAL
+    // NUEVO ENFOQUE: Ocultar TODOS y mostrar solo los de Moral
+    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.getElementById('docManifestacionMoral').classList.add('activo');
+    document.getElementById('docAltaMoral').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
-    document.getElementById('docManifestacionMoral').style.display = 'block';
-    document.getElementById('docAltaMoral').style.display = 'block';
     
     window.scrollTo(0, 0);
   }
@@ -1308,10 +1319,7 @@
 
   function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
-    document.getElementById('docManifestacionFisica').style.display = 'none';
-    document.getElementById('docAltaFisica').style.display = 'none';
-    document.getElementById('docManifestacionMoral').style.display = 'none';
-    document.getElementById('docAltaMoral').style.display = 'none';
+    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
     window.scrollTo(0, 0);
   }
 
@@ -1331,10 +1339,7 @@
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
     
-    document.getElementById('docManifestacionFisica').style.display = 'none';
-    document.getElementById('docAltaFisica').style.display = 'none';
-    document.getElementById('docManifestacionMoral').style.display = 'none';
-    document.getElementById('docAltaMoral').style.display = 'none';
+    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
     
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
