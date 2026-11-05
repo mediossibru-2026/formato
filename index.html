@@ -1040,6 +1040,7 @@
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   let tipoSeleccionado = null;
+  let ultimoIDGenerado = null;
 
   function cambiarTipoPersona() {
     const radios = document.getElementsByName('tipoPersona');
@@ -1178,6 +1179,7 @@
         mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarFisica').classList.remove('oculto');
+        ultimoIDGenerado = idCliente;
         setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
       } else {
         alert('Error al guardar: ' + result.message);
@@ -1230,6 +1232,7 @@
         mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarMoral').classList.remove('oculto');
+        ultimoIDGenerado = idCliente;
         setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
       } else {
         alert('Error al guardar: ' + result.message);
@@ -1256,8 +1259,9 @@
     document.getElementById('mFisicaRFC').textContent = rfc;
     document.getElementById('mFisicaFirmaNombre').textContent = nombre;
 
-    document.getElementById('aFisicaID').textContent = '__________';
-    document.getElementById('aFisicaReferencia').textContent = '__________';
+    const idMostrar = ultimoIDGenerado || '__________';
+    document.getElementById('aFisicaID').textContent = idMostrar;
+    document.getElementById('aFisicaReferencia').textContent = idMostrar;
     document.getElementById('aFisicaNombre').textContent = nombre;
     document.getElementById('aFisicaRFC').textContent = rfc;
     document.getElementById('aFisicaRegimen').textContent = document.getElementById('fisicaRegimen').value;
@@ -1292,8 +1296,9 @@
     document.getElementById('mMoralRFC').textContent = rfc;
     document.getElementById('mMoralFirmaNombre').textContent = representante;
 
-    document.getElementById('aMoralID').textContent = '__________';
-    document.getElementById('aMoralReferencia').textContent = '__________';
+    const idMostrar = ultimoIDGenerado || '__________';
+    document.getElementById('aMoralID').textContent = idMostrar;
+    document.getElementById('aMoralReferencia').textContent = idMostrar;
     document.getElementById('aMoralRazonSocial').textContent = razonSocial;
     document.getElementById('aMoralRFC').textContent = rfc;
     document.getElementById('aMoralRegimen').textContent = document.getElementById('moralRegimen').value;
