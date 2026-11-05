@@ -13,6 +13,7 @@
     --gris-texto: #333333;
     --gris-claro: #f5f5f5;
     --azul-accion: #1976D2;
+    --naranja-accion: #FF9800;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -97,7 +98,7 @@
   .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--negro); }
   .stat-label { font-size: 0.75rem; color: var(--gris-texto); text-transform: uppercase; }
 
-  .search-box input, .filter-box select {
+  .search-box input, .filter-box select, .filter-box input {
     width: 100%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -183,6 +184,8 @@
   }
 
   .badge-normal { background: #e3f2fd; color: #1976D2; }
+  .badge-activo { background: #e8f5e9; color: #388e3c; }
+  .badge-baja { background: #ffebee; color: #d32f2f; }
 
   .btn-accion-small {
     padding: 5px 8px;
@@ -195,6 +198,8 @@
 
   .btn-edit-small { background: var(--azul-accion); color: white; }
   .btn-delete-small { background: var(--rojo-sibru); color: white; }
+  .btn-print-small { background: var(--verde-banda); color: white; }
+  .btn-email-small { background: var(--naranja-accion); color: white; }
 
   .modal-overlay {
     position: fixed;
@@ -212,10 +217,14 @@
     background: white;
     padding: 30px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 600px;
+    width: 95%;
+    max-width: 900px;
     max-height: 90vh;
     overflow-y: auto;
+  }
+
+  .modal-content.small {
+    max-width: 500px;
   }
 
   .modal-header {
@@ -238,16 +247,21 @@
   .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 12px;
   }
 
-  .form-group { margin-bottom: 10px; }
+  .form-grid .full-width {
+    grid-column: span 2;
+  }
+
+  .form-group { margin-bottom: 5px; }
   .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
     font-weight: 600;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--negro);
+    text-transform: uppercase;
   }
 
   .form-group input, .form-group select {
@@ -258,12 +272,45 @@
     font-size: 0.9rem;
   }
 
+  .form-section {
+    margin-top: 15px;
+    padding: 12px;
+    background: var(--gris-claro);
+    border-radius: 6px;
+    border-left: 4px solid var(--verde-sibru);
+  }
+
+  .form-section h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--negro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+  }
+
   .modal-footer {
     margin-top: 20px;
     display: flex;
     gap: 10px;
     justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
   }
+
+  .btn-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-modal-primary { background: var(--verde-sibru); color: white; }
+  .btn-modal-secondary { background: var(--gris-texto); color: white; }
+  .btn-modal-print { background: var(--negro); color: white; }
+  .btn-modal-email { background: var(--naranja-accion); color: white; }
 </style>
 </head>
 <body>
@@ -356,69 +403,196 @@
   </div>
 </div>
 
+<!-- MODAL AGREGAR/EDITAR -->
 <div class="modal-overlay" id="modalCliente">
   <div class="modal-content">
     <div class="modal-header">
       <h2 id="modalTitle">Agregar Cliente</h2>
-      <button class="modal-close" onclick="cerrarModal()">&times;</button>
+      <button class="modal-close" onclick="cerrarModal('modalCliente')">&times;</button>
     </div>
     <form id="formCliente">
       <input type="hidden" id="clientId">
-      <div class="form-grid">
-        <div class="form-group">
-          <label>Tipo de Cliente</label>
-          <select id="clientTipo" required>
-            <option value="">Seleccione...</option>
-            <option value="Persona Física">Persona Física</option>
-            <option value="Persona Moral">Persona Moral</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>RFC</label>
-          <input type="text" id="clientRFC" required maxlength="13" style="text-transform: uppercase;">
-        </div>
-        <div class="form-group" id="groupNombre">
-          <label>Nombre</label>
-          <input type="text" id="clientNombre">
-        </div>
-        <div class="form-group" id="groupRazonSocial" style="display:none;">
-          <label>Razón Social</label>
-          <input type="text" id="clientRazonSocial">
-        </div>
-        <div class="form-group" id="groupRepresentante" style="display:none;">
-          <label>Representante Legal</label>
-          <input type="text" id="clientRepresentante">
-        </div>
-        <div class="form-group">
-          <label>Régimen Fiscal</label>
-          <select id="clientRegimen" required>
-            <option value="">Seleccione...</option>
-            <option value="601 - General de Ley Personas Morales">601 - General de Ley</option>
-            <option value="612 - Actividades Empresariales">612 - Actividades Empresariales</option>
-            <option value="626 - RESICO">626 - RESICO</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Correo Electrónico</label>
-          <input type="email" id="clientCorreo" required>
-        </div>
-        <div class="form-group">
-          <label>Código Postal</label>
-          <input type="text" id="clientCP" maxlength="5">
-        </div>
-        <div class="form-group">
-          <label>Status</label>
-          <select id="clientStatus">
-            <option value="ACTIVO">Activo</option>
-            <option value="INACTIVO">Inactivo</option>
-          </select>
+      
+      <div class="form-section">
+        <h4>Datos Generales</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de Cliente *</label>
+            <select id="clientTipo" required onchange="toggleCamposTipo()">
+              <option value="">Seleccione...</option>
+              <option value="Persona Física">Persona Física</option>
+              <option value="Persona Moral">Persona Moral</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>RFC * (12 moral / 13 física)</label>
+            <input type="text" id="clientRFC" required maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+          </div>
+          <div class="form-group" id="groupNombre">
+            <label>Nombre *</label>
+            <input type="text" id="clientNombre">
+          </div>
+          <div class="form-group" id="groupRazonSocial" style="display:none;">
+            <label>Razón Social *</label>
+            <input type="text" id="clientRazonSocial">
+          </div>
+          <div class="form-group" id="groupRepresentante" style="display:none;">
+            <label>Representante Legal *</label>
+            <input type="text" id="clientRepresentante">
+          </div>
+          <div class="form-group">
+            <label>Lugar y fecha</label>
+            <input type="text" id="clientLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+          </div>
         </div>
       </div>
+
+      <div class="form-section">
+        <h4>Datos Fiscales</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Régimen Fiscal *</label>
+            <select id="clientRegimen" required>
+              <option value="">Seleccione...</option>
+              <option value="601 - General de Ley Personas Morales">601 - General de Ley Personas Morales</option>
+              <option value="603 - Personas Morales con Fines No Lucrativos">603 - Personas Morales con Fines No Lucrativos</option>
+              <option value="605 - Sueldos y Salarios">605 - Sueldos y Salarios e Ingresos Asimilados a Salarios</option>
+              <option value="606 - Arrendamiento">606 - Arrendamiento</option>
+              <option value="608 - Demás ingresos">608 - Demás ingresos</option>
+              <option value="611 - Ingresos por Dividendos">611 - Ingresos por Dividendos</option>
+              <option value="612 - Actividades Empresariales y Profesionales">612 - Personas Físicas con Actividades Empresariales y Profesionales</option>
+              <option value="614 - Ingresos por intereses">614 - Ingresos por intereses</option>
+              <option value="616 - Sin obligaciones fiscales">616 - Sin obligaciones fiscales</option>
+              <option value="620 - Sociedades Cooperativas">620 - Sociedades Cooperativas de Producción</option>
+              <option value="621 - Incorporación Fiscal">621 - Incorporación Fiscal</option>
+              <option value="622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras">622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras</option>
+              <option value="623 - Opcional para Grupos de Sociedades">623 - Opcional para Grupos de Sociedades</option>
+              <option value="624 - Coordinados">624 - Coordinados</option>
+              <option value="625 - Actividades con plataformas tecnológicas">625 - Actividades con plataformas tecnológicas</option>
+              <option value="626 - RESICO">626 - Régimen Simplificado de Confianza</option>
+              <option value="628 - Hidrocarburos">628 - Hidrocarburos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Código Postal (5 dígitos)</label>
+            <input type="text" id="clientCP" maxlength="5" pattern="\d{5}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+          </div>
+          <div class="form-group full-width">
+            <label>Uso de CFDI</label>
+            <select id="clientUsoCFDI">
+              <option value="">Seleccione...</option>
+              <option value="G01 - Adquisición de mercancías">G01 - Adquisición de mercancías</option>
+              <option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
+              <option value="G03 - Gastos en general">G03 - Gastos en general</option>
+              <option value="I01 - Construcciones">I01 - Construcciones</option>
+              <option value="I02 - Mobilario y equipo de oficina">I02 - Mobilario y equipo de oficina por inversiones</option>
+              <option value="I03 - Equipo de transporte">I03 - Equipo de transporte</option>
+              <option value="I04 - Equipo de computo y accesorios">I04 - Equipo de computo y accesorios</option>
+              <option value="I05 - Dados, troqueles, moldes, matrices y herramental">I05 - Dados, troqueles, moldes, matrices y herramental</option>
+              <option value="I06 - Comunicaciones telefónicas">I06 - Comunicaciones telefónicas</option>
+              <option value="I07 - Comunicaciones satelitales">I07 - Comunicaciones satelitales</option>
+              <option value="I08 - Otra maquinaria y equipo">I08 - Otra maquinaria y equipo</option>
+              <option value="P01 - Por definir">P01 - Por definir</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h4>Datos para Facturación</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Forma de pago</label>
+            <select id="clientFormaPago">
+              <option value="">Seleccione...</option>
+              <option value="01 - Efectivo">01 - Efectivo</option>
+              <option value="02 - Cheque nominativo">02 - Cheque nominativo</option>
+              <option value="03 - Transferencia electrónica de fondos">03 - Transferencia electrónica de fondos</option>
+              <option value="04 - Tarjeta de crédito">04 - Tarjeta de crédito</option>
+              <option value="05 - Monedero electrónico">05 - Monedero electrónico</option>
+              <option value="06 - Dinero electrónico">06 - Dinero electrónico</option>
+              <option value="28 - Tarjeta de débito">28 - Tarjeta de débito</option>
+              <option value="99 - Por definir">99 - Por definir</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Método de pago</label>
+            <select id="clientMetodoPago">
+              <option value="">Seleccione...</option>
+              <option value="PUE - Pago en una sola exhibición">PUE - Pago en una sola exhibición</option>
+              <option value="PPD - Pago en parcialidades o diferido">PPD - Pago en parcialidades o diferido</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Correo Electrónico *</label>
+            <input type="email" id="clientCorreo" required style="text-transform: lowercase;">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h4>Datos Bancarios</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Banco</label>
+            <input type="text" id="clientBanco">
+          </div>
+          <div class="form-group">
+            <label>CLABE Interbancaria (18 dígitos)</label>
+            <input type="text" id="clientCLABE" maxlength="18">
+          </div>
+          <div class="form-group">
+            <label>Número de cuenta</label>
+            <input type="text" id="clientCuenta">
+          </div>
+          <div class="form-group">
+            <label>Titular de la cuenta</label>
+            <input type="text" id="clientTitularCuenta">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="clientStatus">
+              <option value="ACTIVO">Activo</option>
+              <option value="INACTIVO">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn-filtro btn-limpiar" onclick="cerrarModal()">Cancelar</button>
-        <button type="submit" class="btn-filtro">Guardar Cliente</button>
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalCliente')">Cancelar</button>
+        <button type="submit" class="btn-modal btn-modal-primary">Guardar Cliente</button>
       </div>
     </form>
+  </div>
+</div>
+
+<!-- MODAL IMPRIMIR/EMAIL -->
+<div class="modal-overlay" id="modalAccion">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2 id="modalAccionTitle">Imprimir / Enviar por Mail</h2>
+      <button class="modal-close" onclick="cerrarModal('modalAccion')">&times;</button>
+    </div>
+    <div>
+      <input type="hidden" id="accionRFC">
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Tipo de Documento</label>
+        <select id="accionTipoDoc">
+          <option value="manifestacion">Manifestación Escrita</option>
+          <option value="alta">Alta de Cliente</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Correo Electrónico</label>
+        <input type="email" id="accionEmail" placeholder="cliente@ejemplo.com">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalAccion')">Cancelar</button>
+        <button type="button" class="btn-modal btn-modal-print" onclick="ejecutarImpresion()">🖨️ Imprimir</button>
+        <button type="button" class="btn-modal btn-modal-email" onclick="ejecutarEnvioEmail()">📧 Enviar por Mail</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -464,27 +638,32 @@
     
     datos.forEach(c => {
       const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${c['ID Cliente'] || '-'}</td>
-        <td>${c['Nombre/Razón Social'] || c['Nombre'] || 'N/A'}</td>
-        <td>${c['RFC'] || '-'}</td>
-        <td><span class="badge badge-normal">${c['Tipo'] || 'N/A'}</span></td>
-        <td>${c['Régimen Fiscal'] || 'N/A'}</td>
-        <td>${c['Correo Electrónico'] || 'N/A'}</td>
-        <td>${c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A'}</td>
-        <td>
-          <button class="btn-accion-small btn-edit-small" onclick="editarCliente('${c['RFC']}')">✏️</button>
-          <button class="btn-accion-small btn-delete-small" onclick="eliminarCliente('${c['RFC']}')">🗑️</button>
-        </td>
-      `;
+      const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
+      const status = c['Status'] || 'ACTIVO';
+      const badgeClass = status === 'ACTIVO' ? 'badge-activo' : 'badge-baja';
+      
+      tr.innerHTML = 
+        '<td>' + (c['ID Cliente'] || '-') + '</td>' +
+        '<td>' + nombre + '</td>' +
+        '<td>' + (c['RFC'] || '-') + '</td>' +
+        '<td><span class="badge badge-normal">' + (c['Tipo'] || 'N/A') + '</span></td>' +
+        '<td>' + (c['Régimen Fiscal'] || 'N/A') + '</td>' +
+        '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
+        '<td>' + (c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A') + '</td>' +
+        '<td>' +
+          '<button class="btn-accion-small btn-edit-small" onclick="editarCliente(\'' + (c['RFC'] || '') + '\')">✏️</button>' +
+          '<button class="btn-accion-small btn-print-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'imprimir\')">🖨️</button>' +
+          '<button class="btn-accion-small btn-email-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'email\')">📧</button>' +
+          '<button class="btn-accion-small btn-delete-small" onclick="eliminarCliente(\'' + (c['RFC'] || '') + '\')">🗑️</button>' +
+        '</td>';
       tbody.appendChild(tr);
     });
   }
 
   function actualizarStats() {
     document.getElementById('statTotal').textContent = clientesData.length;
-    document.getElementById('statActivos').textContent = clientesData.filter(c => c['Status'] === 'ACTIVO').length;
-    document.getElementById('statBajas').textContent = clientesData.filter(c => c['Status'] === 'INACTIVO').length;
+    document.getElementById('statActivos').textContent = clientesData.filter(function(c) { return c['Status'] === 'ACTIVO'; }).length;
+    document.getElementById('statBajas').textContent = clientesData.filter(function(c) { return c['Status'] === 'INACTIVO'; }).length;
   }
 
   function buscarClientes() {
@@ -492,11 +671,11 @@
     if (!termino) {
       clientesFiltrados = [...clientesData];
     } else {
-      clientesFiltrados = clientesData.filter(c => 
-        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().includes(termino) ||
-        (c['RFC'] || '').toLowerCase().includes(termino) ||
-        (c['ID Cliente'] || '').toLowerCase().includes(termino)
-      );
+      clientesFiltrados = clientesData.filter(function(c) {
+        return (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().indexOf(termino) !== -1 ||
+               (c['RFC'] || '').toLowerCase().indexOf(termino) !== -1 ||
+               (c['ID Cliente'] || '').toLowerCase().indexOf(termino) !== -1;
+      });
     }
     renderizarTabla(clientesFiltrados);
   }
@@ -505,12 +684,11 @@
     const tipo = document.getElementById('filterTipo').value;
     const general = document.getElementById('filterGeneral').value.toLowerCase();
     
-    clientesFiltrados = clientesData.filter(c => {
+    clientesFiltrados = clientesData.filter(function(c) {
       const matchTipo = !tipo || c['Tipo'] === tipo;
       const matchGeneral = !general || 
-        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().includes(general) ||
-        (c['RFC'] || '').toLowerCase().includes(general);
-      
+        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().indexOf(general) !== -1 ||
+        (c['RFC'] || '').toLowerCase().indexOf(general) !== -1;
       return matchTipo && matchGeneral;
     });
     
@@ -532,23 +710,25 @@
     }
     
     const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Fecha Registro'];
-    const rows = clientesFiltrados.map(c => [
-      c['ID Cliente'] || '',
-      c['Tipo'] || '',
-      c['RFC'] || '',
-      c['Nombre/Razón Social'] || c['Nombre'] || '',
-      c['Representante Legal'] || '',
-      c['Régimen Fiscal'] || '',
-      c['Código Postal'] || '',
-      c['Correo Electrónico'] || '',
-      c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
-    ]);
+    const rows = clientesFiltrados.map(function(c) {
+      return [
+        c['ID Cliente'] || '',
+        c['Tipo'] || '',
+        c['RFC'] || '',
+        c['Nombre/Razón Social'] || c['Nombre'] || '',
+        c['Representante Legal'] || '',
+        c['Régimen Fiscal'] || '',
+        c['Código Postal'] || '',
+        c['Correo Electrónico'] || '',
+        c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
+      ];
+    });
     
-    const csvContent = [headers.join(','), ...rows.map(r => r.map(field => `"${field}"`).join(','))].join('\n');
+    const csvContent = [headers.join(','), rows.map(function(r) { return r.map(function(f) { return '"' + f + '"'; }).join(','); }).join('\n')].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `Clientes_SIBRU_${new Date().toISOString().split('T')[0]}.csv`;
+    link.download = 'Clientes_SIBRU_' + new Date().toISOString().split('T')[0] + '.csv';
     link.click();
   }
 
@@ -570,7 +750,7 @@
     html += '<p>Total de registros: ' + clientesFiltrados.length + '</p></div>';
     html += '<table><thead><tr><th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th></tr></thead><tbody>';
     
-    clientesFiltrados.forEach(c => {
+    clientesFiltrados.forEach(function(c) {
       html += '<tr>';
       html += '<td>' + (c['ID Cliente'] || '-') + '</td>';
       html += '<td>' + (c['Nombre/Razón Social'] || c['Nombre'] || '-') + '</td>';
@@ -589,21 +769,47 @@
     ventana.document.close();
   }
 
-  document.getElementById('formCliente').addEventListener('submit', async (e) => {
+  function toggleCamposTipo() {
+    const tipo = document.getElementById('clientTipo').value;
+    document.getElementById('groupNombre').style.display = tipo === 'Persona Física' ? 'block' : 'none';
+    document.getElementById('groupRazonSocial').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+    document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+  }
+
+  document.getElementById('formCliente').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const tipo = document.getElementById('clientTipo').value;
+    const rfc = document.getElementById('clientRFC').value.toUpperCase().trim();
+    
+    if (tipo === 'Persona Física' && rfc.length !== 13) {
+      alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
+      return;
+    }
+    if (tipo === 'Persona Moral' && rfc.length !== 12) {
+      alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
+      return;
+    }
+    
     const datos = {
       action: 'guardar',
       tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
       idCliente: document.getElementById('clientId').value || generarIDNuevo(),
-      rfc: document.getElementById('clientRFC').value.toUpperCase(),
+      rfc: rfc,
       nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
       razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
       representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
+      lugarFecha: document.getElementById('clientLugarFecha').value,
       regimen: document.getElementById('clientRegimen').value,
-      correo: document.getElementById('clientCorreo').value.toLowerCase(),
       cp: document.getElementById('clientCP').value,
+      usoCFDI: document.getElementById('clientUsoCFDI').value,
+      formaPago: document.getElementById('clientFormaPago').value,
+      metodoPago: document.getElementById('clientMetodoPago').value,
+      correo: document.getElementById('clientCorreo').value.toLowerCase().trim(),
+      banco: document.getElementById('clientBanco').value,
+      clabe: document.getElementById('clientCLABE').value,
+      cuenta: document.getElementById('clientCuenta').value,
+      titularCuenta: document.getElementById('clientTitularCuenta').value,
       status: document.getElementById('clientStatus').value,
       fechaGuardado: new Date().toISOString()
     };
@@ -614,7 +820,7 @@
       
       if (result.result === 'success') {
         alert('Cliente guardado correctamente');
-        cerrarModal();
+        cerrarModal('modalCliente');
         cargarClientes();
       } else {
         alert('Error: ' + result.message);
@@ -634,43 +840,51 @@
     document.getElementById('formCliente').reset();
     document.getElementById('clientId').value = '';
     document.getElementById('clientRFC').readOnly = false;
+    document.getElementById('groupNombre').style.display = 'block';
+    document.getElementById('groupRazonSocial').style.display = 'none';
+    document.getElementById('groupRepresentante').style.display = 'none';
     document.getElementById('modalCliente').classList.add('activo');
   }
 
   function editarCliente(rfc) {
-    const cliente = clientesData.find(c => c['RFC'] === rfc);
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
     if (!cliente) return;
     
     document.getElementById('modalTitle').textContent = 'Editar Cliente';
-    document.getElementById('clientId').value = cliente['ID Cliente'];
-    document.getElementById('clientTipo').value = cliente['Tipo'];
-    document.getElementById('clientRFC').value = cliente['RFC'];
+    document.getElementById('clientId').value = cliente['ID Cliente'] || '';
+    document.getElementById('clientTipo').value = cliente['Tipo'] || '';
+    document.getElementById('clientRFC').value = cliente['RFC'] || '';
     document.getElementById('clientRFC').readOnly = true;
+    document.getElementById('clientLugarFecha').value = cliente['Lugar y Fecha'] || '';
+    document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
+    document.getElementById('clientCP').value = cliente['Código Postal'] || '';
+    document.getElementById('clientUsoCFDI').value = cliente['Uso CFDI'] || '';
+    document.getElementById('clientFormaPago').value = cliente['Forma de Pago'] || '';
+    document.getElementById('clientMetodoPago').value = cliente['Método de Pago'] || '';
+    document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('clientBanco').value = cliente['Banco'] || '';
+    document.getElementById('clientCLABE').value = cliente['CLABE'] || '';
+    document.getElementById('clientCuenta').value = cliente['Número de Cuenta'] || '';
+    document.getElementById('clientTitularCuenta').value = cliente['Titular de Cuenta'] || '';
+    document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
+    
+    toggleCamposTipo();
     
     if (cliente['Tipo'] === 'Persona Física') {
-      document.getElementById('groupNombre').style.display = 'block';
-      document.getElementById('groupRazonSocial').style.display = 'none';
-      document.getElementById('groupRepresentante').style.display = 'none';
       document.getElementById('clientNombre').value = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
     } else {
-      document.getElementById('groupNombre').style.display = 'none';
-      document.getElementById('groupRazonSocial').style.display = 'block';
-      document.getElementById('groupRepresentante').style.display = 'block';
       document.getElementById('clientRazonSocial').value = cliente['Nombre/Razón Social'] || '';
       document.getElementById('clientRepresentante').value = cliente['Representante Legal'] || '';
     }
     
-    document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
-    document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
-    document.getElementById('clientCP').value = cliente['Código Postal'] || '';
-    document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
-    
     document.getElementById('modalCliente').classList.add('activo');
   }
 
-  function cerrarModal() {
-    document.getElementById('modalCliente').classList.remove('activo');
-    document.getElementById('clientRFC').readOnly = false;
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('activo');
+    if (id === 'modalCliente') {
+      document.getElementById('clientRFC').readOnly = false;
+    }
   }
 
   async function eliminarCliente(rfc) {
@@ -694,12 +908,123 @@
     }
   }
 
-  document.getElementById('clientTipo').addEventListener('change', function() {
-    const tipo = this.value;
-    document.getElementById('groupNombre').style.display = tipo === 'Persona Física' ? 'block' : 'none';
-    document.getElementById('groupRazonSocial').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
-    document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
-  });
+  function abrirModalAccion(rfc, tipoAccion) {
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
+    
+    document.getElementById('accionRFC').value = rfc;
+    document.getElementById('accionEmail').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('modalAccionTitle').textContent = tipoAccion === 'imprimir' ? 'Imprimir Documento' : 'Enviar Documento por Mail';
+    document.getElementById('modalAccion').classList.add('activo');
+  }
+
+  function ejecutarImpresion() {
+    const rfc = document.getElementById('accionRFC').value;
+    const tipoDoc = document.getElementById('accionTipoDoc').value;
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
+
+    const ventana = window.open('', '_blank');
+    let html = '<!DOCTYPE html><html><head><title>Documento - Grupo SIBRÜ</title>';
+    html += '<style>body{font-family:Arial,sans-serif;padding:30px;max-width:800px;margin:0 auto}';
+    html += 'h1{color:#007A3D;text-align:center}h2{text-align:center;color:#333}';
+    html += '.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #6BAE3E;padding-bottom:15px;margin-bottom:20px}';
+    html += '.header img{max-height:60px}.header-info h2{margin:0;font-size:18pt}';
+    html += '.header-info p{margin:2px 0 0 0;color:#666}';
+    html += '.info-right{text-align:right;font-size:10pt}';
+    html += 'table{width:100%;border-collapse:collapse;margin:15px 0}';
+    html += 'td{padding:8px;border:1px solid #ddd}';
+    html += 'td.label{background:#f5f5f5;font-weight:600;width:35%}';
+    html += '.firma{margin-top:60px;text-align:center}';
+    html += '.firma-linea{border-top:1px solid #000;width:300px;margin:0 auto 10px}';
+    html += '.section-title{background:#007A3D;color:white;padding:8px;margin-top:20px;font-weight:700}';
+    html += '@media print{body{padding:15px}}</style></head><body>';
+
+    const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    const representante = cliente['Representante Legal'] || '';
+    const regimen = cliente['Régimen Fiscal'] || '';
+    const cp = cliente['Código Postal'] || '';
+    const usoCFDI = cliente['Uso CFDI'] || '';
+    const formaPago = cliente['Forma de Pago'] || '';
+    const metodoPago = cliente['Método de Pago'] || '';
+    const correo = cliente['Correo Electrónico'] || '';
+    const banco = cliente['Banco'] || '';
+    const clabe = cliente['CLABE'] || '';
+    const cuenta = cliente['Número de Cuenta'] || '';
+    const titular = cliente['Titular de Cuenta'] || '';
+    const lugarFecha = cliente['Lugar y Fecha'] || '';
+
+    if (tipoDoc === 'manifestacion') {
+      html += '<h1>MANIFESTACIÓN ESCRITA</h1>';
+      html += '<h2 style="color:#D94F3D;font-size:11pt">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</h2>';
+      html += '<hr style="border-top:2px solid #6BAE3E;margin:15px 0">';
+      html += '<p style="text-align:right;margin-bottom:20px">Lugar y fecha: ' + lugarFecha + '</p>';
+      html += '<p style="font-weight:700;margin-bottom:15px">A QUIEN CORRESPONDA:</p>';
+      
+      if (cliente['Tipo'] === 'Persona Física') {
+        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+      } else {
+        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + representante + '</strong>, en mi carácter de representante legal de <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+      }
+      
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>SEGUNDO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>TERCERO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en ' + (cliente['Tipo'] === 'Persona Física' ? 'mi poder' : 'poder de mi representada') + ' y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</p>';
+      html += '<p style="text-align:justify;margin-top:20px">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</p>';
+      html += '<div class="firma"><p style="color:#6BAE3E;font-weight:700;letter-spacing:3px;margin-bottom:30px">ATENTAMENTE</p><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p>' + (cliente['Tipo'] === 'Persona Moral' ? '<p style="color:#666;font-size:9pt">Representante Legal</p>' : '') + '</div>';
+    } else {
+      html += '<div class="header"><div class="header-info"><h2>GRUPO SIBRÜ</h2><p>ISRAEL SILVA ZAMORA</p></div><div class="info-right"><strong style="font-size:12pt">ALTA DE CLIENTE</strong><br>N° DE CLIENTE: __________________________</div></div>';
+      html += '<div class="section-title">DATOS FISCALES</div>';
+      html += '<table><tr><td class="label">' + (cliente['Tipo'] === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</td><td>' + nombre + '</td></tr>';
+      html += '<tr><td class="label">RFC</td><td>' + rfc + '</td></tr>';
+      html += '<tr><td class="label">Régimen Fiscal</td><td>' + regimen + '</td></tr>';
+      html += '<tr><td class="label">Código Postal</td><td>' + cp + '</td></tr>';
+      html += '<tr><td class="label">Uso CFDI</td><td>' + usoCFDI + '</td></tr></table>';
+      html += '<div class="section-title" style="background:#333">DATOS FACTURACIÓN</div>';
+      html += '<table><tr><td class="label">Forma de pago</td><td>' + formaPago + '</td></tr>';
+      html += '<tr><td class="label">Método de pago</td><td>' + metodoPago + '</td></tr>';
+      html += '<tr><td class="label">Correo</td><td>' + correo + '</td></tr></table>';
+      html += '<div class="section-title" style="background:#333">DATOS BANCARIOS</div>';
+      html += '<table><tr><td class="label">Banco</td><td>' + banco + '</td></tr>';
+      html += '<tr><td class="label">CLABE</td><td>' + clabe + '</td></tr>';
+      html += '<tr><td class="label">Número cuenta</td><td>' + cuenta + '</td></tr>';
+      html += '<tr><td class="label">Titular</td><td>' + titular + '</td></tr></table>';
+      html += '<div class="section-title">DATOS CRÉDITO (GRUPO)</div>';
+      html += '<table><tr><td class="label">Línea crédito</td><td></td></tr><tr><td class="label">Días crédito</td><td></td></tr><tr><td class="label">Autorizado por</td><td></td></tr></table>';
+      html += '<p style="margin-top:20px;padding:10px;background:#f5f5f5;border-left:3px solid #6BAE3E"><strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.</p>';
+      html += '<div style="display:flex;justify-content:space-between;margin-top:60px"><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p><p style="color:#666;font-size:9pt">NOMBRE Y FIRMA DEL CLIENTE</p></div><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="color:#666;font-size:9pt">NOMBRE DEL VENDEDOR</p></div></div>';
+    }
+
+    html += '<script>window.onload=function(){window.print();}<\/script>';
+    html += '</body></html>';
+    
+    ventana.document.write(html);
+    ventana.document.close();
+    cerrarModal('modalAccion');
+  }
+
+  function ejecutarEnvioEmail() {
+    const rfc = document.getElementById('accionRFC').value;
+    const email = document.getElementById('accionEmail').value;
+    const tipoDoc = document.getElementById('accionTipoDoc').value;
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Por favor ingrese un correo válido');
+      return;
+    }
+
+    const nombreDoc = tipoDoc === 'manifestacion' ? 'Manifestación CFF' : 'Alta de Cliente';
+    const asunto = 'Documentos ' + nombreDoc + ' - Grupo SIBRÜ';
+    const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    const cuerpo = 'Estimado/a ' + nombre + ',\n\nAdjunto encontrará los documentos solicitados (' + nombreDoc + ').\n\nSaludos cordiales,\nGrupo SIBRÜ\nISRAEL SILVA ZAMORA';
+    
+    window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+    
+    alert('Se ha abierto su cliente de correo. Por favor adjunte el documento PDF generado manualmente.');
+    cerrarModal('modalAccion');
+  }
 </script>
 
 </body>
