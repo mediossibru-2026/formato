@@ -24,7 +24,6 @@
     line-height: 1.5;
   }
 
-  /* ============ FORMULARIO ============ */
   .contenedor-formulario {
     max-width: 700px;
     margin: 0 auto 30px auto;
@@ -187,16 +186,16 @@
 
   .oculto { display: none !important; }
 
-  /* ============ DOCUMENTOS ============ */
+  /* DOCUMENTOS - OCULTOS POR DEFECTO */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
     margin: 0 auto 30px auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
-    display: none;
+    display: none; /* OCULTO POR DEFECTO */
     position: relative;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .barras-superiores {
@@ -218,67 +217,67 @@
   }
 
   .contenido-documento {
-    padding: 10mm 20mm 20mm 20mm;
+    padding: 8mm 15mm 15mm 15mm; /* REDUCIDO */
   }
 
   .header-alta {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
+    margin-bottom: 10px; /* REDUCIDO */
+    padding-bottom: 8px; /* REDUCIDO */
     border-bottom: 2px solid var(--verde-sibru);
   }
 
   .header-alta-logo {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 12px; /* REDUCIDO */
   }
 
   .header-alta-logo img {
-    max-height: 60px;
+    max-height: 50px; /* REDUCIDO */
     width: auto;
   }
 
   .header-alta-info h2 {
-    font-size: 14pt;
+    font-size: 13pt; /* REDUCIDO */
     font-weight: 800;
     color: var(--negro);
     margin: 0;
   }
 
   .header-alta-info p {
-    font-size: 10pt;
+    font-size: 9pt; /* REDUCIDO */
     color: var(--gris-texto);
     margin: 2px 0 0 0;
   }
 
   .header-alta-cliente {
     text-align: right;
-    font-size: 9pt;
+    font-size: 8pt; /* REDUCIDO */
     color: var(--gris-texto);
   }
 
   .header-alta-cliente strong {
     display: block;
     color: var(--negro);
-    font-size: 10pt;
+    font-size: 9pt; /* REDUCIDO */
   }
 
   .seccion-alta {
-    margin-bottom: 12px;
+    margin-bottom: 8px; /* REDUCIDO */
   }
 
   .seccion-alta-titulo {
     background: var(--negro);
     color: white;
-    padding: 6px 12px;
-    font-size: 9pt;
+    padding: 5px 10px; /* REDUCIDO */
+    font-size: 8.5pt; /* REDUCIDO */
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 8px;
+    margin-bottom: 6px; /* REDUCIDO */
   }
 
   .seccion-alta-titulo.verde {
@@ -288,11 +287,11 @@
   .tabla-alta {
     width: 100%;
     border-collapse: collapse;
-    font-size: 9pt;
+    font-size: 8.5pt; /* REDUCIDO */
   }
 
   .tabla-alta td {
-    padding: 6px 10px;
+    padding: 4px 8px; /* REDUCIDO */
     border: 1px solid #ddd;
     vertical-align: middle;
   }
@@ -306,41 +305,41 @@
 
   .tabla-alta td.valor {
     color: var(--gris-texto);
-    min-height: 20px;
+    min-height: 18px; /* REDUCIDO */
   }
 
   .tabla-alta td.valor.vacio {
-    height: 25px;
+    height: 20px; /* REDUCIDO */
     background: white;
   }
 
   .checkbox-doc {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 4px 0;
-    font-size: 9pt;
+    gap: 6px; /* REDUCIDO */
+    padding: 3px 0; /* REDUCIDO */
+    font-size: 8.5pt; /* REDUCIDO */
   }
 
   .checkbox-doc input[type="checkbox"] {
-    width: 14px;
-    height: 14px;
+    width: 12px; /* REDUCIDO */
+    height: 12px; /* REDUCIDO */
     accent-color: var(--verde-sibru);
   }
 
   .nota-alta {
-    font-size: 8pt;
+    font-size: 7.5pt; /* REDUCIDO */
     color: #666;
     font-style: italic;
-    margin-top: 5px;
+    margin-top: 3px; /* REDUCIDO */
   }
 
   .declaracion-alta {
     text-align: justify;
-    font-size: 9pt;
+    font-size: 8.5pt; /* REDUCIDO */
     color: var(--gris-texto);
-    margin: 15px 0;
-    padding: 10px;
+    margin: 10px 0; /* REDUCIDO */
+    padding: 8px; /* REDUCIDO */
     background: var(--gris-claro);
     border-left: 3px solid var(--verde-sibru);
   }
@@ -348,81 +347,81 @@
   .firmas-alta {
     display: flex;
     justify-content: space-between;
-    margin-top: 40px;
-    gap: 30px;
+    margin-top: 25px; /* REDUCIDO */
+    gap: 20px; /* REDUCIDO */
   }
 
   .firma-alta-box {
     flex: 1;
-    max-width: 300px;
+    max-width: 250px; /* REDUCIDO */
     text-align: center;
   }
 
   .firma-alta-linea {
     border-top: 1px solid var(--negro);
-    margin-bottom: 8px;
-    padding-top: 8px;
+    margin-bottom: 6px; /* REDUCIDO */
+    padding-top: 6px; /* REDUCIDO */
   }
 
   .firma-alta-nombre {
-    font-size: 9pt;
+    font-size: 8.5pt; /* REDUCIDO */
     font-weight: 700;
     color: var(--negro);
   }
 
   .firma-alta-titulo {
-    font-size: 8pt;
+    font-size: 7.5pt; /* REDUCIDO */
     color: var(--gris-texto);
     text-transform: uppercase;
   }
 
   .logo-centrado {
     text-align: center;
-    margin-bottom: 15px;
+    margin-bottom: 12px; /* REDUCIDO */
   }
 
   .logo-empresa {
-    max-height: 220px;
+    max-height: 140px; /* REDUCIDO */
     width: auto;
   }
 
   .titulo-principal {
     text-align: center;
-    font-size: 16pt;
+    font-size: 15pt; /* REDUCIDO */
     font-weight: 800;
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 5px;
+    margin-bottom: 4px; /* REDUCIDO */
   }
 
   .titulo-sub {
     text-align: center;
-    font-size: 10pt;
+    font-size: 9.5pt; /* REDUCIDO */
     font-weight: 700;
     color: var(--rojo-sibru);
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 12px;
+    margin-bottom: 10px; /* REDUCIDO */
   }
 
   .linea-verde {
     border: none;
     border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 20px;
+    margin-bottom: 15px; /* REDUCIDO */
   }
 
   .lugar-fecha {
     text-align: right;
-    margin-bottom: 20px;
-    font-size: 10pt;
+    margin-bottom: 15px; /* REDUCIDO */
+    font-size: 9.5pt; /* REDUCIDO */
     color: var(--gris-texto);
   }
 
   .lugar-fecha .linea-lf {
     display: inline-block;
     border-bottom: 1px solid var(--negro);
-    min-width: 220px;
+    min-width: 200px; /* REDUCIDO */
     text-align: center;
     padding: 0 5px;
     color: var(--negro);
@@ -431,17 +430,17 @@
 
   .destinatario {
     font-weight: 700;
-    margin-bottom: 15px;
-    font-size: 10.5pt;
+    margin-bottom: 12px; /* REDUCIDO */
+    font-size: 10pt; /* REDUCIDO */
     color: var(--negro);
     letter-spacing: 1px;
   }
 
   .parrafo {
     text-align: justify;
-    margin-bottom: 12px;
-    font-size: 10pt;
-    line-height: 1.6;
+    margin-bottom: 8px; /* REDUCIDO */
+    font-size: 9.5pt; /* REDUCIDO */
+    line-height: 1.5; /* REDUCIDO */
     color: var(--gris-texto);
   }
 
@@ -453,61 +452,61 @@
   .dato-linea {
     display: inline-block;
     border-bottom: 1px solid var(--negro);
-    min-width: 180px;
+    min-width: 160px; /* REDUCIDO */
     text-align: center;
     padding: 0 5px;
     color: var(--negro);
     font-weight: 600;
   }
 
-  .dato-linea.largo { min-width: 280px; }
-  .dato-linea.corto { min-width: 140px; }
+  .dato-linea.largo { min-width: 240px; /* REDUCIDO */ }
+  .dato-linea.corto { min-width: 120px; /* REDUCIDO */ }
 
   .cierre {
-    margin-top: 15px;
+    margin-top: 10px; /* REDUCIDO */
     text-align: justify;
-    font-size: 10pt;
+    font-size: 9.5pt; /* REDUCIDO */
     color: var(--gris-texto);
   }
 
   .firma-seccion {
-    margin-top: 90px;
+    margin-top: 50px; /* REDUCIDO */
     text-align: center;
     page-break-inside: avoid;
   }
 
   .firma-atentamente {
-    font-size: 10pt;
+    font-size: 9.5pt; /* REDUCIDO */
     font-weight: 700;
     letter-spacing: 3px;
     color: var(--verde-sibru);
-    margin-bottom: 30px;
+    margin-bottom: 25px; /* REDUCIDO */
     text-transform: uppercase;
   }
 
   .linea-firma {
     border-top: 1px solid var(--negro);
-    width: 280px;
-    margin: 0 auto 8px auto;
+    width: 260px; /* REDUCIDO */
+    margin: 0 auto 6px auto; /* REDUCIDO */
   }
 
   .nombre-firma {
     font-weight: 700;
-    font-size: 10pt;
+    font-size: 9.5pt; /* REDUCIDO */
     color: var(--negro);
   }
 
   .cargo-firma {
-    font-size: 9pt;
+    font-size: 8.5pt; /* REDUCIDO */
     color: var(--gris-texto);
     margin-top: 2px;
   }
 
   .footer-documento {
-    margin-top: 30px;
+    margin-top: 20px; /* REDUCIDO */
     text-align: center;
-    font-size: 8pt;
-    padding: 6px 0;
+    font-size: 7.5pt; /* REDUCIDO */
+    padding: 4px 0; /* REDUCIDO */
     letter-spacing: 0.5px;
     color: #999;
     border-top: 1px solid #e0e0e0;
@@ -540,16 +539,16 @@
       page-break-after: auto;
     }
     .contenido-documento {
-      padding: 8mm 18mm 15mm 18mm;
+      padding: 6mm 12mm 10mm 12mm; /* REDUCIDO PARA IMPRESIÓN */
     }
     .logo-empresa {
-      max-height: 140px;
+      max-height: 120px; /* REDUCIDO */
     }
     .firma-seccion {
-      margin-top: 50px;
+      margin-top: 40px; /* REDUCIDO */
     }
     .header-alta-logo img {
-      max-height: 50px;
+      max-height: 45px; /* REDUCIDO */
     }
   }
 </style>
@@ -860,31 +859,31 @@
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Documentación Obligatoria para Alta (Marcar y Adjuntar)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocConstancia"> Constancia de Situación Fiscal (mes actual)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocOpinion"> Opinión de cumplimiento positivo</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocComprobante"> Comprobante de domicilio vigente</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocIdentificacion"> Identificación oficial vigente</div>
+      <div class="seccion-alta-titulo">Documentación Obligatoria (Marcar)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocConstancia"> Constancia Situación Fiscal</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocOpinion"> Opinión cumplimiento positivo</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocComprobante"> Comprobante domicilio</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aFisicaDocIdentificacion"> Identificación oficial</div>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo verde">Datos Fiscales (Conforme a Constancia de Situación Fiscal)</div>
+      <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
         <tr><td class="label">Nombre</td><td class="valor" id="aFisicaNombre"></td></tr>
-        <tr><td class="label">RFC (12 persona moral / 13 persona física)</td><td class="valor" id="aFisicaRFC"></td></tr>
+        <tr><td class="label">RFC</td><td class="valor" id="aFisicaRFC"></td></tr>
         <tr><td class="label">Régimen Fiscal</td><td class="valor" id="aFisicaRegimen"></td></tr>
-        <tr><td class="label">Código Postal del domicilio fiscal</td><td class="valor" id="aFisicaCP"></td></tr>
-        <tr><td class="label">Uso de CFDI</td><td class="valor" id="aFisicaUsoCFDI"></td></tr>
+        <tr><td class="label">Código Postal</td><td class="valor" id="aFisicaCP"></td></tr>
+        <tr><td class="label">Uso CFDI</td><td class="valor" id="aFisicaUsoCFDI"></td></tr>
       </table>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Datos para Facturación</div>
+      <div class="seccion-alta-titulo">Datos Facturación</div>
       <table class="tabla-alta">
         <tr><td class="label">Forma de pago</td><td class="valor" id="aFisicaFormaPago"></td></tr>
         <tr><td class="label">Método de pago</td><td class="valor" id="aFisicaMetodoPago"></td></tr>
-        <tr><td class="label">Correo para envío de facturas</td><td class="valor" id="aFisicaCorreo"></td></tr>
-        <tr><td class="label">Confirmación de correo validado (Sí/No)</td><td class="valor" id="aFisicaConfirmacionCorreo"></td></tr>
+        <tr><td class="label">Correo</td><td class="valor" id="aFisicaCorreo"></td></tr>
+        <tr><td class="label">Confirmación correo</td><td class="valor" id="aFisicaConfirmacionCorreo"></td></tr>
       </table>
     </div>
 
@@ -892,26 +891,24 @@
       <div class="seccion-alta-titulo">Datos Bancarios</div>
       <table class="tabla-alta">
         <tr><td class="label">Banco</td><td class="valor" id="aFisicaBanco"></td></tr>
-        <tr><td class="label">CLABE Interbancaria</td><td class="valor" id="aFisicaCLABE"></td></tr>
-        <tr><td class="label">Número de cuenta</td><td class="valor" id="aFisicaCuenta"></td></tr>
-        <tr><td class="label">Titular de la cuenta</td><td class="valor" id="aFisicaTitularCuenta"></td></tr>
+        <tr><td class="label">CLABE</td><td class="valor" id="aFisicaCLABE"></td></tr>
+        <tr><td class="label">Número cuenta</td><td class="valor" id="aFisicaCuenta"></td></tr>
+        <tr><td class="label">Titular</td><td class="valor" id="aFisicaTitularCuenta"></td></tr>
       </table>
-      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre o razón social registrada en el RFC.</div>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo verde">Datos de Crédito (Espacio exclusivo para Grupo)</div>
+      <div class="seccion-alta-titulo verde">Datos Crédito (Grupo)</div>
       <table class="tabla-alta">
-        <tr><td class="label">Línea de crédito solicitada</td><td class="valor vacio"></td></tr>
-        <tr><td class="label">Días de crédito solicitados</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Línea crédito</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Días crédito</td><td class="valor vacio"></td></tr>
         <tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>
-        <tr><td class="label">Fecha de autorización</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>
       </table>
     </div>
 
     <div class="declaracion-alta">
-      <strong>DECLARACIÓN</strong><br>
-      El cliente declara que la información y documentación proporcionada es verídica, actual y corresponde a su situación fiscal vigente. La empresa se reserva el derecho de verificar la información proporcionada.
+      <strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.
     </div>
 
     <div class="firmas-alta">
@@ -952,34 +949,34 @@
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Documentación Obligatoria para Alta (Marcar y Adjuntar)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocConstancia"> Constancia de Situación Fiscal (mes actual)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocOpinion"> Opinión de cumplimiento positivo</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocComprobante"> Comprobante de domicilio vigente</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocActa"> Acta constitutiva (si aplica)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocPoder"> Poder notarial del representante legal (si aplica)</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocIdentificacion"> Identificación oficial vigente</div>
-      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocCaratula"> Carátula de estado de cuenta (CLABE visible y mismo RFC)</div>
+      <div class="seccion-alta-titulo">Documentación Obligatoria (Marcar)</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocConstancia"> Constancia Situación Fiscal</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocOpinion"> Opinión cumplimiento</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocComprobante"> Comprobante domicilio</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocActa"> Acta constitutiva</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocPoder"> Poder notarial</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocIdentificacion"> Identificación</div>
+      <div class="checkbox-doc"><input type="checkbox" id="aMoralDocCaratula"> Carátula cuenta (CLABE)</div>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo verde">Datos Fiscales (Conforme a Constancia de Situación Fiscal)</div>
+      <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
-        <tr><td class="label">Nombre o Razón Social</td><td class="valor" id="aMoralRazonSocial"></td></tr>
-        <tr><td class="label">RFC (12 persona moral / 13 persona física)</td><td class="valor" id="aMoralRFC"></td></tr>
+        <tr><td class="label">Razón Social</td><td class="valor" id="aMoralRazonSocial"></td></tr>
+        <tr><td class="label">RFC</td><td class="valor" id="aMoralRFC"></td></tr>
         <tr><td class="label">Régimen Fiscal</td><td class="valor" id="aMoralRegimen"></td></tr>
-        <tr><td class="label">Código Postal del domicilio fiscal</td><td class="valor" id="aMoralCP"></td></tr>
-        <tr><td class="label">Uso de CFDI</td><td class="valor" id="aMoralUsoCFDI"></td></tr>
+        <tr><td class="label">Código Postal</td><td class="valor" id="aMoralCP"></td></tr>
+        <tr><td class="label">Uso CFDI</td><td class="valor" id="aMoralUsoCFDI"></td></tr>
       </table>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Datos para Facturación</div>
+      <div class="seccion-alta-titulo">Datos Facturación</div>
       <table class="tabla-alta">
         <tr><td class="label">Forma de pago</td><td class="valor" id="aMoralFormaPago"></td></tr>
         <tr><td class="label">Método de pago</td><td class="valor" id="aMoralMetodoPago"></td></tr>
-        <tr><td class="label">Correo para envío de facturas</td><td class="valor" id="aMoralCorreo"></td></tr>
-        <tr><td class="label">Confirmación de correo validado (Sí/No)</td><td class="valor" id="aMoralConfirmacionCorreo"></td></tr>
+        <tr><td class="label">Correo</td><td class="valor" id="aMoralCorreo"></td></tr>
+        <tr><td class="label">Confirmación</td><td class="valor" id="aMoralConfirmacionCorreo"></td></tr>
       </table>
     </div>
 
@@ -987,26 +984,24 @@
       <div class="seccion-alta-titulo">Datos Bancarios</div>
       <table class="tabla-alta">
         <tr><td class="label">Banco</td><td class="valor" id="aMoralBanco"></td></tr>
-        <tr><td class="label">CLABE Interbancaria</td><td class="valor" id="aMoralCLABE"></td></tr>
-        <tr><td class="label">Número de cuenta</td><td class="valor" id="aMoralCuenta"></td></tr>
-        <tr><td class="label">Titular de la cuenta</td><td class="valor" id="aMoralTitularCuenta"></td></tr>
+        <tr><td class="label">CLABE</td><td class="valor" id="aMoralCLABE"></td></tr>
+        <tr><td class="label">Número cuenta</td><td class="valor" id="aMoralCuenta"></td></tr>
+        <tr><td class="label">Titular</td><td class="valor" id="aMoralTitularCuenta"></td></tr>
       </table>
-      <div class="nota-alta">Nota: La cuenta bancaria proporcionada deberá coincidir con el nombre o razón social registrada en el RFC.</div>
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo verde">Datos de Crédito (Espacio exclusivo para Grupo)</div>
+      <div class="seccion-alta-titulo verde">Datos Crédito (Grupo)</div>
       <table class="tabla-alta">
-        <tr><td class="label">Línea de crédito solicitada</td><td class="valor vacio"></td></tr>
-        <tr><td class="label">Días de crédito solicitados</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Línea crédito</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Días crédito</td><td class="valor vacio"></td></tr>
         <tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>
-        <tr><td class="label">Fecha de autorización</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>
       </table>
     </div>
 
     <div class="declaracion-alta">
-      <strong>DECLARACIÓN</strong><br>
-      El cliente declara que la información y documentación proporcionada es verídica, actual y corresponde a su situación fiscal vigente. La empresa se reserva el derecho de verificar la información proporcionada.
+      <strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.
     </div>
 
     <div class="firmas-alta">
@@ -1218,9 +1213,9 @@
     const nombre = document.getElementById('fisicaNombre').value.trim();
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
 
-    if (!lugarFecha || !nombre || !rfc) { alert('Por favor, complete los campos obligatorios: Lugar y fecha, Nombre y RFC.'); return; }
-    if (rfc.length !== 13) { alert('El RFC de Persona Física debe tener exactamente 13 caracteres.'); return; }
-    if (!validarEmailFisica()) { alert('El correo electrónico no tiene un formato válido.'); return; }
+    if (!lugarFecha || !nombre || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
+    if (rfc.length !== 13) { alert('El RFC debe tener 13 caracteres.'); return; }
+    if (!validarEmailFisica()) { alert('Correo inválido.'); return; }
 
     const idCliente = generarIDCliente(rfc);
 
@@ -1245,11 +1240,13 @@
     document.getElementById('aFisicaTitularCuenta').textContent = document.getElementById('fisicaTitularCuenta').value.trim();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
-    // OCULTAR documentos de persona moral
+    // OCULTAR TODOS PRIMERO
+    document.getElementById('docManifestacionFisica').style.display = 'none';
+    document.getElementById('docAltaFisica').style.display = 'none';
     document.getElementById('docManifestacionMoral').style.display = 'none';
     document.getElementById('docAltaMoral').style.display = 'none';
     
-    // MOSTRAR solo documentos de persona física
+    // MOSTRAR SOLO FÍSICA
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('docManifestacionFisica').style.display = 'block';
     document.getElementById('docAltaFisica').style.display = 'block';
@@ -1263,9 +1260,9 @@
     const razonSocial = document.getElementById('moralRazonSocial').value.trim();
     const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
 
-    if (!lugarFecha || !representante || !razonSocial || !rfc) { alert('Por favor, complete los campos obligatorios: Lugar y fecha, Representante, Razón Social y RFC.'); return; }
-    if (rfc.length !== 12) { alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.'); return; }
-    if (!validarEmailMoral()) { alert('El correo electrónico no tiene un formato válido.'); return; }
+    if (!lugarFecha || !representante || !razonSocial || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
+    if (rfc.length !== 12) { alert('El RFC debe tener 12 caracteres.'); return; }
+    if (!validarEmailMoral()) { alert('Correo inválido.'); return; }
 
     const idCliente = generarIDCliente(rfc);
 
@@ -1291,11 +1288,13 @@
     document.getElementById('aMoralTitularCuenta').textContent = document.getElementById('moralTitularCuenta').value.trim();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
-    // OCULTAR documentos de persona física
+    // OCULTAR TODOS PRIMERO
     document.getElementById('docManifestacionFisica').style.display = 'none';
     document.getElementById('docAltaFisica').style.display = 'none';
+    document.getElementById('docManifestacionMoral').style.display = 'none';
+    document.getElementById('docAltaMoral').style.display = 'none';
     
-    // MOSTRAR solo documentos de persona moral
+    // MOSTRAR SOLO MORAL
     document.getElementById('formulario').style.display = 'none';
     document.getElementById('docManifestacionMoral').style.display = 'block';
     document.getElementById('docAltaMoral').style.display = 'block';
