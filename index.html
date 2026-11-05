@@ -163,17 +163,46 @@
   /* ============ DOCUMENTO ============ */
   .hoja-documento {
     max-width: 216mm;
-    height: 279mm;
+    min-height: 279mm;
     margin: 0 auto;
     background: white;
     box-shadow: 0 4px 25px rgba(0,0,0,0.15);
     display: none;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
+  }
+
+  /* BARRAS SUPERIORES */
+  .barras-superiores {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .barra-verde {
+    width: 100%;
+    height: 14px;
+    background-color: #007A3D;
+  }
+
+  .barra-naranja {
+    width: 100%;
+    height: 6px;
+    background-color: var(--rojo-sibru);
+  }
+
+  /* BOTONES EN PARTE ALTA DEL DOCUMENTO */
+  .botones-doc-top {
+    padding: 15px 20mm;
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    background: #f9f9f9;
+    border-bottom: 1px solid #e0e0e0;
   }
 
   .contenido-documento {
-    padding: 15mm 20mm 25mm 20mm;
+    padding: 10mm 20mm 20mm 20mm;
   }
 
   .logo-centrado {
@@ -304,24 +333,16 @@
   }
 
   .footer-documento {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    margin-top: 30px;
     text-align: center;
     font-size: 8pt;
-    padding: 6px 20mm;
+    padding: 6px 0;
     letter-spacing: 0.5px;
     color: #999;
+    border-top: 1px solid #e0e0e0;
   }
 
-  .botones-doc {
-    padding: 20px;
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-  }
-
+  /* ============ IMPRESIÓN ============ */
   @media print {
     @page {
       size: letter;
@@ -332,10 +353,11 @@
       padding: 0;
       margin: 0;
     }
-    .contenedor-formulario, .botones-doc, .no-print {
+    .contenedor-formulario, .botones-doc-top, .no-print {
       display: none !important;
     }
     .hoja-documento {
+      display: block !important;
       box-shadow: none;
       margin: 0;
       width: 100%;
@@ -348,6 +370,15 @@
     }
     .hoja-documento.activo {
       display: block !important;
+    }
+    .contenido-documento {
+      padding: 8mm 20mm 15mm 20mm;
+    }
+    .logo-empresa {
+      max-height: 140px;
+    }
+    .firma-seccion {
+      margin-top: 50px;
     }
   }
 </style>
@@ -417,6 +448,16 @@
 
 <!-- DOCUMENTO PERSONA FÍSICA -->
 <div class="hoja-documento" id="documentoFisica">
+  <div class="barras-superiores">
+    <div class="barra-verde"></div>
+    <div class="barra-naranja"></div>
+  </div>
+
+  <div class="botones-doc-top no-print">
+    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+  </div>
+
   <div class="contenido-documento">
     <div class="logo-centrado">
       <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
@@ -460,20 +501,25 @@
       <div class="linea-firma"></div>
       <div class="nombre-firma" id="docFisicaFirmaNombre"></div>
     </div>
-  </div>
 
-  <div class="footer-documento">
-    GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
-  </div>
-
-  <div class="botones-doc no-print">
-    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
-    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+    <div class="footer-documento">
+      GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+    </div>
   </div>
 </div>
 
 <!-- DOCUMENTO PERSONA MORAL -->
 <div class="hoja-documento" id="documentoMoral">
+  <div class="barras-superiores">
+    <div class="barra-verde"></div>
+    <div class="barra-naranja"></div>
+  </div>
+
+  <div class="botones-doc-top no-print">
+    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+  </div>
+
   <div class="contenido-documento">
     <div class="logo-centrado">
       <img src="logo.png" alt="Grupo SIBRÜ" class="logo-empresa">
@@ -518,15 +564,10 @@
       <div class="nombre-firma" id="docMoralFirmaNombre"></div>
       <div class="cargo-firma">Representante Legal</div>
     </div>
-  </div>
 
-  <div class="footer-documento">
-    GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
-  </div>
-
-  <div class="botones-doc no-print">
-    <button class="btn-imprimir" onclick="imprimirDocumento()">Imprimir / Guardar como PDF</button>
-    <button class="btn-editar" onclick="editarDocumento()">Editar Datos</button>
+    <div class="footer-documento">
+      GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740
+    </div>
   </div>
 </div>
 
@@ -645,7 +686,6 @@
   }
 
   function imprimirDocumento() {
-    // Asegurar que solo el documento activo se imprima
     const docFisica = document.getElementById('documentoFisica');
     const docMoral = document.getElementById('documentoMoral');
     
@@ -670,7 +710,6 @@
   }
 
   function borrarFormulario() {
-    // Limpiar todos los inputs
     document.getElementById('fisicaLugarFecha').value = '';
     document.getElementById('fisicaNombre').value = '';
     document.getElementById('fisicaRFC').value = '';
@@ -679,25 +718,20 @@
     document.getElementById('moralRazonSocial').value = '';
     document.getElementById('moralRFC').value = '';
 
-    // Quitar errores
     document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
     document.querySelectorAll('.mensaje-error.visible').forEach(el => el.classList.remove('visible'));
 
-    // Desmarcar radio buttons
     const radios = document.getElementsByName('tipoPersona');
     radios.forEach(radio => radio.checked = false);
 
-    // Ocultar formularios tipo
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
 
-    // Ocultar documentos
     document.getElementById('documentoFisica').style.display = 'none';
     document.getElementById('documentoMoral').style.display = 'none';
     document.getElementById('documentoFisica').classList.remove('activo', 'no-activo');
     document.getElementById('documentoMoral').classList.remove('activo', 'no-activo');
 
-    // Mostrar formulario principal
     document.getElementById('formulario').style.display = 'block';
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
