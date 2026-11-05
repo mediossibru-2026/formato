@@ -598,6 +598,7 @@
 
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
+  const LOGO_URL = 'https://mediossibru-2026.github.io/formato/logo.png';
   
   let clientesData = [];
   let clientesFiltrados = [];
@@ -636,11 +637,12 @@
       return;
     }
     
-    datos.forEach(c => {
+    datos.forEach(function(c) {
       const tr = document.createElement('tr');
       const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
       const status = c['Status'] || 'ACTIVO';
       const badgeClass = status === 'ACTIVO' ? 'badge-activo' : 'badge-baja';
+      const rfcSafe = (c['RFC'] || '').replace(/'/g, "\\'");
       
       tr.innerHTML = 
         '<td>' + (c['ID Cliente'] || '-') + '</td>' +
@@ -651,10 +653,10 @@
         '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
         '<td>' + (c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A') + '</td>' +
         '<td>' +
-          '<button class="btn-accion-small btn-edit-small" onclick="editarCliente(\'' + (c['RFC'] || '') + '\')">✏️</button>' +
-          '<button class="btn-accion-small btn-print-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'imprimir\')">🖨️</button>' +
-          '<button class="btn-accion-small btn-email-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'email\')">📧</button>' +
-          '<button class="btn-accion-small btn-delete-small" onclick="eliminarCliente(\'' + (c['RFC'] || '') + '\')">🗑️</button>' +
+          '<button class="btn-accion-small btn-edit-small" onclick="editarCliente(\'' + rfcSafe + '\')">✏️</button>' +
+          '<button class="btn-accion-small btn-print-small" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'imprimir\')">🖨️</button>' +
+          '<button class="btn-accion-small btn-email-small" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'email\')">📧</button>' +
+          '<button class="btn-accion-small btn-delete-small" onclick="eliminarCliente(\'' + rfcSafe + '\')">🗑️</button>' +
         '</td>';
       tbody.appendChild(tr);
     });
@@ -924,22 +926,6 @@
     const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
     if (!cliente) return;
 
-    const ventana = window.open('', '_blank');
-    let html = '<!DOCTYPE html><html><head><title>Documento - Grupo SIBRÜ</title>';
-    html += '<style>body{font-family:Arial,sans-serif;padding:30px;max-width:800px;margin:0 auto}';
-    html += 'h1{color:#007A3D;text-align:center}h2{text-align:center;color:#333}';
-    html += '.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #6BAE3E;padding-bottom:15px;margin-bottom:20px}';
-    html += '.header img{max-height:60px}.header-info h2{margin:0;font-size:18pt}';
-    html += '.header-info p{margin:2px 0 0 0;color:#666}';
-    html += '.info-right{text-align:right;font-size:10pt}';
-    html += 'table{width:100%;border-collapse:collapse;margin:15px 0}';
-    html += 'td{padding:8px;border:1px solid #ddd}';
-    html += 'td.label{background:#f5f5f5;font-weight:600;width:35%}';
-    html += '.firma{margin-top:60px;text-align:center}';
-    html += '.firma-linea{border-top:1px solid #000;width:300px;margin:0 auto 10px}';
-    html += '.section-title{background:#007A3D;color:white;padding:8px;margin-top:20px;font-weight:700}';
-    html += '@media print{body{padding:15px}}</style></head><body>';
-
     const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
     const representante = cliente['Representante Legal'] || '';
     const regimen = cliente['Régimen Fiscal'] || '';
@@ -953,49 +939,175 @@
     const cuenta = cliente['Número de Cuenta'] || '';
     const titular = cliente['Titular de Cuenta'] || '';
     const lugarFecha = cliente['Lugar y Fecha'] || '';
-
+    const tipoCliente = cliente['Tipo'] || 'Persona Física';
+    
+    const ventana = window.open('', '_blank');
+    
+    let html = '<!DOCTYPE html>';
+    html += '<html lang="es">';
+    html += '<head>';
+    html += '<meta charset="UTF-8">';
+    html += '<title>Documento - Grupo SIBRÜ</title>';
+    html += '<style>';
+    html += ':root { --verde-sibru: #6BAE3E; --verde-banda: #007A3D; --rojo-sibru: #D94F3D; --negro: #1a1a1a; --gris-texto: #333333; --gris-claro: #f5f5f5; }';
+    html += '* { box-sizing: border-box; margin: 0; padding: 0; }';
+    html += 'body { font-family: Segoe UI, Arial, sans-serif; background: white; padding: 0; }';
+    html += '.hoja-documento { max-width: 216mm; min-height: 279mm; margin: 0 auto; background: white; position: relative; overflow: visible; }';
+    html += '.barras-superiores { width: 100%; display: flex; flex-direction: column; }';
+    html += '.barra-verde { width: 100%; height: 14px; background-color: var(--verde-banda); }';
+    html += '.barra-naranja { width: 100%; height: 6px; background-color: var(--rojo-sibru); }';
+    html += '.contenido-documento { padding: 10mm 18mm 15mm 18mm; }';
+    html += '.header-alta { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--verde-sibru); }';
+    html += '.header-alta-logo { display: flex; align-items: center; gap: 12px; }';
+    html += '.header-alta-logo img { max-height: 50px; width: auto; }';
+    html += '.header-alta-info h2 { font-size: 13pt; font-weight: 800; color: var(--negro); margin: 0; }';
+    html += '.header-alta-info p { font-size: 9pt; color: var(--gris-texto); margin: 2px 0 0 0; }';
+    html += '.header-alta-cliente { text-align: right; font-size: 8pt; color: var(--gris-texto); }';
+    html += '.header-alta-cliente strong { display: block; color: var(--negro); font-size: 9pt; }';
+    html += '.seccion-alta { margin-bottom: 8px; }';
+    html += '.seccion-alta-titulo { background: var(--negro); color: white; padding: 5px 10px; font-size: 8.5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+    html += '.seccion-alta-titulo.verde { background: var(--verde-banda); -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+    html += '.tabla-alta { width: 100%; border-collapse: collapse; font-size: 8.5pt; }';
+    html += '.tabla-alta td { padding: 4px 8px; border: 1px solid #ddd; vertical-align: middle; }';
+    html += '.tabla-alta td.label { font-weight: 600; color: var(--negro); width: 40%; background: var(--gris-claro); -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+    html += '.tabla-alta td.valor { color: var(--gris-texto); min-height: 18px; }';
+    html += '.tabla-alta td.valor.vacio { height: 20px; background: white; }';
+    html += '.checkbox-doc { display: flex; align-items: center; gap: 6px; padding: 3px 0; font-size: 8.5pt; }';
+    html += '.checkbox-doc input[type="checkbox"] { width: 12px; height: 12px; accent-color: var(--verde-sibru); }';
+    html += '.declaracion-alta { text-align: justify; font-size: 8.5pt; color: var(--gris-texto); margin: 12px 0; padding: 8px; background: var(--gris-claro); border-left: 3px solid var(--verde-sibru); -webkit-print-color-adjust: exact; print-color-adjust: exact; }';
+    html += '.firmas-alta { display: flex; justify-content: space-between; margin-top: 35px; gap: 20px; }';
+    html += '.firma-alta-box { flex: 1; max-width: 250px; text-align: center; }';
+    html += '.firma-alta-linea { border-top: 1px solid var(--negro); margin-bottom: 6px; padding-top: 6px; }';
+    html += '.firma-alta-nombre { font-size: 8.5pt; font-weight: 700; color: var(--negro); }';
+    html += '.firma-alta-titulo { font-size: 7.5pt; color: var(--gris-texto); text-transform: uppercase; }';
+    html += '.logo-centrado { text-align: center; margin-bottom: 12px; }';
+    html += '.logo-empresa { max-height: 140px; width: auto; }';
+    html += '.titulo-principal { text-align: center; font-size: 15pt; font-weight: 800; color: var(--negro); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }';
+    html += '.titulo-sub { text-align: center; font-size: 9.5pt; font-weight: 700; color: var(--rojo-sibru); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }';
+    html += '.linea-verde { border: none; border-top: 2px solid var(--verde-sibru); margin-bottom: 18px; }';
+    html += '.lugar-fecha { text-align: right; margin-bottom: 18px; font-size: 10pt; color: var(--gris-texto); }';
+    html += '.lugar-fecha .linea-lf { display: inline-block; border-bottom: 1px solid var(--negro); min-width: 200px; text-align: center; padding: 0 5px; color: var(--negro); font-weight: 600; }';
+    html += '.destinatario { font-weight: 700; margin-bottom: 15px; font-size: 10.5pt; color: var(--negro); letter-spacing: 1px; }';
+    html += '.parrafo { text-align: justify; margin-bottom: 12px; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }';
+    html += '.parrafo strong { color: var(--negro); font-weight: 700; }';
+    html += '.dato-linea { display: inline-block; border-bottom: 1px solid var(--negro); min-width: 160px; text-align: center; padding: 0 5px; color: var(--negro); font-weight: 600; }';
+    html += '.dato-linea.largo { min-width: 240px; }';
+    html += '.dato-linea.corto { min-width: 120px; }';
+    html += '.cierre { margin-top: 18px; text-align: justify; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }';
+    html += '.firma-seccion { margin-top: 60px; text-align: center; page-break-inside: avoid; }';
+    html += '.firma-atentamente { font-size: 10pt; font-weight: 700; letter-spacing: 3px; color: var(--verde-sibru); margin-bottom: 25px; text-transform: uppercase; }';
+    html += '.linea-firma { border-top: 1px solid var(--negro); width: 260px; margin: 0 auto 6px auto; }';
+    html += '.nombre-firma { font-weight: 700; font-size: 10pt; color: var(--negro); }';
+    html += '.cargo-firma { font-size: 9pt; color: var(--gris-texto); margin-top: 2px; }';
+    html += '.footer-documento { margin-top: 20px; text-align: center; font-size: 7.5pt; padding: 4px 0; letter-spacing: 0.5px; color: #999; border-top: 1px solid #e0e0e0; }';
+    html += '@media print { @page { size: letter; margin: 0; } body { background: white; padding: 0; margin: 0; } .hoja-documento { box-shadow: none; margin: 0; width: 100%; max-width: 100%; min-height: 279mm; overflow: visible !important; page-break-after: always; } .contenido-documento { padding: 8mm 15mm 15mm 15mm; } .logo-empresa { max-height: 120px; } .firma-seccion { margin-top: 50px; } .header-alta-logo img { max-height: 45px; } .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; } }';
+    html += '</style>';
+    html += '</head>';
+    html += '<body>';
+    
     if (tipoDoc === 'manifestacion') {
-      html += '<h1>MANIFESTACIÓN ESCRITA</h1>';
-      html += '<h2 style="color:#D94F3D;font-size:11pt">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</h2>';
-      html += '<hr style="border-top:2px solid #6BAE3E;margin:15px 0">';
-      html += '<p style="text-align:right;margin-bottom:20px">Lugar y fecha: ' + lugarFecha + '</p>';
-      html += '<p style="font-weight:700;margin-bottom:15px">A QUIEN CORRESPONDA:</p>';
+      html += '<div class="hoja-documento">';
+      html += '<div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>';
+      html += '<div class="contenido-documento">';
+      html += '<div class="logo-centrado"><img src="' + LOGO_URL + '" alt="Grupo SIBRÜ" class="logo-empresa"></div>';
+      html += '<div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>';
+      html += '<div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>';
+      html += '<hr class="linea-verde">';
+      html += '<div class="lugar-fecha">Lugar y fecha: <span class="linea-lf">' + lugarFecha + '</span></div>';
+      html += '<div class="destinatario">A QUIEN CORRESPONDA:</div>';
       
-      if (cliente['Tipo'] === 'Persona Física') {
-        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+      if (tipoCliente === 'Persona Física') {
+        html += '<div class="parrafo">Quien suscribe, <span class="dato-linea largo">' + nombre + '</span>, con RFC <span class="dato-linea corto">' + rfc + '</span>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>';
       } else {
-        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + representante + '</strong>, en mi carácter de representante legal de <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+        html += '<div class="parrafo">Quien suscribe, <span class="dato-linea largo">' + representante + '</span>, en mi carácter de representante legal de <span class="dato-linea largo">' + nombre + '</span>, con RFC <span class="dato-linea corto">' + rfc + '</span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>';
       }
       
-      html += '<p style="text-align:justify;margin-bottom:12px"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</p>';
-      html += '<p style="text-align:justify;margin-bottom:12px"><strong>SEGUNDO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</p>';
-      html += '<p style="text-align:justify;margin-bottom:12px"><strong>TERCERO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</p>';
-      html += '<p style="text-align:justify;margin-bottom:12px"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en ' + (cliente['Tipo'] === 'Persona Física' ? 'mi poder' : 'poder de mi representada') + ' y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</p>';
-      html += '<p style="text-align:justify;margin-top:20px">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</p>';
-      html += '<div class="firma"><p style="color:#6BAE3E;font-weight:700;letter-spacing:3px;margin-bottom:30px">ATENTAMENTE</p><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p>' + (cliente['Tipo'] === 'Persona Moral' ? '<p style="color:#666;font-size:9pt">Representante Legal</p>' : '') + '</div>';
+      const sujeto = tipoCliente === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida';
+      const posesion = tipoCliente === 'Persona Física' ? 'mi poder' : 'poder de mi representada';
+      
+      html += '<div class="parrafo"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, ' + sujeto + ' en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</div>';
+      html += '<div class="parrafo"><strong>SEGUNDO.</strong> Que ' + sujeto + ' en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</div>';
+      html += '<div class="parrafo"><strong>TERCERO.</strong> Que ' + sujeto + ' en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</div>';
+      html += '<div class="parrafo"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en ' + posesion + ' y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</div>';
+      html += '<div class="cierre">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</div>';
+      html += '<div class="firma-seccion">';
+      html += '<div class="firma-atentamente">ATENTAMENTE</div>';
+      html += '<div class="linea-firma"></div>';
+      html += '<div class="nombre-firma">' + (tipoCliente === 'Persona Física' ? nombre : representante) + '</div>';
+      if (tipoCliente === 'Persona Moral') {
+        html += '<div class="cargo-firma">Representante Legal</div>';
+      }
+      html += '</div>';
+      html += '<div class="footer-documento">GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740</div>';
+      html += '</div></div>';
     } else {
-      html += '<div class="header"><div class="header-info"><h2>GRUPO SIBRÜ</h2><p>ISRAEL SILVA ZAMORA</p></div><div class="info-right"><strong style="font-size:12pt">ALTA DE CLIENTE</strong><br>N° DE CLIENTE: __________________________</div></div>';
-      html += '<div class="section-title">DATOS FISCALES</div>';
-      html += '<table><tr><td class="label">' + (cliente['Tipo'] === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</td><td>' + nombre + '</td></tr>';
-      html += '<tr><td class="label">RFC</td><td>' + rfc + '</td></tr>';
-      html += '<tr><td class="label">Régimen Fiscal</td><td>' + regimen + '</td></tr>';
-      html += '<tr><td class="label">Código Postal</td><td>' + cp + '</td></tr>';
-      html += '<tr><td class="label">Uso CFDI</td><td>' + usoCFDI + '</td></tr></table>';
-      html += '<div class="section-title" style="background:#333">DATOS FACTURACIÓN</div>';
-      html += '<table><tr><td class="label">Forma de pago</td><td>' + formaPago + '</td></tr>';
-      html += '<tr><td class="label">Método de pago</td><td>' + metodoPago + '</td></tr>';
-      html += '<tr><td class="label">Correo</td><td>' + correo + '</td></tr></table>';
-      html += '<div class="section-title" style="background:#333">DATOS BANCARIOS</div>';
-      html += '<table><tr><td class="label">Banco</td><td>' + banco + '</td></tr>';
-      html += '<tr><td class="label">CLABE</td><td>' + clabe + '</td></tr>';
-      html += '<tr><td class="label">Número cuenta</td><td>' + cuenta + '</td></tr>';
-      html += '<tr><td class="label">Titular</td><td>' + titular + '</td></tr></table>';
-      html += '<div class="section-title">DATOS CRÉDITO (GRUPO)</div>';
-      html += '<table><tr><td class="label">Línea crédito</td><td></td></tr><tr><td class="label">Días crédito</td><td></td></tr><tr><td class="label">Autorizado por</td><td></td></tr></table>';
-      html += '<p style="margin-top:20px;padding:10px;background:#f5f5f5;border-left:3px solid #6BAE3E"><strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.</p>';
-      html += '<div style="display:flex;justify-content:space-between;margin-top:60px"><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p><p style="color:#666;font-size:9pt">NOMBRE Y FIRMA DEL CLIENTE</p></div><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="color:#666;font-size:9pt">NOMBRE DEL VENDEDOR</p></div></div>';
+      html += '<div class="hoja-documento">';
+      html += '<div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>';
+      html += '<div class="contenido-documento">';
+      html += '<div class="header-alta">';
+      html += '<div class="header-alta-logo"><img src="' + LOGO_URL + '" alt="Grupo SIBRÜ"><div class="header-alta-info"><h2>GRUPO SIBRÜ</h2><p>ISRAEL SILVA ZAMORA</p></div></div>';
+      html += '<div class="header-alta-cliente"><strong>ALTA DE CLIENTE</strong><span>N° DE CLIENTE: __________________________</span></div>';
+      html += '</div>';
+      
+      html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Documentación Obligatoria (Marcar)</div>';
+      html += '<div class="checkbox-doc"><input type="checkbox"> Constancia Situación Fiscal</div>';
+      if (tipoCliente === 'Persona Física') {
+        html += '<div class="checkbox-doc"><input type="checkbox"> Opinión cumplimiento positivo</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Identificación oficial</div>';
+      } else {
+        html += '<div class="checkbox-doc"><input type="checkbox"> Opinión cumplimiento</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Acta constitutiva</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Poder notarial</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Identificación</div>';
+        html += '<div class="checkbox-doc"><input type="checkbox"> Carátula cuenta (CLABE)</div>';
+      }
+      html += '</div>';
+      
+      html += '<div class="seccion-alta"><div class="seccion-alta-titulo verde">Datos Fiscales</div>';
+      html += '<table class="tabla-alta">';
+      html += '<tr><td class="label">' + (tipoCliente === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</td><td class="valor">' + nombre + '</td></tr>';
+      html += '<tr><td class="label">RFC</td><td class="valor">' + rfc + '</td></tr>';
+      html += '<tr><td class="label">Régimen Fiscal</td><td class="valor">' + regimen + '</td></tr>';
+      html += '<tr><td class="label">Código Postal</td><td class="valor">' + cp + '</td></tr>';
+      html += '<tr><td class="label">Uso CFDI</td><td class="valor">' + usoCFDI + '</td></tr>';
+      html += '</table></div>';
+      
+      html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Datos Facturación</div>';
+      html += '<table class="tabla-alta">';
+      html += '<tr><td class="label">Forma de pago</td><td class="valor">' + formaPago + '</td></tr>';
+      html += '<tr><td class="label">Método de pago</td><td class="valor">' + metodoPago + '</td></tr>';
+      html += '<tr><td class="label">Correo</td><td class="valor">' + correo + '</td></tr>';
+      html += '<tr><td class="label">Confirmación correo</td><td class="valor"></td></tr>';
+      html += '</table></div>';
+      
+      html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Datos Bancarios</div>';
+      html += '<table class="tabla-alta">';
+      html += '<tr><td class="label">Banco</td><td class="valor">' + banco + '</td></tr>';
+      html += '<tr><td class="label">CLABE</td><td class="valor">' + clabe + '</td></tr>';
+      html += '<tr><td class="label">Número cuenta</td><td class="valor">' + cuenta + '</td></tr>';
+      html += '<tr><td class="label">Titular</td><td class="valor">' + titular + '</td></tr>';
+      html += '</table></div>';
+      
+      html += '<div class="seccion-alta"><div class="seccion-alta-titulo verde">Datos Crédito (Grupo)</div>';
+      html += '<table class="tabla-alta">';
+      html += '<tr><td class="label">Línea crédito</td><td class="valor vacio"></td></tr>';
+      html += '<tr><td class="label">Días crédito</td><td class="valor vacio"></td></tr>';
+      html += '<tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>';
+      html += '<tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>';
+      html += '</table></div>';
+      
+      html += '<div class="declaracion-alta"><strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.</div>';
+      
+      html += '<div class="firmas-alta">';
+      html += '<div class="firma-alta-box"><div class="firma-alta-linea"></div><div class="firma-alta-nombre">' + (tipoCliente === 'Persona Física' ? nombre : representante) + '</div><div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div></div>';
+      html += '<div class="firma-alta-box"><div class="firma-alta-linea"></div><div class="firma-alta-nombre">&nbsp;</div><div class="firma-alta-titulo">NOMBRE DEL VENDEDOR</div></div>';
+      html += '</div>';
+      
+      html += '</div></div>';
     }
-
+    
     html += '<script>window.onload=function(){window.print();}<\/script>';
     html += '</body></html>';
     
