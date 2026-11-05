@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración - Grupo SIBRÜ</title>
+<style>
+  :root {
+    --verde-sibru: #6BAE3E;
+    --verde-banda: #007A3D;
+    --rojo-sibru: #D94F3D;
+    --negro: #1a1a1a;
+    --gris-texto: #333333;
+    --gris-claro: #f5f5f5;
+    --azul-accion: #1976D2;
+    --naranja-accion: #FF9800;
+    --morado-accion: #9C27B0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8ecef; }
+
+  /* LOGIN SCREEN */
+  .login-screen {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, var(--verde-banda) 0%, var(--verde-sibru) 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+
+  .login-box {
+    background: white;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+  }
+
+  .login-box img { max-height: 80px; margin-bottom: 20px; }
+  .login-box h2 { color: var(--negro); margin-bottom: 25px; }
+  .login-box input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+  }
+  .login-box button {
+    width: 100%;
+    padding: 12px;
+    background: var(--verde-sibru);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .login-box button:hover { background: var(--verde-banda); }
+  .login-error { color: var(--rojo-sibru); margin-top: 10px; display: none; }
+
+  /* ADMIN PANEL */
+  .admin-container { display: none; }
+  .admin-container.activo { display: block; }
+
+  /* HEADER */
+  .admin-header {
+    background: white;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .admin-header-left { display: flex; align-items: center; gap: 20px; }
+  .admin-header-left img { max-height: 50px; }
+  .admin-header h1 { font-size: 1.5rem; color: var(--verde-banda); }
+
+  .admin-header-right { display: flex; gap: 10px; align-items: center; }
+  .btn-header {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-agregar { background: var(--verde-sibru); color: white; }
+  .btn-editar { background: var(--azul-accion); color: white; }
+  .btn-ver { background: var(--naranja-accion); color: white; }
+  .btn-pdf { background: var(--rojo-sibru); color: white; }
+  .btn-bitacora { background: var(--morado-accion); color: white; }
+  .btn-eliminar { background: var(--rojo-sibru); color: white; }
+  .btn-actualizar { background: var(--gris-texto); color: white; }
+  .btn-logout { background: var(--rojo-sibru); color: white; }
+
+  /* MAIN LAYOUT */
+  .admin-main {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .sidebar-section { margin-bottom: 25px; }
+  .sidebar-section h3 {
+    color: var(--negro);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--verde-sibru);
+    padding-bottom: 5px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--gris-claro);
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .stat-card.total { border-left: 4px solid var(--azul-accion); }
+  .stat-card.activos { border-left: 4px solid var(--verde-sibru); }
+  .stat-card.bajas { border-left: 4px solid var(--rojo-sibru); }
+
+  .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--negro); }
+  .stat-label { font-size: 0.75rem; color: var(--gris-texto); text-transform: uppercase; }
+
+  .search-box input, .filter-box select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-filtro {
+    width: 100%;
+    padding: 10px;
+    background: var(--verde-sibru);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+
+  .btn-limpiar {
+    background: var(--gris-texto);
+  }
+
+  .export-buttons { display: flex; flex-direction: column; gap: 8px; }
+  .btn-export {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-pdf-export { background: var(--rojo-sibru); color: white; }
+  .btn-csv-export { background: var(--azul-accion); color: white; }
+
+  /* CONTENT AREA */
+  .content-area {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  thead {
+    background: var(--verde-banda);
+    color: white;
+    position: sticky;
+    top: 0;
+  }
+
+  th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:hover { background: var(--gris-claro); }
+
+  .badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-normal { background: #e3f2fd; color: #1976D2; }
+  .badge-activo { background: #e8f5e9; color: #388e3c; }
+  .badge-baja { background: #ffebee; color: #d32f2f; }
+
+  .btn-accion-small {
+    padding: 5px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 3px;
+  }
+
+  .btn-edit-small { background: var(--azul-accion); color: white; }
+  .btn-delete-small { background: var(--rojo-sibru); color: white; }
+
+  /* MODAL */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-overlay.activo { display: flex; }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--verde-sibru);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gris-texto);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+
+  .form-group { margin-bottom: 10px; }
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--negro);
+  }
+
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .modal-footer {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+  }
+</style>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <img src="logo.png" alt="Grupo SIBRÜ">
+    <h2>Panel de Administración</h2>
+    <input type="password" id="adminPassword" placeholder="Ingrese contraseña de administrador">
+    <button onclick="verificarAcceso()">Acceder al Sistema</button>
+    <div class="login-error" id="loginError">Contraseña incorrecta</div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin-container" id="adminPanel">
+  <!-- HEADER -->
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <img src="logo.png" alt="Grupo SIBRÜ">
+      <h1>Base General de Clientes - Grupo SIBRÜ</h1>
+    </div>
+    <div class="admin-header-right">
+      <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button>
+      <button class="btn-header btn-actualizar" onclick="cargarClientes()">🔄 Actualizar</button>
+      <button class="btn-header btn-logout" onclick="cerrarSesion()">🚪 Salir</button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="admin-main">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="stats-grid">
+        <div class="stat-card total">
+          <div class="stat-number" id="statTotal">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card activos">
+          <div class="stat-number" id="statActivos">0</div>
+          <div class="stat-label">Activos</div>
+        </div>
+        <div class="stat-card bajas">
+          <div class="stat-number" id="statBajas">0</div>
+          <div class="stat-label">Bajas</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3> Buscar Documentos</h3>
+        <div class="search-box">
+          <input type="text" id="searchGlobal" placeholder="Nombre, RFC, CURP o ID...">
+          <button class="btn-filtro" onclick="buscarClientes()">Buscar</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>📊 Filtros Avanzados</h3>
+        <div class="filter-box">
+          <label style="font-size: 0.8rem; font-weight: 600;">BÚSQUEDA GENERAL</label>
+          <input type="text" id="filterGeneral" placeholder="Nombre, CURP, RFC...">
+          
+          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">TIPO DE CLIENTE</label>
+          <select id="filterTipo">
+            <option value="">Todos</option>
+            <option value="Persona Física">Persona Física</option>
+            <option value="Persona Moral">Persona Moral</option>
+          </select>
+          
+          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">RÉGIMEN FISCAL</label>
+          <select id="filterRegimen">
+            <option value="">Todos</option>
+            <option value="601">601 - General de Ley</option>
+            <option value="612">612 - Actividades Empresariales</option>
+            <option value="626">626 - RESICO</option>
+          </select>
+          
+          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">STATUS</label>
+          <select id="filterStatus">
+            <option value="">Todos</option>
+            <option value="ACTIVO">Activo</option>
+            <option value="INACTIVO">Inactivo</option>
+          </select>
+          
+          <button class="btn-filtro" onclick="aplicarFiltros()">Aplicar Filtros</button>
+          <button class="btn-filtro btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>📥 Exportar</h3>
+        <div class="export-buttons">
+          <button class="btn-export btn-pdf-export" onclick="exportarPDF()">📄 PDF Completo</button>
+          <button class="btn-export btn-csv-export" onclick="exportarCSV()">📊 CSV / Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT TABLE -->
+    <div class="content-area">
+      <div class="table-container">
+        <table id="tablaClientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre / Razón Social</th>
+              <th>RFC</th>
+              <th>Tipo</th>
+              <th>Régimen</th>
+              <th>Correo</th>
+              <th>Teléfono</th>
+              <th>Fecha Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaBody">
+            <tr><td colspan="9" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR/EDITAR -->
+<div class="modal-overlay" id="modalCliente">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Agregar Cliente</h2>
+      <button class="modal-close" onclick="cerrarModal()">&times;</button>
+    </div>
+    <form id="formCliente">
+      <input type="hidden" id="clientId">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Tipo de Cliente</label>
+          <select id="clientTipo" required>
+            <option value="">Seleccione...</option>
+            <option value="Persona Física">Persona Física</option>
+            <option value="Persona Moral">Persona Moral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>RFC</label>
+          <input type="text" id="clientRFC" required maxlength="13" style="text-transform: uppercase;">
+        </div>
+        <div class="form-group" id="groupNombre">
+          <label>Nombre</label>
+          <input type="text" id="clientNombre">
+        </div>
+        <div class="form-group" id="groupRazonSocial" style="display:none;">
+          <label>Razón Social</label>
+          <input type="text" id="clientRazonSocial">
+        </div>
+        <div class="form-group" id="groupRepresentante" style="display:none;">
+          <label>Representante Legal</label>
+          <input type="text" id="clientRepresentante">
+        </div>
+        <div class="form-group">
+          <label>Régimen Fiscal</label>
+          <select id="clientRegimen" required>
+            <option value="">Seleccione...</option>
+            <option value="601 - General de Ley Personas Morales">601 - General de Ley</option>
+            <option value="612 - Actividades Empresariales">612 - Actividades Empresariales</option>
+            <option value="626 - RESICO">626 - RESICO</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Correo Electrónico</label>
+          <input type="email" id="clientCorreo" required>
+        </div>
+        <div class="form-group">
+          <label>Teléfono</label>
+          <input type="text" id="clientTelefono">
+        </div>
+        <div class="form-group">
+          <label>Código Postal</label>
+          <input type="text" id="clientCP" maxlength="5">
+        </div>
+        <div class="form-group">
+          <label>Status</label>
+          <select id="clientStatus">
+            <option value="ACTIVO">Activo</option>
+            <option value="INACTIVO">Inactivo</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-filtro btn-limpiar" onclick="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn-filtro">Guardar Cliente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
+  const ADMIN_PASSWORD = 'SIBRU2026admin'; // Cambiar por contraseña segura
+  
+  let clientesData = [];
+  let clientesFiltrados = [];
+
+  // LOGIN
+  function verificarAcceso() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === ADMIN_PASSWORD) {
+      document.getElementById('loginScreen').style.display = 'none';
+      document.getElementById('adminPanel').classList.add('activo');
+      cargarClientes();
+    } else {
+      document.getElementById('loginError').style.display = 'block';
+    }
+  }
+
+  function cerrarSesion() {
+    location.reload();
+  }
+
+  // CARGAR DATOS
+  async function cargarClientes() {
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">Cargando...</td></tr>';
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL);
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        clientesData = result.data;
+        clientesFiltrados = [...clientesData];
+        renderizarTabla(clientesFiltrados);
+        actualizarStats();
+      } else {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">Error al cargar</td></tr>';
+      }
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">Error de conexión</td></tr>';
+    }
+  }
+
+  function renderizarTabla(datos) {
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '';
+    
+    if (datos.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
+      return;
+    }
+    
+    datos.forEach(c => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${c['ID Cliente'] || '-'}</td>
+        <td>${c['Nombre/Razón Social'] || c['Nombre'] || 'N/A'}</td>
+        <td>${c['RFC'] || '-'}</td>
+        <td><span class="badge badge-normal">${c['Tipo'] || 'N/A'}</span></td>
+        <td>${c['Régimen Fiscal'] || 'N/A'}</td>
+        <td>${c['Correo Electrónico'] || 'N/A'}</td>
+        <td>${c['Teléfono'] || 'N/A'}</td>
+        <td>${c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A'}</td>
+        <td>
+          <button class="btn-accion-small btn-edit-small" onclick="editarCliente('${c['RFC']}')">✏️</button>
+          <button class="btn-accion-small btn-delete-small" onclick="eliminarCliente('${c['RFC']}')">🗑️</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function actualizarStats() {
+    document.getElementById('statTotal').textContent = clientesData.length;
+    document.getElementById('statActivos').textContent = clientesData.filter(c => c['Status'] === 'ACTIVO').length;
+    document.getElementById('statBajas').textContent = clientesData.filter(c => c['Status'] === 'INACTIVO').length;
+  }
+
+  // FILTROS Y BÚSQUEDA
+  function buscarClientes() {
+    const termino = document.getElementById('searchGlobal').value.toLowerCase();
+    if (!termino) {
+      clientesFiltrados = [...clientesData];
+    } else {
+      clientesFiltrados = clientesData.filter(c => 
+        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().includes(termino) ||
+        (c['RFC'] || '').toLowerCase().includes(termino) ||
+        (c['ID Cliente'] || '').toLowerCase().includes(termino)
+      );
+    }
+    renderizarTabla(clientesFiltrados);
+  }
+
+  function aplicarFiltros() {
+    const tipo = document.getElementById('filterTipo').value;
+    const regimen = document.getElementById('filterRegimen').value;
+    const status = document.getElementById('filterStatus').value;
+    const general = document.getElementById('filterGeneral').value.toLowerCase();
+    
+    clientesFiltrados = clientesData.filter(c => {
+      const matchTipo = !tipo || c['Tipo'] === tipo;
+      const matchRegimen = !regimen || (c['Régimen Fiscal'] || '').includes(regimen);
+      const matchStatus = !status || c['Status'] === status;
+      const matchGeneral = !general || 
+        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().includes(general) ||
+        (c['RFC'] || '').toLowerCase().includes(general);
+      
+      return matchTipo && matchRegimen && matchStatus && matchGeneral;
+    });
+    
+    renderizarTabla(clientesFiltrados);
+  }
+
+  function limpiarFiltros() {
+    document.getElementById('filterGeneral').value = '';
+    document.getElementById('filterTipo').value = '';
+    document.getElementById('filterRegimen').value = '';
+    document.getElementById('filterStatus').value = '';
+    clientesFiltrados = [...clientesData];
+    renderizarTabla(clientesFiltrados);
+  }
+
+  // EXPORTAR
+  function exportarCSV() {
+    if (clientesFiltrados.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+    
+    const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Teléfono', 'Fecha Registro'];
+    const rows = clientesFiltrados.map(c => [
+      c['ID Cliente'] || '',
+      c['Tipo'] || '',
+      c['RFC'] || '',
+      c['Nombre/Razón Social'] || c['Nombre'] || '',
+      c['Representante Legal'] || '',
+      c['Régimen Fiscal'] || '',
+      c['Código Postal'] || '',
+      c['Correo Electrónico'] || '',
+      c['Teléfono'] || '',
+      c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
+    ]);
+    
+    const csvContent = [headers.join(','), ...rows.map(r => r.map(field => `"${field}"`).join(','))].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `Clientes_SIBRU_${new Date().toISOString().split('T')[0]}.csv`;
+    link.click();
+  }
+
+  async function exportarPDF() {
+    if (clientesFiltrados.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+    
+    // Crear ventana de impresión con formato especial
+    const ventana = window.open('', '_blank');
+    let html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <title>Reporte de Clientes - Grupo SIBRÜ</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 20px; }
+          h1 { color: #007A3D; text-align: center; }
+          table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 10px; }
+          th { background: #007A3D; color: white; padding: 8px; border: 1px solid #ddd; }
+          td { padding: 6px; border: 1px solid #ddd; }
+          tr:nth-child(even) { background: #f5f5f5; }
+          .header-info { text-align: center; margin-bottom: 20px; }
+        </style>
+      </head>
+      <body>
+        <div class="header-info">
+          <h1>GRUPO SIBRÜ</h1>
+          <h2>Reporte General de Clientes</h2>
+          <p>Fecha de generación: ${new Date().toLocaleString('es-MX')}</p>
+          <p>Total de registros: ${clientesFiltrados.length}</p>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th><th>Teléfono</th>
+            </tr>
+          </thead>
+          <tbody>
+    `;
+    
+    clientesFiltrados.forEach(c => {
+      html += `
+        <tr>
+          <td>${c['ID Cliente'] || '-'}</td>
+          <td>${c['Nombre/Razón Social'] || c['Nombre'] || '-'}</td>
+          <td>${c['RFC'] || '-'}</td>
+          <td>${c['Tipo'] || '-'}</td>
+          <td>${c['Régimen Fiscal'] || '-'}</td>
+          <td>${c['Correo Electrónico'] || '-'}</td>
+          <td>${c['Teléfono'] || '-'}</td>
+        </tr>
+      `;
+    });
+    
+    html += `
+          </tbody>
+        </table>
+        <script>window.onload = function() { window.print(); }</script>
+      </body>
+      </html>
+    `;
+    
+    ventana.document.write(html);
+    ventana.document.close();
+  }
+
+  // MODAL Y FORMULARIO
+  document.getElementById('formCliente').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const tipo = document.getElementById('clientTipo').value;
+    const datos = {
+      action: 'guardar',
+      tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
+      idCliente: document.getElementById('clientId').value || generarIDNuevo(),
+      rfc: document.getElementById('clientRFC').value.toUpperCase(),
+      nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
+      razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
+      representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
+      regimen: document.getElementById('clientRegimen').value,
+      correo: document.getElementById('clientCorreo').value.toLowerCase(),
+      telefono: document.getElementById('clientTelefono').value,
+      cp: document.getElementById('clientCP').value,
+      status: document.getElementById('clientStatus').value,
+      fechaGuardado: new Date().toISOString()
+    };
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        alert('Cliente guardado correctamente');
+        cerrarModal();
+        cargarClientes();
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (e) {
+      alert('Error de conexión');
+    }
+  });
+
+  function generarIDNuevo() {
+    const f = new Date();
+    return `CLI-${f.getFullYear()}${(f.getMonth()+1).toString().padStart(2,'0')}${Math.floor(Math.random()*1000).toString().padStart(3,'0')}`;
+  }
+
+  function abrirModalAgregar() {
+    document.getElementById('modalTitle').textContent = 'Agregar Cliente';
+    document.getElementById('formCliente').reset();
+    document.getElementById('clientId').value = '';
+    document.getElementById('modalCliente').classList.add('activo');
+  }
+
+  function editarCliente(rfc) {
+    const cliente = clientesData.find(c => c['RFC'] === rfc);
+    if (!cliente) return;
+    
+    document.getElementById('modalTitle').textContent = 'Editar Cliente';
+    document.getElementById('clientId').value = cliente['ID Cliente'];
+    document.getElementById('clientTipo').value = cliente['Tipo'];
+    document.getElementById('clientRFC').value = cliente['RFC'];
+    document.getElementById('clientRFC').readOnly = true;
+    
+    if (cliente['Tipo'] === 'Persona Física') {
+      document.getElementById('groupNombre').style.display = 'block';
+      document.getElementById('groupRazonSocial').style.display = 'none';
+      document.getElementById('groupRepresentante').style.display = 'none';
+      document.getElementById('clientNombre').value = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    } else {
+      document.getElementById('groupNombre').style.display = 'none';
+      document.getElementById('groupRazonSocial').style.display = 'block';
+      document.getElementById('groupRepresentante').style.display = 'block';
+      document.getElementById('clientRazonSocial').value = cliente['Nombre/Razón Social'] || '';
+      document.getElementById('clientRepresentante').value = cliente['Representante Legal'] || '';
+    }
+    
+    document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
+    document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('clientTelefono').value = cliente['Teléfono'] || '';
+    document.getElementById('clientCP').value = cliente['Código Postal'] || '';
+    document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
+    
+    document.getElementById('modalCliente').classList.add('activo');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalCliente').classList.remove('activo');
+    document.getElementById('clientRFC').readOnly = false;
+  }
+
+  async function eliminarCliente(rfc) {
+    if (!confirm(`¿Está seguro de eliminar al cliente con RFC ${rfc}?`)) return;
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'eliminar', rfc: rfc })
+      });
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        alert('Cliente eliminado correctamente');
+        cargarClientes();
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (e) {
+      alert('Error de conexión');
+    }
+  }
+
+  // Mostrar/ocultar campos según tipo de cliente
+  document.getElementById('clientTipo').addEventListener('change', function() {
+    const tipo = this.value;
+    document.getElementById('groupNombre').style.display = tipo === 'Persona Física' ? 'block' : 'none';
+    document.getElementById('groupRazonSocial').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+    document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+  });
+</script>
+
+</body>
+</html>
