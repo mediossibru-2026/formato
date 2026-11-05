@@ -20,54 +20,8 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8ecef; }
 
-  /* LOGIN SCREEN */
-  .login-screen {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, var(--verde-banda) 0%, var(--verde-sibru) 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-  }
-
-  .login-box {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    width: 90%;
-    max-width: 400px;
-    text-align: center;
-  }
-
-  .login-box img { max-height: 80px; margin-bottom: 20px; }
-  .login-box h2 { color: var(--negro); margin-bottom: 25px; }
-  .login-box input {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 2px solid #ddd;
-    border-radius: 6px;
-    font-size: 1rem;
-  }
-  .login-box button {
-    width: 100%;
-    padding: 12px;
-    background: var(--verde-sibru);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .login-box button:hover { background: var(--verde-banda); }
-  .login-error { color: var(--rojo-sibru); margin-top: 10px; display: none; }
-
   /* ADMIN PANEL */
-  .admin-container { display: none; }
-  .admin-container.activo { display: block; }
+  .admin-container { display: block; }
 
   /* HEADER */
   .admin-header {
@@ -98,13 +52,7 @@
     gap: 8px;
   }
   .btn-agregar { background: var(--verde-sibru); color: white; }
-  .btn-editar { background: var(--azul-accion); color: white; }
-  .btn-ver { background: var(--naranja-accion); color: white; }
-  .btn-pdf { background: var(--rojo-sibru); color: white; }
-  .btn-bitacora { background: var(--morado-accion); color: white; }
-  .btn-eliminar { background: var(--rojo-sibru); color: white; }
   .btn-actualizar { background: var(--gris-texto); color: white; }
-  .btn-logout { background: var(--rojo-sibru); color: white; }
 
   /* MAIN LAYOUT */
   .admin-main {
@@ -175,9 +123,7 @@
     margin-bottom: 5px;
   }
 
-  .btn-limpiar {
-    background: var(--gris-texto);
-  }
+  .btn-limpiar { background: var(--gris-texto); }
 
   .export-buttons { display: flex; flex-direction: column; gap: 8px; }
   .btn-export {
@@ -332,17 +278,6 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <img src="logo.png" alt="Grupo SIBRÜ">
-    <h2>Panel de Administración</h2>
-    <input type="password" id="adminPassword" placeholder="Ingrese contraseña de administrador">
-    <button onclick="verificarAcceso()">Acceder al Sistema</button>
-    <div class="login-error" id="loginError">Contraseña incorrecta</div>
-  </div>
-</div>
-
 <!-- ADMIN PANEL -->
 <div class="admin-container" id="adminPanel">
   <!-- HEADER -->
@@ -354,7 +289,6 @@
     <div class="admin-header-right">
       <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button>
       <button class="btn-header btn-actualizar" onclick="cargarClientes()">🔄 Actualizar</button>
-      <button class="btn-header btn-logout" onclick="cerrarSesion()">🚪 Salir</button>
     </div>
   </div>
 
@@ -378,9 +312,9 @@
       </div>
 
       <div class="sidebar-section">
-        <h3> Buscar Documentos</h3>
+        <h3>🔍 Buscar Documentos</h3>
         <div class="search-box">
-          <input type="text" id="searchGlobal" placeholder="Nombre, RFC, CURP o ID...">
+          <input type="text" id="searchGlobal" placeholder="Nombre, RFC o ID...">
           <button class="btn-filtro" onclick="buscarClientes()">Buscar</button>
         </div>
       </div>
@@ -389,28 +323,13 @@
         <h3>📊 Filtros Avanzados</h3>
         <div class="filter-box">
           <label style="font-size: 0.8rem; font-weight: 600;">BÚSQUEDA GENERAL</label>
-          <input type="text" id="filterGeneral" placeholder="Nombre, CURP, RFC...">
+          <input type="text" id="filterGeneral" placeholder="Nombre, RFC...">
           
           <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">TIPO DE CLIENTE</label>
           <select id="filterTipo">
             <option value="">Todos</option>
             <option value="Persona Física">Persona Física</option>
             <option value="Persona Moral">Persona Moral</option>
-          </select>
-          
-          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">RÉGIMEN FISCAL</label>
-          <select id="filterRegimen">
-            <option value="">Todos</option>
-            <option value="601">601 - General de Ley</option>
-            <option value="612">612 - Actividades Empresariales</option>
-            <option value="626">626 - RESICO</option>
-          </select>
-          
-          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">STATUS</label>
-          <select id="filterStatus">
-            <option value="">Todos</option>
-            <option value="ACTIVO">Activo</option>
-            <option value="INACTIVO">Inactivo</option>
           </select>
           
           <button class="btn-filtro" onclick="aplicarFiltros()">Aplicar Filtros</button>
@@ -439,13 +358,12 @@
               <th>Tipo</th>
               <th>Régimen</th>
               <th>Correo</th>
-              <th>Teléfono</th>
               <th>Fecha Registro</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="tablaBody">
-            <tr><td colspan="9" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
+            <tr><td colspan="8" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
           </tbody>
         </table>
       </div>
@@ -501,10 +419,6 @@
           <input type="email" id="clientCorreo" required>
         </div>
         <div class="form-group">
-          <label>Teléfono</label>
-          <input type="text" id="clientTelefono">
-        </div>
-        <div class="form-group">
           <label>Código Postal</label>
           <input type="text" id="clientCP" maxlength="5">
         </div>
@@ -526,31 +440,18 @@
 
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
-  const ADMIN_PASSWORD = 'SIBRU2026'; // Cambiar por contraseña segura
   
   let clientesData = [];
   let clientesFiltrados = [];
 
-  // LOGIN
-  function verificarAcceso() {
-    const password = document.getElementById('adminPassword').value;
-    if (password === ADMIN_PASSWORD) {
-      document.getElementById('loginScreen').style.display = 'none';
-      document.getElementById('adminPanel').classList.add('activo');
-      cargarClientes();
-    } else {
-      document.getElementById('loginError').style.display = 'block';
-    }
-  }
+  // CARGAR DATOS AL INICIAR
+  window.onload = function() {
+    cargarClientes();
+  };
 
-  function cerrarSesion() {
-    location.reload();
-  }
-
-  // CARGAR DATOS
   async function cargarClientes() {
     const tbody = document.getElementById('tablaBody');
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">Cargando...</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">Cargando...</td></tr>';
     
     try {
       const res = await fetch(SHEET_SCRIPT_URL);
@@ -562,10 +463,10 @@
         renderizarTabla(clientesFiltrados);
         actualizarStats();
       } else {
-        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">Error al cargar</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Error al cargar</td></tr>';
       }
     } catch (e) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; color:red;">Error de conexión</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Error de conexión</td></tr>';
     }
   }
 
@@ -574,7 +475,7 @@
     tbody.innerHTML = '';
     
     if (datos.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
       return;
     }
     
@@ -587,7 +488,6 @@
         <td><span class="badge badge-normal">${c['Tipo'] || 'N/A'}</span></td>
         <td>${c['Régimen Fiscal'] || 'N/A'}</td>
         <td>${c['Correo Electrónico'] || 'N/A'}</td>
-        <td>${c['Teléfono'] || 'N/A'}</td>
         <td>${c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A'}</td>
         <td>
           <button class="btn-accion-small btn-edit-small" onclick="editarCliente('${c['RFC']}')">✏️</button>
@@ -621,19 +521,15 @@
 
   function aplicarFiltros() {
     const tipo = document.getElementById('filterTipo').value;
-    const regimen = document.getElementById('filterRegimen').value;
-    const status = document.getElementById('filterStatus').value;
     const general = document.getElementById('filterGeneral').value.toLowerCase();
     
     clientesFiltrados = clientesData.filter(c => {
       const matchTipo = !tipo || c['Tipo'] === tipo;
-      const matchRegimen = !regimen || (c['Régimen Fiscal'] || '').includes(regimen);
-      const matchStatus = !status || c['Status'] === status;
       const matchGeneral = !general || 
         (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().includes(general) ||
         (c['RFC'] || '').toLowerCase().includes(general);
       
-      return matchTipo && matchRegimen && matchStatus && matchGeneral;
+      return matchTipo && matchGeneral;
     });
     
     renderizarTabla(clientesFiltrados);
@@ -642,8 +538,7 @@
   function limpiarFiltros() {
     document.getElementById('filterGeneral').value = '';
     document.getElementById('filterTipo').value = '';
-    document.getElementById('filterRegimen').value = '';
-    document.getElementById('filterStatus').value = '';
+    document.getElementById('searchGlobal').value = '';
     clientesFiltrados = [...clientesData];
     renderizarTabla(clientesFiltrados);
   }
@@ -655,7 +550,7 @@
       return;
     }
     
-    const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Teléfono', 'Fecha Registro'];
+    const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Fecha Registro'];
     const rows = clientesFiltrados.map(c => [
       c['ID Cliente'] || '',
       c['Tipo'] || '',
@@ -665,7 +560,6 @@
       c['Régimen Fiscal'] || '',
       c['Código Postal'] || '',
       c['Correo Electrónico'] || '',
-      c['Teléfono'] || '',
       c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
     ]);
     
@@ -683,7 +577,6 @@
       return;
     }
     
-    // Crear ventana de impresión con formato especial
     const ventana = window.open('', '_blank');
     let html = `
       <!DOCTYPE html>
@@ -710,7 +603,7 @@
         <table>
           <thead>
             <tr>
-              <th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th><th>Teléfono</th>
+              <th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th>
             </tr>
           </thead>
           <tbody>
@@ -725,7 +618,6 @@
           <td>${c['Tipo'] || '-'}</td>
           <td>${c['Régimen Fiscal'] || '-'}</td>
           <td>${c['Correo Electrónico'] || '-'}</td>
-          <td>${c['Teléfono'] || '-'}</td>
         </tr>
       `;
     });
@@ -757,7 +649,6 @@
       representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
       regimen: document.getElementById('clientRegimen').value,
       correo: document.getElementById('clientCorreo').value.toLowerCase(),
-      telefono: document.getElementById('clientTelefono').value,
       cp: document.getElementById('clientCP').value,
       status: document.getElementById('clientStatus').value,
       fechaGuardado: new Date().toISOString()
@@ -788,6 +679,7 @@
     document.getElementById('modalTitle').textContent = 'Agregar Cliente';
     document.getElementById('formCliente').reset();
     document.getElementById('clientId').value = '';
+    document.getElementById('clientRFC').readOnly = false;
     document.getElementById('modalCliente').classList.add('activo');
   }
 
@@ -816,7 +708,6 @@
     
     document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
     document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
-    document.getElementById('clientTelefono').value = cliente['Teléfono'] || '';
     document.getElementById('clientCP').value = cliente['Código Postal'] || '';
     document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
     
