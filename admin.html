@@ -1,322 +1,1031 @@
-function ejecutarImpresion() {
-  const rfc = document.getElementById('accionRFC').value;
-  const tipoDoc = document.getElementById('accionTipoDoc').value;
-  const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
-  if (!cliente) return;
-
-  const ventana = window.open('', '_blank');
-  
-  // CSS EXACTO del index.html
-  const css = `
-    <style>
-      :root {
-        --verde-sibru: #6BAE3E;
-        --verde-banda: #007A3D;
-        --rojo-sibru: #D94F3D;
-        --negro: #1a1a1a;
-        --gris-texto: #333333;
-        --gris-claro: #f5f5f5;
-      }
-      * { box-sizing: border-box; margin: 0; padding: 0; }
-      body { font-family: 'Segoe UI', Arial, sans-serif; background: white; padding: 0; }
-      
-      .hoja-documento {
-        max-width: 216mm;
-        min-height: 279mm;
-        margin: 0 auto;
-        background: white;
-        position: relative;
-        overflow: visible;
-      }
-      
-      .barras-superiores { width: 100%; display: flex; flex-direction: column; }
-      .barra-verde { width: 100%; height: 14px; background-color: var(--verde-banda); }
-      .barra-naranja { width: 100%; height: 6px; background-color: var(--rojo-sibru); }
-      
-      .contenido-documento { padding: 10mm 18mm 15mm 18mm; }
-      
-      .header-alta {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        margin-bottom: 10px;
-        padding-bottom: 8px;
-        border-bottom: 2px solid var(--verde-sibru);
-      }
-      .header-alta-logo { display: flex; align-items: center; gap: 12px; }
-      .header-alta-logo img { max-height: 50px; width: auto; }
-      .header-alta-info h2 { font-size: 13pt; font-weight: 800; color: var(--negro); margin: 0; }
-      .header-alta-info p { font-size: 9pt; color: var(--gris-texto); margin: 2px 0 0 0; }
-      .header-alta-cliente { text-align: right; font-size: 8pt; color: var(--gris-texto); }
-      .header-alta-cliente strong { display: block; color: var(--negro); font-size: 9pt; }
-      
-      .seccion-alta { margin-bottom: 8px; }
-      .seccion-alta-titulo {
-        background: var(--negro);
-        color: white;
-        padding: 5px 10px;
-        font-size: 8.5pt;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 6px;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .seccion-alta-titulo.verde {
-        background: var(--verde-banda);
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .tabla-alta { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
-      .tabla-alta td { padding: 4px 8px; border: 1px solid #ddd; vertical-align: middle; }
-      .tabla-alta td.label {
-        font-weight: 600;
-        color: var(--negro);
-        width: 40%;
-        background: var(--gris-claro);
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      .tabla-alta td.valor { color: var(--gris-texto); min-height: 18px; }
-      .tabla-alta td.valor.vacio { height: 20px; background: white; }
-      
-      .declaracion-alta {
-        text-align: justify;
-        font-size: 8.5pt;
-        color: var(--gris-texto);
-        margin: 12px 0;
-        padding: 8px;
-        background: var(--gris-claro);
-        border-left: 3px solid var(--verde-sibru);
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-      }
-      
-      .firmas-alta { display: flex; justify-content: space-between; margin-top: 35px; gap: 20px; }
-      .firma-alta-box { flex: 1; max-width: 250px; text-align: center; }
-      .firma-alta-linea { border-top: 1px solid var(--negro); margin-bottom: 6px; padding-top: 6px; }
-      .firma-alta-nombre { font-size: 8.5pt; font-weight: 700; color: var(--negro); }
-      .firma-alta-titulo { font-size: 7.5pt; color: var(--gris-texto); text-transform: uppercase; }
-      
-      .logo-centrado { text-align: center; margin-bottom: 12px; }
-      .logo-empresa { max-height: 140px; width: auto; }
-      .titulo-principal {
-        text-align: center;
-        font-size: 15pt;
-        font-weight: 800;
-        color: var(--negro);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin-bottom: 4px;
-      }
-      .titulo-sub {
-        text-align: center;
-        font-size: 9.5pt;
-        font-weight: 700;
-        color: var(--rojo-sibru);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        margin-bottom: 10px;
-      }
-      .linea-verde { border: none; border-top: 2px solid var(--verde-sibru); margin-bottom: 18px; }
-      .lugar-fecha { text-align: right; margin-bottom: 18px; font-size: 10pt; color: var(--gris-texto); }
-      .lugar-fecha .linea-lf {
-        display: inline-block;
-        border-bottom: 1px solid var(--negro);
-        min-width: 200px;
-        text-align: center;
-        padding: 0 5px;
-        color: var(--negro);
-        font-weight: 600;
-      }
-      .destinatario { font-weight: 700; margin-bottom: 15px; font-size: 10.5pt; color: var(--negro); letter-spacing: 1px; }
-      .parrafo { text-align: justify; margin-bottom: 12px; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }
-      .parrafo strong { color: var(--negro); font-weight: 700; }
-      .dato-linea {
-        display: inline-block;
-        border-bottom: 1px solid var(--negro);
-        min-width: 160px;
-        text-align: center;
-        padding: 0 5px;
-        color: var(--negro);
-        font-weight: 600;
-      }
-      .dato-linea.largo { min-width: 240px; }
-      .dato-linea.corto { min-width: 120px; }
-      .cierre { margin-top: 18px; text-align: justify; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }
-      .firma-seccion { margin-top: 60px; text-align: center; page-break-inside: avoid; }
-      .firma-atentamente {
-        font-size: 10pt;
-        font-weight: 700;
-        letter-spacing: 3px;
-        color: var(--verde-sibru);
-        margin-bottom: 25px;
-        text-transform: uppercase;
-      }
-      .linea-firma { border-top: 1px solid var(--negro); width: 260px; margin: 0 auto 6px auto; }
-      .nombre-firma { font-weight: 700; font-size: 10pt; color: var(--negro); }
-      .cargo-firma { font-size: 9pt; color: var(--gris-texto); margin-top: 2px; }
-      .footer-documento {
-        margin-top: 20px;
-        text-align: center;
-        font-size: 7.5pt;
-        padding: 4px 0;
-        letter-spacing: 0.5px;
-        color: #999;
-        border-top: 1px solid #e0e0e0;
-      }
-      
-      @media print {
-        @page { size: letter; margin: 0; }
-        body { background: white; padding: 0; margin: 0; }
-        .hoja-documento {
-          box-shadow: none;
-          margin: 0;
-          width: 100%;
-          max-width: 100%;
-          min-height: 279mm;
-          overflow: visible !important;
-          page-break-after: always;
-        }
-        .contenido-documento { padding: 8mm 15mm 15mm 15mm; }
-        .logo-empresa { max-height: 120px; }
-        .firma-seccion { margin-top: 50px; }
-        .header-alta-logo img { max-height: 45px; }
-        .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta {
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-          color-adjust: exact !important;
-        }
-      }
-    </style>
-  `;
-  
-  // Datos del cliente
-  const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
-  const representante = cliente['Representante Legal'] || '';
-  const regimen = cliente['Régimen Fiscal'] || '';
-  const cp = cliente['Código Postal'] || '';
-  const usoCFDI = cliente['Uso CFDI'] || '';
-  const formaPago = cliente['Forma de Pago'] || '';
-  const metodoPago = cliente['Método de Pago'] || '';
-  const correo = cliente['Correo Electrónico'] || '';
-  const banco = cliente['Banco'] || '';
-  const clabe = cliente['CLABE'] || '';
-  const cuenta = cliente['Número de Cuenta'] || '';
-  const titular = cliente['Titular de Cuenta'] || '';
-  const lugarFecha = cliente['Lugar y Fecha'] || '';
-  const tipoCliente = cliente['Tipo'] || 'Persona Física';
-  
-  let html = '<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Documento - Grupo SIBRÜ</title>' + css + '</head><body>';
-  
-  if (tipoDoc === 'manifestacion') {
-    // MANIFESTACIÓN ESCRITA - EXACTAMENTE IGUAL QUE INDEX.HTML
-    html += '<div class="hoja-documento">';
-    html += '<div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>';
-    html += '<div class="contenido-documento">';
-    html += '<div class="logo-centrado"><img src="https://mediossibru-2026.github.io/formato/logo.png" alt="Grupo SIBRÜ" class="logo-empresa"></div>';
-    html += '<div class="titulo-principal">MANIFESTACIÓN ESCRITA</div>';
-    html += '<div class="titulo-sub">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</div>';
-    html += '<hr class="linea-verde">';
-    html += '<div class="lugar-fecha">Lugar y fecha: <span class="linea-lf">' + lugarFecha + '</span></div>';
-    html += '<div class="destinatario">A QUIEN CORRESPONDA:</div>';
-    
-    if (tipoCliente === 'Persona Física') {
-      html += '<div class="parrafo">Quien suscribe, <span class="dato-linea largo">' + nombre + '</span>, con RFC <span class="dato-linea corto">' + rfc + '</span>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>';
-    } else {
-      html += '<div class="parrafo">Quien suscribe, <span class="dato-linea largo">' + representante + '</span>, en mi carácter de representante legal de <span class="dato-linea largo">' + nombre + '</span>, con RFC <span class="dato-linea corto">' + rfc + '</span>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</div>';
-    }
-    
-    const sujeto = tipoCliente === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida';
-    const posesion = tipoCliente === 'Persona Física' ? 'mi poder' : 'poder de mi representada';
-    
-    html += '<div class="parrafo"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, ' + sujeto + ' en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</div>';
-    html += '<div class="parrafo"><strong>SEGUNDO.</strong> Que ' + sujeto + ' en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</div>';
-    html += '<div class="parrafo"><strong>TERCERO.</strong> Que ' + sujeto + ' en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</div>';
-    html += '<div class="parrafo"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en ' + posesion + ' y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</div>';
-    html += '<div class="cierre">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</div>';
-    html += '<div class="firma-seccion">';
-    html += '<div class="firma-atentamente">ATENTAMENTE</div>';
-    html += '<div class="linea-firma"></div>';
-    html += '<div class="nombre-firma">' + (tipoCliente === 'Persona Física' ? nombre : representante) + '</div>';
-    if (tipoCliente === 'Persona Moral') {
-      html += '<div class="cargo-firma">Representante Legal</div>';
-    }
-    html += '</div>';
-    html += '<div class="footer-documento">GRUPO SIBRÜ &nbsp;|&nbsp; Cuautitlán Izcalli, Edo. Méx. C.P. 54740</div>';
-    html += '</div></div>';
-  } else {
-    // ALTA DE CLIENTE - EXACTAMENTE IGUAL QUE INDEX.HTML
-    html += '<div class="hoja-documento">';
-    html += '<div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>';
-    html += '<div class="contenido-documento">';
-    html += '<div class="header-alta">';
-    html += '<div class="header-alta-logo"><img src="https://mediossibru-2026.github.io/formato/logo.png" alt="Grupo SIBRÜ"><div class="header-alta-info"><h2>GRUPO SIBRÜ</h2><p>ISRAEL SILVA ZAMORA</p></div></div>';
-    html += '<div class="header-alta-cliente"><strong>ALTA DE CLIENTE</strong><span>N° DE CLIENTE: __________________________</span></div>';
-    html += '</div>';
-    
-    html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Documentación Obligatoria (Marcar)</div>';
-    html += '<div class="checkbox-doc"><input type="checkbox"> Constancia Situación Fiscal</div>';
-    html += '<div class="checkbox-doc"><input type="checkbox"> Opinión cumplimiento' + (tipoCliente === 'Persona Moral' ? '' : ' positivo') + '</div>';
-    html += '<div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>';
-    if (tipoCliente === 'Persona Moral') {
-      html += '<div class="checkbox-doc"><input type="checkbox"> Acta constitutiva</div>';
-      html += '<div class="checkbox-doc"><input type="checkbox"> Poder notarial</div>';
-      html += '<div class="checkbox-doc"><input type="checkbox"> Identificación</div>';
-      html += '<div class="checkbox-doc"><input type="checkbox"> Carátula cuenta (CLABE)</div>';
-    } else {
-      html += '<div class="checkbox-doc"><input type="checkbox"> Identificación oficial</div>';
-    }
-    html += '</div>';
-    
-    html += '<div class="seccion-alta"><div class="seccion-alta-titulo verde">Datos Fiscales</div>';
-    html += '<table class="tabla-alta">';
-    html += '<tr><td class="label">' + (tipoCliente === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</td><td class="valor">' + nombre + '</td></tr>';
-    html += '<tr><td class="label">RFC</td><td class="valor">' + rfc + '</td></tr>';
-    html += '<tr><td class="label">Régimen Fiscal</td><td class="valor">' + regimen + '</td></tr>';
-    html += '<tr><td class="label">Código Postal</td><td class="valor">' + cp + '</td></tr>';
-    html += '<tr><td class="label">Uso CFDI</td><td class="valor">' + usoCFDI + '</td></tr>';
-    html += '</table></div>';
-    
-    html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Datos Facturación</div>';
-    html += '<table class="tabla-alta">';
-    html += '<tr><td class="label">Forma de pago</td><td class="valor">' + formaPago + '</td></tr>';
-    html += '<tr><td class="label">Método de pago</td><td class="valor">' + metodoPago + '</td></tr>';
-    html += '<tr><td class="label">Correo</td><td class="valor">' + correo + '</td></tr>';
-    html += '<tr><td class="label">Confirmación correo</td><td class="valor"></td></tr>';
-    html += '</table></div>';
-    
-    html += '<div class="seccion-alta"><div class="seccion-alta-titulo">Datos Bancarios</div>';
-    html += '<table class="tabla-alta">';
-    html += '<tr><td class="label">Banco</td><td class="valor">' + banco + '</td></tr>';
-    html += '<tr><td class="label">CLABE</td><td class="valor">' + clabe + '</td></tr>';
-    html += '<tr><td class="label">Número cuenta</td><td class="valor">' + cuenta + '</td></tr>';
-    html += '<tr><td class="label">Titular</td><td class="valor">' + titular + '</td></tr>';
-    html += '</table></div>';
-    
-    html += '<div class="seccion-alta"><div class="seccion-alta-titulo verde">Datos Crédito (Grupo)</div>';
-    html += '<table class="tabla-alta">';
-    html += '<tr><td class="label">Línea crédito</td><td class="valor vacio"></td></tr>';
-    html += '<tr><td class="label">Días crédito</td><td class="valor vacio"></td></tr>';
-    html += '<tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>';
-    html += '<tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>';
-    html += '</table></div>';
-    
-    html += '<div class="declaracion-alta"><strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.</div>';
-    
-    html += '<div class="firmas-alta">';
-    html += '<div class="firma-alta-box"><div class="firma-alta-linea"></div><div class="firma-alta-nombre">' + (tipoCliente === 'Persona Física' ? nombre : representante) + '</div><div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div></div>';
-    html += '<div class="firma-alta-box"><div class="firma-alta-linea"></div><div class="firma-alta-nombre">&nbsp;</div><div class="firma-alta-titulo">NOMBRE DEL VENDEDOR</div></div>';
-    html += '</div>';
-    
-    html += '</div></div>';
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Administración - Grupo SIBRÜ</title>
+<style>
+  :root {
+    --verde-sibru: #6BAE3E;
+    --verde-banda: #007A3D;
+    --rojo-sibru: #D94F3D;
+    --negro: #1a1a1a;
+    --gris-texto: #333333;
+    --gris-claro: #f5f5f5;
+    --azul-accion: #1976D2;
+    --naranja-accion: #FF9800;
   }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8ecef; }
+
+  .admin-container { display: block; }
+
+  .admin-header {
+    background: white;
+    padding: 15px 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .admin-header-left { display: flex; align-items: center; gap: 20px; }
+  .admin-header-left img { max-height: 50px; }
+  .admin-header h1 { font-size: 1.5rem; color: var(--verde-banda); }
+
+  .admin-header-right { display: flex; gap: 10px; align-items: center; }
+  .btn-header {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-agregar { background: var(--verde-sibru); color: white; }
+  .btn-actualizar { background: var(--gris-texto); color: white; }
+
+  .admin-main {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .sidebar {
+    width: 280px;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .sidebar-section { margin-bottom: 25px; }
+  .sidebar-section h3 {
+    color: var(--negro);
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    border-bottom: 2px solid var(--verde-sibru);
+    padding-bottom: 5px;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .stat-card {
+    background: var(--gris-claro);
+    padding: 15px;
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .stat-card.total { border-left: 4px solid var(--azul-accion); }
+  .stat-card.activos { border-left: 4px solid var(--verde-sibru); }
+  .stat-card.bajas { border-left: 4px solid var(--rojo-sibru); }
+
+  .stat-number { font-size: 1.8rem; font-weight: 700; color: var(--negro); }
+  .stat-label { font-size: 0.75rem; color: var(--gris-texto); text-transform: uppercase; }
+
+  .search-box input, .filter-box select, .filter-box input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+  }
+
+  .btn-filtro {
+    width: 100%;
+    padding: 10px;
+    background: var(--verde-sibru);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-bottom: 5px;
+  }
+
+  .btn-limpiar { background: var(--gris-texto); }
+
+  .export-buttons { display: flex; flex-direction: column; gap: 8px; }
+  .btn-export {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-pdf-export { background: var(--rojo-sibru); color: white; }
+  .btn-csv-export { background: var(--azul-accion); color: white; }
+
+  .content-area {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    max-height: calc(100vh - 150px);
+    overflow-y: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  thead {
+    background: var(--verde-banda);
+    color: white;
+    position: sticky;
+    top: 0;
+  }
+
+  th {
+    padding: 12px 10px;
+    text-align: left;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+
+  tr:hover { background: var(--gris-claro); }
+
+  .badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .badge-normal { background: #e3f2fd; color: #1976D2; }
+  .badge-activo { background: #e8f5e9; color: #388e3c; }
+  .badge-baja { background: #ffebee; color: #d32f2f; }
+
+  .btn-accion-small {
+    padding: 5px 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+    margin-right: 3px;
+  }
+
+  .btn-edit-small { background: var(--azul-accion); color: white; }
+  .btn-delete-small { background: var(--rojo-sibru); color: white; }
+  .btn-print-small { background: var(--verde-banda); color: white; }
+  .btn-email-small { background: var(--naranja-accion); color: white; }
+
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal-overlay.activo { display: flex; }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 900px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-content.small {
+    max-width: 500px;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--verde-sibru);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gris-texto);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .form-grid .full-width {
+    grid-column: span 2;
+  }
+
+  .form-group { margin-bottom: 5px; }
+  .form-group label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: var(--negro);
+    text-transform: uppercase;
+  }
+
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 0.9rem;
+  }
+
+  .form-section {
+    margin-top: 15px;
+    padding: 12px;
+    background: var(--gris-claro);
+    border-radius: 6px;
+    border-left: 4px solid var(--verde-sibru);
+  }
+
+  .form-section h4 {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--negro);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .modal-footer {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+  }
+
+  .btn-modal {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  .btn-modal-primary { background: var(--verde-sibru); color: white; }
+  .btn-modal-secondary { background: var(--gris-texto); color: white; }
+  .btn-modal-print { background: var(--negro); color: white; }
+  .btn-modal-email { background: var(--naranja-accion); color: white; }
+</style>
+</head>
+<body>
+
+<div class="admin-container" id="adminPanel">
+  <div class="admin-header">
+    <div class="admin-header-left">
+      <img src="logo.png" alt="Grupo SIBRÜ">
+      <h1>Base General de Clientes - Grupo SIBRÜ</h1>
+    </div>
+    <div class="admin-header-right">
+      <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button>
+      <button class="btn-header btn-actualizar" onclick="cargarClientes()">🔄 Actualizar</button>
+    </div>
+  </div>
+
+  <div class="admin-main">
+    <div class="sidebar">
+      <div class="stats-grid">
+        <div class="stat-card total">
+          <div class="stat-number" id="statTotal">0</div>
+          <div class="stat-label">Total</div>
+        </div>
+        <div class="stat-card activos">
+          <div class="stat-number" id="statActivos">0</div>
+          <div class="stat-label">Activos</div>
+        </div>
+        <div class="stat-card bajas">
+          <div class="stat-number" id="statBajas">0</div>
+          <div class="stat-label">Bajas</div>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>🔍 Buscar</h3>
+        <div class="search-box">
+          <input type="text" id="searchGlobal" placeholder="Nombre, RFC o ID...">
+          <button class="btn-filtro" onclick="buscarClientes()">Buscar</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>📊 Filtros</h3>
+        <div class="filter-box">
+          <label style="font-size: 0.8rem; font-weight: 600;">BÚSQUEDA GENERAL</label>
+          <input type="text" id="filterGeneral" placeholder="Nombre, RFC...">
+          
+          <label style="font-size: 0.8rem; font-weight: 600; margin-top: 10px;">TIPO DE CLIENTE</label>
+          <select id="filterTipo">
+            <option value="">Todos</option>
+            <option value="Persona Física">Persona Física</option>
+            <option value="Persona Moral">Persona Moral</option>
+          </select>
+          
+          <button class="btn-filtro" onclick="aplicarFiltros()">Aplicar Filtros</button>
+          <button class="btn-filtro btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>📥 Exportar</h3>
+        <div class="export-buttons">
+          <button class="btn-export btn-pdf-export" onclick="exportarPDF()">📄 PDF Completo</button>
+          <button class="btn-export btn-csv-export" onclick="exportarCSV()">📊 CSV / Excel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-area">
+      <div class="table-container">
+        <table id="tablaClientes">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre / Razón Social</th>
+              <th>RFC</th>
+              <th>Tipo</th>
+              <th>Régimen</th>
+              <th>Correo</th>
+              <th>Fecha Registro</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tablaBody">
+            <tr><td colspan="8" style="text-align: center; padding: 40px;">Cargando datos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL AGREGAR/EDITAR -->
+<div class="modal-overlay" id="modalCliente">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="modalTitle">Agregar Cliente</h2>
+      <button class="modal-close" onclick="cerrarModal('modalCliente')">&times;</button>
+    </div>
+    <form id="formCliente">
+      <input type="hidden" id="clientId">
+      
+      <div class="form-section">
+        <h4>Datos Generales</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Tipo de Cliente *</label>
+            <select id="clientTipo" required onchange="toggleCamposTipo()">
+              <option value="">Seleccione...</option>
+              <option value="Persona Física">Persona Física</option>
+              <option value="Persona Moral">Persona Moral</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>RFC * (12 moral / 13 física)</label>
+            <input type="text" id="clientRFC" required maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+          </div>
+          <div class="form-group" id="groupNombre">
+            <label>Nombre *</label>
+            <input type="text" id="clientNombre">
+          </div>
+          <div class="form-group" id="groupRazonSocial" style="display:none;">
+            <label>Razón Social *</label>
+            <input type="text" id="clientRazonSocial">
+          </div>
+          <div class="form-group" id="groupRepresentante" style="display:none;">
+            <label>Representante Legal *</label>
+            <input type="text" id="clientRepresentante">
+          </div>
+          <div class="form-group">
+            <label>Lugar y fecha</label>
+            <input type="text" id="clientLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h4>Datos Fiscales</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Régimen Fiscal *</label>
+            <select id="clientRegimen" required>
+              <option value="">Seleccione...</option>
+              <option value="601 - General de Ley Personas Morales">601 - General de Ley Personas Morales</option>
+              <option value="603 - Personas Morales con Fines No Lucrativos">603 - Personas Morales con Fines No Lucrativos</option>
+              <option value="605 - Sueldos y Salarios">605 - Sueldos y Salarios e Ingresos Asimilados a Salarios</option>
+              <option value="606 - Arrendamiento">606 - Arrendamiento</option>
+              <option value="608 - Demás ingresos">608 - Demás ingresos</option>
+              <option value="611 - Ingresos por Dividendos">611 - Ingresos por Dividendos</option>
+              <option value="612 - Actividades Empresariales y Profesionales">612 - Personas Físicas con Actividades Empresariales y Profesionales</option>
+              <option value="614 - Ingresos por intereses">614 - Ingresos por intereses</option>
+              <option value="616 - Sin obligaciones fiscales">616 - Sin obligaciones fiscales</option>
+              <option value="620 - Sociedades Cooperativas">620 - Sociedades Cooperativas de Producción</option>
+              <option value="621 - Incorporación Fiscal">621 - Incorporación Fiscal</option>
+              <option value="622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras">622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras</option>
+              <option value="623 - Opcional para Grupos de Sociedades">623 - Opcional para Grupos de Sociedades</option>
+              <option value="624 - Coordinados">624 - Coordinados</option>
+              <option value="625 - Actividades con plataformas tecnológicas">625 - Actividades con plataformas tecnológicas</option>
+              <option value="626 - RESICO">626 - Régimen Simplificado de Confianza</option>
+              <option value="628 - Hidrocarburos">628 - Hidrocarburos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Código Postal (5 dígitos)</label>
+            <input type="text" id="clientCP" maxlength="5" pattern="\d{5}" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+          </div>
+          <div class="form-group full-width">
+            <label>Uso de CFDI</label>
+            <select id="clientUsoCFDI">
+              <option value="">Seleccione...</option>
+              <option value="G01 - Adquisición de mercancías">G01 - Adquisición de mercancías</option>
+              <option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
+              <option value="G03 - Gastos en general">G03 - Gastos en general</option>
+              <option value="I01 - Construcciones">I01 - Construcciones</option>
+              <option value="I02 - Mobilario y equipo de oficina">I02 - Mobilario y equipo de oficina por inversiones</option>
+              <option value="I03 - Equipo de transporte">I03 - Equipo de transporte</option>
+              <option value="I04 - Equipo de computo y accesorios">I04 - Equipo de computo y accesorios</option>
+              <option value="I05 - Dados, troqueles, moldes, matrices y herramental">I05 - Dados, troqueles, moldes, matrices y herramental</option>
+              <option value="I06 - Comunicaciones telefónicas">I06 - Comunicaciones telefónicas</option>
+              <option value="I07 - Comunicaciones satelitales">I07 - Comunicaciones satelitales</option>
+              <option value="I08 - Otra maquinaria y equipo">I08 - Otra maquinaria y equipo</option>
+              <option value="P01 - Por definir">P01 - Por definir</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h4>Datos para Facturación</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Forma de pago</label>
+            <select id="clientFormaPago">
+              <option value="">Seleccione...</option>
+              <option value="01 - Efectivo">01 - Efectivo</option>
+              <option value="02 - Cheque nominativo">02 - Cheque nominativo</option>
+              <option value="03 - Transferencia electrónica de fondos">03 - Transferencia electrónica de fondos</option>
+              <option value="04 - Tarjeta de crédito">04 - Tarjeta de crédito</option>
+              <option value="05 - Monedero electrónico">05 - Monedero electrónico</option>
+              <option value="06 - Dinero electrónico">06 - Dinero electrónico</option>
+              <option value="28 - Tarjeta de débito">28 - Tarjeta de débito</option>
+              <option value="99 - Por definir">99 - Por definir</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Método de pago</label>
+            <select id="clientMetodoPago">
+              <option value="">Seleccione...</option>
+              <option value="PUE - Pago en una sola exhibición">PUE - Pago en una sola exhibición</option>
+              <option value="PPD - Pago en parcialidades o diferido">PPD - Pago en parcialidades o diferido</option>
+            </select>
+          </div>
+          <div class="form-group full-width">
+            <label>Correo Electrónico *</label>
+            <input type="email" id="clientCorreo" required style="text-transform: lowercase;">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h4>Datos Bancarios</h4>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Banco</label>
+            <input type="text" id="clientBanco">
+          </div>
+          <div class="form-group">
+            <label>CLABE Interbancaria (18 dígitos)</label>
+            <input type="text" id="clientCLABE" maxlength="18">
+          </div>
+          <div class="form-group">
+            <label>Número de cuenta</label>
+            <input type="text" id="clientCuenta">
+          </div>
+          <div class="form-group">
+            <label>Titular de la cuenta</label>
+            <input type="text" id="clientTitularCuenta">
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="clientStatus">
+              <option value="ACTIVO">Activo</option>
+              <option value="INACTIVO">Inactivo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalCliente')">Cancelar</button>
+        <button type="submit" class="btn-modal btn-modal-primary">Guardar Cliente</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL IMPRIMIR/EMAIL -->
+<div class="modal-overlay" id="modalAccion">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2 id="modalAccionTitle">Imprimir / Enviar por Mail</h2>
+      <button class="modal-close" onclick="cerrarModal('modalAccion')">&times;</button>
+    </div>
+    <div>
+      <input type="hidden" id="accionRFC">
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Tipo de Documento</label>
+        <select id="accionTipoDoc">
+          <option value="manifestacion">Manifestación Escrita</option>
+          <option value="alta">Alta de Cliente</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Correo Electrónico</label>
+        <input type="email" id="accionEmail" placeholder="cliente@ejemplo.com">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalAccion')">Cancelar</button>
+        <button type="button" class="btn-modal btn-modal-print" onclick="ejecutarImpresion()">🖨️ Imprimir</button>
+        <button type="button" class="btn-modal btn-modal-email" onclick="ejecutarEnvioEmail()">📧 Enviar por Mail</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   
-  html += '<script>window.onload=function(){window.print();}<\/script>';
-  html += '</body></html>';
-  
-  ventana.document.write(html);
-  ventana.document.close();
-  cerrarModal('modalAccion');
-}
+  let clientesData = [];
+  let clientesFiltrados = [];
+
+  window.onload = function() {
+    cargarClientes();
+  };
+
+  async function cargarClientes() {
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">Cargando...</td></tr>';
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL);
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        clientesData = result.data;
+        clientesFiltrados = [...clientesData];
+        renderizarTabla(clientesFiltrados);
+        actualizarStats();
+      } else {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Error al cargar</td></tr>';
+      }
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:red;">Error de conexión</td></tr>';
+    }
+  }
+
+  function renderizarTabla(datos) {
+    const tbody = document.getElementById('tablaBody');
+    tbody.innerHTML = '';
+    
+    if (datos.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
+      return;
+    }
+    
+    datos.forEach(c => {
+      const tr = document.createElement('tr');
+      const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
+      const status = c['Status'] || 'ACTIVO';
+      const badgeClass = status === 'ACTIVO' ? 'badge-activo' : 'badge-baja';
+      
+      tr.innerHTML = 
+        '<td>' + (c['ID Cliente'] || '-') + '</td>' +
+        '<td>' + nombre + '</td>' +
+        '<td>' + (c['RFC'] || '-') + '</td>' +
+        '<td><span class="badge badge-normal">' + (c['Tipo'] || 'N/A') + '</span></td>' +
+        '<td>' + (c['Régimen Fiscal'] || 'N/A') + '</td>' +
+        '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
+        '<td>' + (c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A') + '</td>' +
+        '<td>' +
+          '<button class="btn-accion-small btn-edit-small" onclick="editarCliente(\'' + (c['RFC'] || '') + '\')">✏️</button>' +
+          '<button class="btn-accion-small btn-print-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'imprimir\')">🖨️</button>' +
+          '<button class="btn-accion-small btn-email-small" onclick="abrirModalAccion(\'' + (c['RFC'] || '') + '\', \'email\')">📧</button>' +
+          '<button class="btn-accion-small btn-delete-small" onclick="eliminarCliente(\'' + (c['RFC'] || '') + '\')">🗑️</button>' +
+        '</td>';
+      tbody.appendChild(tr);
+    });
+  }
+
+  function actualizarStats() {
+    document.getElementById('statTotal').textContent = clientesData.length;
+    document.getElementById('statActivos').textContent = clientesData.filter(function(c) { return c['Status'] === 'ACTIVO'; }).length;
+    document.getElementById('statBajas').textContent = clientesData.filter(function(c) { return c['Status'] === 'INACTIVO'; }).length;
+  }
+
+  function buscarClientes() {
+    const termino = document.getElementById('searchGlobal').value.toLowerCase();
+    if (!termino) {
+      clientesFiltrados = [...clientesData];
+    } else {
+      clientesFiltrados = clientesData.filter(function(c) {
+        return (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().indexOf(termino) !== -1 ||
+               (c['RFC'] || '').toLowerCase().indexOf(termino) !== -1 ||
+               (c['ID Cliente'] || '').toLowerCase().indexOf(termino) !== -1;
+      });
+    }
+    renderizarTabla(clientesFiltrados);
+  }
+
+  function aplicarFiltros() {
+    const tipo = document.getElementById('filterTipo').value;
+    const general = document.getElementById('filterGeneral').value.toLowerCase();
+    
+    clientesFiltrados = clientesData.filter(function(c) {
+      const matchTipo = !tipo || c['Tipo'] === tipo;
+      const matchGeneral = !general || 
+        (c['Nombre/Razón Social'] || c['Nombre'] || '').toLowerCase().indexOf(general) !== -1 ||
+        (c['RFC'] || '').toLowerCase().indexOf(general) !== -1;
+      return matchTipo && matchGeneral;
+    });
+    
+    renderizarTabla(clientesFiltrados);
+  }
+
+  function limpiarFiltros() {
+    document.getElementById('filterGeneral').value = '';
+    document.getElementById('filterTipo').value = '';
+    document.getElementById('searchGlobal').value = '';
+    clientesFiltrados = [...clientesData];
+    renderizarTabla(clientesFiltrados);
+  }
+
+  function exportarCSV() {
+    if (clientesFiltrados.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+    
+    const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Fecha Registro'];
+    const rows = clientesFiltrados.map(function(c) {
+      return [
+        c['ID Cliente'] || '',
+        c['Tipo'] || '',
+        c['RFC'] || '',
+        c['Nombre/Razón Social'] || c['Nombre'] || '',
+        c['Representante Legal'] || '',
+        c['Régimen Fiscal'] || '',
+        c['Código Postal'] || '',
+        c['Correo Electrónico'] || '',
+        c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
+      ];
+    });
+    
+    const csvContent = [headers.join(','), rows.map(function(r) { return r.map(function(f) { return '"' + f + '"'; }).join(','); }).join('\n')].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Clientes_SIBRU_' + new Date().toISOString().split('T')[0] + '.csv';
+    link.click();
+  }
+
+  function exportarPDF() {
+    if (clientesFiltrados.length === 0) {
+      alert('No hay datos para exportar');
+      return;
+    }
+    
+    const ventana = window.open('', '_blank');
+    let html = '<!DOCTYPE html><html><head><title>Reporte de Clientes - Grupo SIBRÜ</title>';
+    html += '<style>body{font-family:Arial,sans-serif;padding:20px}h1{color:#007A3D;text-align:center}';
+    html += 'table{width:100%;border-collapse:collapse;margin-top:20px;font-size:10px}';
+    html += 'th{background:#007A3D;color:white;padding:8px;border:1px solid #ddd}';
+    html += 'td{padding:6px;border:1px solid #ddd}tr:nth-child(even){background:#f5f5f5}';
+    html += '.header-info{text-align:center;margin-bottom:20px}</style></head><body>';
+    html += '<div class="header-info"><h1>GRUPO SIBRÜ</h1><h2>Reporte General de Clientes</h2>';
+    html += '<p>Fecha de generación: ' + new Date().toLocaleString('es-MX') + '</p>';
+    html += '<p>Total de registros: ' + clientesFiltrados.length + '</p></div>';
+    html += '<table><thead><tr><th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th></tr></thead><tbody>';
+    
+    clientesFiltrados.forEach(function(c) {
+      html += '<tr>';
+      html += '<td>' + (c['ID Cliente'] || '-') + '</td>';
+      html += '<td>' + (c['Nombre/Razón Social'] || c['Nombre'] || '-') + '</td>';
+      html += '<td>' + (c['RFC'] || '-') + '</td>';
+      html += '<td>' + (c['Tipo'] || '-') + '</td>';
+      html += '<td>' + (c['Régimen Fiscal'] || '-') + '</td>';
+      html += '<td>' + (c['Correo Electrónico'] || '-') + '</td>';
+      html += '</tr>';
+    });
+    
+    html += '</tbody></table>';
+    html += '<script>window.onload=function(){window.print();}<\/script>';
+    html += '</body></html>';
+    
+    ventana.document.write(html);
+    ventana.document.close();
+  }
+
+  function toggleCamposTipo() {
+    const tipo = document.getElementById('clientTipo').value;
+    document.getElementById('groupNombre').style.display = tipo === 'Persona Física' ? 'block' : 'none';
+    document.getElementById('groupRazonSocial').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+    document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
+  }
+
+  document.getElementById('formCliente').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const tipo = document.getElementById('clientTipo').value;
+    const rfc = document.getElementById('clientRFC').value.toUpperCase().trim();
+    
+    if (tipo === 'Persona Física' && rfc.length !== 13) {
+      alert('El RFC de Persona Física debe tener exactamente 13 caracteres.');
+      return;
+    }
+    if (tipo === 'Persona Moral' && rfc.length !== 12) {
+      alert('El RFC de Persona Moral debe tener exactamente 12 caracteres.');
+      return;
+    }
+    
+    const datos = {
+      action: 'guardar',
+      tipo: tipo === 'Persona Física' ? 'fisica' : 'moral',
+      idCliente: document.getElementById('clientId').value || generarIDNuevo(),
+      rfc: rfc,
+      nombre: tipo === 'Persona Física' ? document.getElementById('clientNombre').value : '',
+      razonSocial: tipo === 'Persona Moral' ? document.getElementById('clientRazonSocial').value : '',
+      representante: tipo === 'Persona Moral' ? document.getElementById('clientRepresentante').value : '',
+      lugarFecha: document.getElementById('clientLugarFecha').value,
+      regimen: document.getElementById('clientRegimen').value,
+      cp: document.getElementById('clientCP').value,
+      usoCFDI: document.getElementById('clientUsoCFDI').value,
+      formaPago: document.getElementById('clientFormaPago').value,
+      metodoPago: document.getElementById('clientMetodoPago').value,
+      correo: document.getElementById('clientCorreo').value.toLowerCase().trim(),
+      banco: document.getElementById('clientBanco').value,
+      clabe: document.getElementById('clientCLABE').value,
+      cuenta: document.getElementById('clientCuenta').value,
+      titularCuenta: document.getElementById('clientTitularCuenta').value,
+      status: document.getElementById('clientStatus').value,
+      fechaGuardado: new Date().toISOString()
+    };
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        alert('Cliente guardado correctamente');
+        cerrarModal('modalCliente');
+        cargarClientes();
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (e) {
+      alert('Error de conexión');
+    }
+  });
+
+  function generarIDNuevo() {
+    const f = new Date();
+    return 'CLI-' + f.getFullYear() + (f.getMonth()+1).toString().padStart(2,'0') + Math.floor(Math.random()*1000).toString().padStart(3,'0');
+  }
+
+  function abrirModalAgregar() {
+    document.getElementById('modalTitle').textContent = 'Agregar Cliente';
+    document.getElementById('formCliente').reset();
+    document.getElementById('clientId').value = '';
+    document.getElementById('clientRFC').readOnly = false;
+    document.getElementById('groupNombre').style.display = 'block';
+    document.getElementById('groupRazonSocial').style.display = 'none';
+    document.getElementById('groupRepresentante').style.display = 'none';
+    document.getElementById('modalCliente').classList.add('activo');
+  }
+
+  function editarCliente(rfc) {
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
+    
+    document.getElementById('modalTitle').textContent = 'Editar Cliente';
+    document.getElementById('clientId').value = cliente['ID Cliente'] || '';
+    document.getElementById('clientTipo').value = cliente['Tipo'] || '';
+    document.getElementById('clientRFC').value = cliente['RFC'] || '';
+    document.getElementById('clientRFC').readOnly = true;
+    document.getElementById('clientLugarFecha').value = cliente['Lugar y Fecha'] || '';
+    document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
+    document.getElementById('clientCP').value = cliente['Código Postal'] || '';
+    document.getElementById('clientUsoCFDI').value = cliente['Uso CFDI'] || '';
+    document.getElementById('clientFormaPago').value = cliente['Forma de Pago'] || '';
+    document.getElementById('clientMetodoPago').value = cliente['Método de Pago'] || '';
+    document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('clientBanco').value = cliente['Banco'] || '';
+    document.getElementById('clientCLABE').value = cliente['CLABE'] || '';
+    document.getElementById('clientCuenta').value = cliente['Número de Cuenta'] || '';
+    document.getElementById('clientTitularCuenta').value = cliente['Titular de Cuenta'] || '';
+    document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
+    
+    toggleCamposTipo();
+    
+    if (cliente['Tipo'] === 'Persona Física') {
+      document.getElementById('clientNombre').value = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    } else {
+      document.getElementById('clientRazonSocial').value = cliente['Nombre/Razón Social'] || '';
+      document.getElementById('clientRepresentante').value = cliente['Representante Legal'] || '';
+    }
+    
+    document.getElementById('modalCliente').classList.add('activo');
+  }
+
+  function cerrarModal(id) {
+    document.getElementById(id).classList.remove('activo');
+    if (id === 'modalCliente') {
+      document.getElementById('clientRFC').readOnly = false;
+    }
+  }
+
+  async function eliminarCliente(rfc) {
+    if (!confirm('¿Está seguro de eliminar al cliente con RFC ' + rfc + '?')) return;
+    
+    try {
+      const res = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'eliminar', rfc: rfc })
+      });
+      const result = await res.json();
+      
+      if (result.result === 'success') {
+        alert('Cliente eliminado correctamente');
+        cargarClientes();
+      } else {
+        alert('Error: ' + result.message);
+      }
+    } catch (e) {
+      alert('Error de conexión');
+    }
+  }
+
+  function abrirModalAccion(rfc, tipoAccion) {
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
+    
+    document.getElementById('accionRFC').value = rfc;
+    document.getElementById('accionEmail').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('modalAccionTitle').textContent = tipoAccion === 'imprimir' ? 'Imprimir Documento' : 'Enviar Documento por Mail';
+    document.getElementById('modalAccion').classList.add('activo');
+  }
+
+  function ejecutarImpresion() {
+    const rfc = document.getElementById('accionRFC').value;
+    const tipoDoc = document.getElementById('accionTipoDoc').value;
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
+
+    const ventana = window.open('', '_blank');
+    let html = '<!DOCTYPE html><html><head><title>Documento - Grupo SIBRÜ</title>';
+    html += '<style>body{font-family:Arial,sans-serif;padding:30px;max-width:800px;margin:0 auto}';
+    html += 'h1{color:#007A3D;text-align:center}h2{text-align:center;color:#333}';
+    html += '.header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #6BAE3E;padding-bottom:15px;margin-bottom:20px}';
+    html += '.header img{max-height:60px}.header-info h2{margin:0;font-size:18pt}';
+    html += '.header-info p{margin:2px 0 0 0;color:#666}';
+    html += '.info-right{text-align:right;font-size:10pt}';
+    html += 'table{width:100%;border-collapse:collapse;margin:15px 0}';
+    html += 'td{padding:8px;border:1px solid #ddd}';
+    html += 'td.label{background:#f5f5f5;font-weight:600;width:35%}';
+    html += '.firma{margin-top:60px;text-align:center}';
+    html += '.firma-linea{border-top:1px solid #000;width:300px;margin:0 auto 10px}';
+    html += '.section-title{background:#007A3D;color:white;padding:8px;margin-top:20px;font-weight:700}';
+    html += '@media print{body{padding:15px}}</style></head><body>';
+
+    const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    const representante = cliente['Representante Legal'] || '';
+    const regimen = cliente['Régimen Fiscal'] || '';
+    const cp = cliente['Código Postal'] || '';
+    const usoCFDI = cliente['Uso CFDI'] || '';
+    const formaPago = cliente['Forma de Pago'] || '';
+    const metodoPago = cliente['Método de Pago'] || '';
+    const correo = cliente['Correo Electrónico'] || '';
+    const banco = cliente['Banco'] || '';
+    const clabe = cliente['CLABE'] || '';
+    const cuenta = cliente['Número de Cuenta'] || '';
+    const titular = cliente['Titular de Cuenta'] || '';
+    const lugarFecha = cliente['Lugar y Fecha'] || '';
+
+    if (tipoDoc === 'manifestacion') {
+      html += '<h1>MANIFESTACIÓN ESCRITA</h1>';
+      html += '<h2 style="color:#D94F3D;font-size:11pt">DE NO ENCONTRARSE EN LOS LISTADOS PREVISTOS EN LOS ARTÍCULOS 69, 69-B Y 69-B BIS DEL CFF</h2>';
+      html += '<hr style="border-top:2px solid #6BAE3E;margin:15px 0">';
+      html += '<p style="text-align:right;margin-bottom:20px">Lugar y fecha: ' + lugarFecha + '</p>';
+      html += '<p style="font-weight:700;margin-bottom:15px">A QUIEN CORRESPONDA:</p>';
+      
+      if (cliente['Tipo'] === 'Persona Física') {
+        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+      } else {
+        html += '<p style="text-align:justify;margin-bottom:15px">Quien suscribe, <strong>' + representante + '</strong>, en mi carácter de representante legal de <strong>' + nombre + '</strong>, con RFC <strong>' + rfc + '</strong>, personalidad que acredito conforme a la documentación correspondiente, comparezco y manifiesto bajo protesta de decir verdad lo siguiente:</p>';
+      }
+      
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>PRIMERO.</strong> Que, a la fecha de firma de la presente, ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en los listados o publicaciones a que se refiere el artículo 69 del Código Fiscal de la Federación, en los supuestos que resulten aplicables.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>SEGUNDO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de inexistencia de operaciones amparadas en comprobantes fiscales.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>TERCERO.</strong> Que ' + (cliente['Tipo'] === 'Persona Física' ? 'no me encuentro incluido' : 'mi representada no se encuentra incluida') + ' en el listado definitivo previsto en el artículo 69-B Bis del Código Fiscal de la Federación, relativo a contribuyentes que no desvirtuaron la presunción de transmisión indebida del derecho a disminuir pérdidas fiscales.</p>';
+      html += '<p style="text-align:justify;margin-bottom:12px"><strong>CUARTO.</strong> Que la presente manifestación se formula con base en la información y documentación que obra en ' + (cliente['Tipo'] === 'Persona Física' ? 'mi poder' : 'poder de mi representada') + ' y se emite para los fines administrativos, comerciales o de contratación para los que sea requerida, sin perjuicio de las facultades de comprobación de las autoridades fiscales.</p>';
+      html += '<p style="text-align:justify;margin-top:20px">Asimismo, manifiesto que la información aquí declarada es cierta y que, en caso de existir algún cambio en la situación señalada, se hará del conocimiento de la parte interesada.</p>';
+      html += '<div class="firma"><p style="color:#6BAE3E;font-weight:700;letter-spacing:3px;margin-bottom:30px">ATENTAMENTE</p><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p>' + (cliente['Tipo'] === 'Persona Moral' ? '<p style="color:#666;font-size:9pt">Representante Legal</p>' : '') + '</div>';
+    } else {
+      html += '<div class="header"><div class="header-info"><h2>GRUPO SIBRÜ</h2><p>ISRAEL SILVA ZAMORA</p></div><div class="info-right"><strong style="font-size:12pt">ALTA DE CLIENTE</strong><br>N° DE CLIENTE: __________________________</div></div>';
+      html += '<div class="section-title">DATOS FISCALES</div>';
+      html += '<table><tr><td class="label">' + (cliente['Tipo'] === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</td><td>' + nombre + '</td></tr>';
+      html += '<tr><td class="label">RFC</td><td>' + rfc + '</td></tr>';
+      html += '<tr><td class="label">Régimen Fiscal</td><td>' + regimen + '</td></tr>';
+      html += '<tr><td class="label">Código Postal</td><td>' + cp + '</td></tr>';
+      html += '<tr><td class="label">Uso CFDI</td><td>' + usoCFDI + '</td></tr></table>';
+      html += '<div class="section-title" style="background:#333">DATOS FACTURACIÓN</div>';
+      html += '<table><tr><td class="label">Forma de pago</td><td>' + formaPago + '</td></tr>';
+      html += '<tr><td class="label">Método de pago</td><td>' + metodoPago + '</td></tr>';
+      html += '<tr><td class="label">Correo</td><td>' + correo + '</td></tr></table>';
+      html += '<div class="section-title" style="background:#333">DATOS BANCARIOS</div>';
+      html += '<table><tr><td class="label">Banco</td><td>' + banco + '</td></tr>';
+      html += '<tr><td class="label">CLABE</td><td>' + clabe + '</td></tr>';
+      html += '<tr><td class="label">Número cuenta</td><td>' + cuenta + '</td></tr>';
+      html += '<tr><td class="label">Titular</td><td>' + titular + '</td></tr></table>';
+      html += '<div class="section-title">DATOS CRÉDITO (GRUPO)</div>';
+      html += '<table><tr><td class="label">Línea crédito</td><td></td></tr><tr><td class="label">Días crédito</td><td></td></tr><tr><td class="label">Autorizado por</td><td></td></tr></table>';
+      html += '<p style="margin-top:20px;padding:10px;background:#f5f5f5;border-left:3px solid #6BAE3E"><strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.</p>';
+      html += '<div style="display:flex;justify-content:space-between;margin-top:60px"><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="font-weight:700">' + (cliente['Tipo'] === 'Persona Física' ? nombre : representante) + '</p><p style="color:#666;font-size:9pt">NOMBRE Y FIRMA DEL CLIENTE</p></div><div class="firma" style="flex:1"><div class="firma-linea"></div><p style="color:#666;font-size:9pt">NOMBRE DEL VENDEDOR</p></div></div>';
+    }
+
+    html += '<script>window.onload=function(){window.print();}<\/script>';
+    html += '</body></html>';
+    
+    ventana.document.write(html);
+    ventana.document.close();
+    cerrarModal('modalAccion');
+  }
+
+  function ejecutarEnvioEmail() {
+    const rfc = document.getElementById('accionRFC').value;
+    const email = document.getElementById('accionEmail').value;
+    const tipoDoc = document.getElementById('accionTipoDoc').value;
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert('Por favor ingrese un correo válido');
+      return;
+    }
+
+    const nombreDoc = tipoDoc === 'manifestacion' ? 'Manifestación CFF' : 'Alta de Cliente';
+    const asunto = 'Documentos ' + nombreDoc + ' - Grupo SIBRÜ';
+    const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    const cuerpo = 'Estimado/a ' + nombre + ',\n\nAdjunto encontrará los documentos solicitados (' + nombreDoc + ').\n\nSaludos cordiales,\nGrupo SIBRÜ\nISRAEL SILVA ZAMORA';
+    
+    window.location.href = 'mailto:' + email + '?subject=' + encodeURIComponent(asunto) + '&body=' + encodeURIComponent(cuerpo);
+    
+    alert('Se ha abierto su cliente de correo. Por favor adjunte el documento PDF generado manualmente.');
+    cerrarModal('modalAccion');
+  }
+</script>
+
+</body>
+</html>
