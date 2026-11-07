@@ -1006,7 +1006,7 @@ function verContactosCliente(rfc) {
     // Helper para generar link de mail
     const mailLink = (correo, asunto) => {
       if (!correo) return 'No registrado';
-      return `<a href="mailto:${correo}?subject=${encodeURIComponent(asunto)}" target="_blank" style="color:var(--azul-accion);text-decoration:none;">✉️ ${correo}</a>`;
+      return `<a href="mailto:${correo}?subject=${encodeURIComponent(asunto)}" target="_blank" style="color:var(--azul-accion);text-decoration:none;">${correo}</a>`;
     };
     
     // Helper para generar link de WhatsApp
@@ -1016,18 +1016,18 @@ function verContactosCliente(rfc) {
       let tel = limpio;
       if (limpio.length === 10) tel = '521' + limpio;
       else if (limpio.length === 12 && limpio.startsWith('52')) tel = limpio;
-      return `<a href="https://wa.me/${tel}" target="_blank" style="color:#25D366;text-decoration:none;">💬 ${numero}</a>`;
+      return `<a href="https://wa.me/${tel}" target="_blank" style="color:#25D366;text-decoration:none;">${numero}</a>`;
     };
     
     // Sección Facturación
-    html += '<div class="contacto-seccion"><h4>💼 Facturación</h4>';
+    html += '<div class="contacto-seccion"><h4>Facturación</h4>';
     html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${getVal('Facturacion Numero') || 'No registrado'}</span></div>`;
     html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${mailLink(getVal('Facturacion Correo'), 'Facturación - Grupo SIBRÜ')}</span></div>`;
     html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${waLink(getVal('Facturacion WhatsApp'))}</span></div>`;
     html += '</div>';
     
     // Sección Cuentas por Pagar
-    html += '<div class="contacto-seccion"><h4>💰 Cuentas por Pagar</h4>';
+    html += '<div class="contacto-seccion"><h4>Cuentas por Pagar</h4>';
     html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${getVal('CuentasPorPagar Numero') || 'No registrado'}</span></div>`;
     html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${mailLink(getVal('CuentasPorPagar Correo'), 'Cuentas por Pagar - Grupo SIBRÜ')}</span></div>`;
     html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${waLink(getVal('CuentasPorPagar WhatsApp'))}</span></div>`;
