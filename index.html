@@ -1024,63 +1024,62 @@
       this.actualizarBotonGuardar();
     },
     
-    async seleccionarArchivo(id, label) {
-      const fileInput = document.getElementById(`file_${id}`);
-      const file = fileInput.files[0];
-      if (!file) return;
-      if (file.type !== 'application/pdf') {
-        alert('Solo se aceptan archivos PDF');
-        fileInput.value = '';
-        return;
-      }
-      
-      const statusEl = document.getElementById(`status_${id}`);
-      statusEl.textContent = 'Subiendo...';
-      statusEl.className = 'doc-status subiendo';
-      
-      try {
-        // Simulación de subida (Requiere Apps Script actualizado con 'subirDocumento' para funcionar realmente)
-        setTimeout(() => {
-          this.documentosSeleccionados[id] = { nombre: label };
-          statusEl.textContent = '✓ Subido';
-          statusEl.className = 'doc-status subido';
-          this.actualizarBotonGuardar();
-        }, 1000);
-      } catch (e) {
-        statusEl.textContent = '✗ Error';
-        statusEl.className = 'doc-status error';
-      }
-    },
+async seleccionarArchivo(id, label) {
+  const fileInput = document.getElementById(`file_${id}`);
+  const file = fileInput.files[0];
+  if (!file) return;
+  if (file.type !== 'application/pdf') {
+    alert('Solo se aceptan archivos PDF');
+    fileInput.value = '';
+    return;
+  }
+  
+  const statusEl = document.getElementById(`status_${id}`);
+  statusEl.textContent = 'Subiendo...';
+  statusEl.className = 'doc-status subiendo';
+  
+  try {
+    const base64 = await this.archivoABase64(file);
     
-    actualizarBotonGuardar() {
-      const docs = [...this.documentosRequeridos];
-      if (this.tipo === 'Persona Moral') {
-        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
-      }
-      const todosMarcados = docs.every(doc => this.documentosSeleccionados[doc.id]);
-      document.getElementById('btnGuardarDocs').disabled = !todosMarcados;
-    },
+    const result = await fetch(SHEET_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'subirDocumento',
+        rfc: this.rfc,
+        nombreArchivo: `${id}_${label.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`,
+        base64Data: base64,
+        mimeType: 'application/pdf'
+      })
+    }).then(r => r.json());
     
-    guardarDocumentos() {
-      const docs = [...this.documentosRequeridos];
-      if (this.tipo === 'Persona Moral') {
-        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
-      }
-      const faltantes = docs.filter(doc => !this.documentosSeleccionados[doc.id]);
-      
-      if (faltantes.length > 0) {
-        alert('Debes completar la documentación para poder enviar.\n\nFaltan:\n• ' + faltantes.map(d => d.label).join('\n• '));
-        return;
-      }
-      
-      alert('✅ Documentación guardada exitosamente en la carpeta de Drive del cliente.');
-      this.cerrarModal();
-    },
-    
-    cerrarModal() {
-      document.getElementById('modalDocumentos').classList.remove('activo');
+    if (result.result === 'success') {
+      this.documentosSeleccionados[id] = {
+        nombre: label,
+        archivoId: result.archivoId,
+        url: result.archivoUrl
+      };
+      statusEl.textContent = '✓ Subido';
+      statusEl.className = 'doc-status subido';
+    } else {
+      throw new Error(result.message || 'Error desconocido');
     }
-  };
+  } catch (e) {
+    statusEl.textContent = '✗ Error';
+    statusEl.className = 'doc-status error';
+    alert('Error al subir: ' + e.message);
+  }
+  
+  this.actualizarBotonGuardar();
+},
+
+archivoABase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+},
 
   function abrirModalDocumentos() {
     document.getElementById('modalBuscarRFC').classList.add('activo');
