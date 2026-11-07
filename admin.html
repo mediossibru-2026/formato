@@ -982,38 +982,65 @@
     }
   }
 
-  function verContactosCliente(rfc) {
-    const cliente = clientesData.find(c => c['RFC'] === rfc);
-    if (!cliente) return;
-    
+function verContactosCliente(rfc) {
+  const cliente = clientesData.find(c => c['RFC'] === rfc);
+  if (!cliente) {
+    alert('Cliente no encontrado');
+    return;
+  }
+  
+  try {
     const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || 'Cliente';
     let html = `<h3 style="margin-bottom:15px;color:var(--negro);">${nombre}</h3>`;
     
+    // Helper para obtener valor seguro
+    const getVal = (key) => {
+      // Intenta con el nombre exacto y variantes comunes
+      const valor = cliente[key] || 
+                    cliente[key.replace('Facturacion', 'Facturación')] ||
+                    cliente[key.replace('CuentasPorPagar', 'Cuentas por Pagar')] ||
+                    '';
+      return valor ? String(valor).trim() : '';
+    };
+    
+    // Helper para generar link de mail
+    const mailLink = (correo, asunto) => {
+      if (!correo) return 'No registrado';
+      return `<a href="mailto:${correo}?subject=${encodeURIComponent(asunto)}" target="_blank" style="color:var(--azul-accion);text-decoration:none;">✉️ ${correo}</a>`;
+    };
+    
+    // Helper para generar link de WhatsApp
+    const waLink = (numero) => {
+      if (!numero) return 'No registrado';
+      const limpio = numero.replace(/\D/g, '');
+      let tel = limpio;
+      if (limpio.length === 10) tel = '521' + limpio;
+      else if (limpio.length === 12 && limpio.startsWith('52')) tel = limpio;
+      return `<a href="https://wa.me/${tel}" target="_blank" style="color:#25D366;text-decoration:none;">💬 ${numero}</a>`;
+    };
+    
     // Sección Facturación
-    html += '<div class="contacto-seccion"><h4>Facturación</h4>';
-    html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${cliente['Facturacion Numero'] || 'No registrado'}</span></div>`;
-    
-    const factCorreo = cliente['Facturacion Correo'];
-    html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${factCorreo ? `<a href="${Utils.generarLinkMail(factCorreo, 'Facturación - Grupo SIBRÜ')}" target="_blank">✉️ ${factCorreo}</a>` : 'No registrado'}</span></div>`;
-    
-    const factWa = cliente['Facturacion WhatsApp'];
-    html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${factWa ? `<a href="${Utils.generarLinkWhatsApp(factWa)}" target="_blank" class="wa-link">💬 ${factWa}</a>` : 'No registrado'}</span></div>`;
+    html += '<div class="contacto-seccion"><h4>💼 Facturación</h4>';
+    html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${getVal('Facturacion Numero') || 'No registrado'}</span></div>`;
+    html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${mailLink(getVal('Facturacion Correo'), 'Facturación - Grupo SIBRÜ')}</span></div>`;
+    html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${waLink(getVal('Facturacion WhatsApp'))}</span></div>`;
     html += '</div>';
     
     // Sección Cuentas por Pagar
-    html += '<div class="contacto-seccion"><h4>Cuentas por Pagar</h4>';
-    html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${cliente['CuentasPorPagar Numero'] || 'No registrado'}</span></div>`;
-    
-    const cppCorreo = cliente['CuentasPorPagar Correo'];
-    html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${cppCorreo ? `<a href="${Utils.generarLinkMail(cppCorreo, 'Cuentas por Pagar - Grupo SIBRÜ')}" target="_blank">✉️ ${cppCorreo}</a>` : 'No registrado'}</span></div>`;
-    
-    const cppWa = cliente['CuentasPorPagar WhatsApp'];
-    html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${cppWa ? `<a href="${Utils.generarLinkWhatsApp(cppWa)}" target="_blank" class="wa-link">💬 ${cppWa}</a>` : 'No registrado'}</span></div>`;
+    html += '<div class="contacto-seccion"><h4>💰 Cuentas por Pagar</h4>';
+    html += `<div class="contacto-row"><span class="contacto-label">Número:</span><span class="contacto-valor">${getVal('CuentasPorPagar Numero') || 'No registrado'}</span></div>`;
+    html += `<div class="contacto-row"><span class="contacto-label">Correo:</span><span class="contacto-valor">${mailLink(getVal('CuentasPorPagar Correo'), 'Cuentas por Pagar - Grupo SIBRÜ')}</span></div>`;
+    html += `<div class="contacto-row"><span class="contacto-label">WhatsApp:</span><span class="contacto-valor">${waLink(getVal('CuentasPorPagar WhatsApp'))}</span></div>`;
     html += '</div>';
     
     document.getElementById('contenidoContactos').innerHTML = html;
     document.getElementById('modalContactos').classList.add('activo');
+    
+  } catch (error) {
+    console.error('Error al mostrar contactos:', error);
+    alert('Error al cargar los contactos: ' + error.message);
   }
+}
 </script>
 
 </body>
