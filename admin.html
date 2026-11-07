@@ -669,7 +669,7 @@
         '<td><span class="badge badge-normal">' + (c['Tipo'] || 'N/A') + '</span></td>' +
         '<td>' + (c['Régimen Fiscal'] || 'N/A') + '</td>' +
         '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
-        '<td>' + (c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : 'N/A') + '</td>' +
+        '<td>' + (c['Fecha de Registro'] || 'N/A') + '</td>' +
         '<td>' +
           '<button class="btn-accion-small btn-docs-small" title="Ver Documentación" onclick="verDocumentosCliente(\'' + rfcSafe + '\')">📁</button>' +
           '<button class="btn-accion-small btn-contact-small" title="Ver Contactos" onclick="verContactosCliente(\'' + rfcSafe + '\')">📞</button>' +
@@ -725,7 +725,7 @@
     const rows = clientesFiltrados.map(c => [
       c['ID Cliente']||'', c['Tipo']||'', c['RFC']||'', c['Nombre/Razón Social']||c['Nombre']||'',
       c['Representante Legal']||'', c['Régimen Fiscal']||'', c['Código Postal']||'',
-      c['Correo Electrónico']||'', c['Fecha de Registro'] ? new Date(c['Fecha de Registro']).toLocaleDateString('es-MX') : ''
+      c['Correo Electrónico']||'', c['Fecha de Registro'] || ''
     ]);
     const csvContent = [headers.join(','), ...rows.map(r => r.map(f => `"${f}"`).join(','))].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -735,24 +735,42 @@
     link.click();
   }
 
-  function exportarPDF() {
-    if (clientesFiltrados.length === 0) { alert('No hay datos para exportar'); return; }
-    const ventana = window.open('', '_blank');
-    let html = '<!DOCTYPE html><html><head><title>Reporte Clientes - Grupo SIBRÜ</title>';
-    html += '<style>body{font-family:Arial,sans-serif;padding:20px}h1{color:#007A3D;text-align:center}';
-    html += 'table{width:100%;border-collapse:collapse;margin-top:20px;font-size:10px}';
-    html += 'th{background:#007A3D;color:white;padding:8px;border:1px solid #ddd}';
-    html += 'td{padding:6px;border:1px solid #ddd}tr:nth-child(even){background:#f5f5f5}</style></head><body>';
-    html += '<h1>GRUPO SIBRÜ</h1><h2 style="text-align:center">Reporte General de Clientes</h2>';
-    html += '<p style="text-align:center">Total de registros: ' + clientesFiltrados.length + '</p>';
-    html += '<table><thead><tr><th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th></tr></thead><tbody>';
-    clientesFiltrados.forEach(c => {
-      html += `<tr><td>${c['ID Cliente']||'-'}</td><td>${c['Nombre/Razón Social']||c['Nombre']||'-'}</td><td>${c['RFC']||'-'}</td><td>${c['Tipo']||'-'}</td><td>${c['Régimen Fiscal']||'-'}</td><td>${c['Correo Electrónico']||'-'}</td></tr>`;
-    });
-    html += '</tbody></table><script>window.onload=function(){window.print();}<\/script></body></html>';
-    ventana.document.write(html);
-    ventana.document.close();
-  }
+function exportarPDF() {
+  if (clientesFiltrados.length === 0) { alert('No hay datos para exportar'); return; }
+  const ventana = window.open('', '_blank');
+  let html = '<!DOCTYPE html><html><head><title>Reporte de Clientes - Grupo SIBRÜ</title>';
+  html += '<style>body{font-family:Arial,sans-serif;padding:20px}h1{color:#007A3D;text-align:center}';
+  html += 'table{width:100%;border-collapse:collapse;margin-top:20px;font-size:10px}';
+  html += 'th{background:#007A3D;color:white;padding:8px;border:1px solid #ddd}';
+  html += 'td{padding:6px;border:1px solid #ddd}tr:nth-child(even){background:#f5f5f5}';
+  html += '.header-info{text-align:center;margin-bottom:20px}</style></head><body>';
+  html += '<div class="header-info"><h1>GRUPO SIBRÜ</h1><h2>Reporte General de Clientes</h2>';
+  
+  // FECHA CORREGIDA A DD/MM/YYYY
+  const ahora = new Date();
+  const fechaGen = ahora.getDate().toString().padStart(2,'0') + '/' + (ahora.getMonth()+1).toString().padStart(2,'0') + '/' + ahora.getFullYear() + ' ' + ahora.getHours().toString().padStart(2,'0') + ':' + ahora.getMinutes().toString().padStart(2,'0');
+  html += '<p>Fecha de generación: ' + fechaGen + '</p>';
+  html += '<p>Total de registros: ' + clientesFiltrados.length + '</p></div>';
+  html += '<table><thead><tr><th>ID</th><th>Nombre/Razón Social</th><th>RFC</th><th>Tipo</th><th>Régimen</th><th>Correo</th></tr></thead><tbody>';
+  
+  clientesFiltrados.forEach(function(c) {
+    html += '<tr>';
+    html += '<td>' + (c['ID Cliente'] || '-') + '</td>';
+    html += '<td>' + (c['Nombre/Razón Social'] || c['Nombre'] || '-') + '</td>';
+    html += '<td>' + (c['RFC'] || '-') + '</td>';
+    html += '<td>' + (c['Tipo'] || '-') + '</td>';
+    html += '<td>' + (c['Régimen Fiscal'] || '-') + '</td>';
+    html += '<td>' + (c['Correo Electrónico'] || '-') + '</td>';
+    html += '</tr>';
+  });
+  
+  html += '</tbody></table>';
+  html += '<script>window.onload=function(){window.print();}<\/script>';
+  html += '</body></html>';
+  
+  ventana.document.write(html);
+  ventana.document.close();
+}
 
   // --- MODALES Y FORMULARIO ---
   function toggleCamposTipo() {
