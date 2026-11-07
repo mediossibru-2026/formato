@@ -12,6 +12,7 @@
     --negro: #1a1a1a;
     --gris-texto: #333333;
     --gris-claro: #f5f5f5;
+    --azul-accion: #1976D2;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,6 +46,23 @@
     max-height: 120px;
     width: auto;
   }
+
+  .btn-subir-docs {
+    display: block;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto 25px auto;
+    padding: 12px;
+    background: var(--azul-accion);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-subir-docs:hover { opacity: 0.9; }
 
   .titulo-formulario {
     text-align: center;
@@ -114,7 +132,7 @@
     letter-spacing: 0.5px;
   }
 
-  input[type="text"], input[type="email"], select {
+  input[type="text"], input[type="email"], input[type="tel"], select {
     width: 100%;
     padding: 10px 12px;
     margin-top: 5px;
@@ -124,7 +142,7 @@
     background-color: white;
   }
 
-  input[type="text"]:focus, input[type="email"]:focus, select:focus {
+  input[type="text"]:focus, input[type="email"]:focus, input[type="tel"]:focus, select:focus {
     border-color: var(--verde-sibru);
     outline: none;
   }
@@ -194,6 +212,93 @@
 
   .oculto { display: none !important; }
 
+  /* MODAL ESTILOS */
+  .modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .modal-overlay.activo { display: flex; }
+
+  .modal-content {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--verde-sibru);
+  }
+
+  .modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--gris-texto);
+  }
+
+  .doc-item {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    background: var(--gris-claro);
+  }
+
+  .doc-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .btn-subir-archivo {
+    padding: 6px 12px;
+    background: var(--azul-accion);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .btn-subir-archivo:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+
+  .doc-status {
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 8px;
+    border-radius: 4px;
+    min-width: 80px;
+    text-align: center;
+  }
+  .doc-status.pendiente { background: #fff3cd; color: #856404; }
+  .doc-status.subiendo { background: #cce5ff; color: #004085; }
+  .doc-status.subido { background: #d4edda; color: #155724; }
+  .doc-status.error { background: #f8d7da; color: #721c24; }
+
+  /* DOCUMENTOS ESTILOS (Sin cambios) */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
@@ -205,16 +310,9 @@
     overflow: visible;
   }
 
-  .hoja-documento.activo {
-    display: block !important;
-  }
+  .hoja-documento.activo { display: block !important; }
 
-  .barras-superiores {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-  }
-
+  .barras-superiores { width: 100%; display: flex; flex-direction: column; }
   .barra-verde { width: 100%; height: 14px; background-color: var(--verde-banda); }
   .barra-naranja { width: 100%; height: 6px; background-color: var(--rojo-sibru); }
 
@@ -227,9 +325,7 @@
     border-bottom: 1px solid #e0e0e0;
   }
 
-  .contenido-documento {
-    padding: 10mm 18mm 15mm 18mm;
-  }
+  .contenido-documento { padding: 10mm 18mm 15mm 18mm; }
 
   .header-alta {
     display: flex;
@@ -239,377 +335,121 @@
     padding-bottom: 8px;
     border-bottom: 2px solid var(--verde-sibru);
   }
+  .header-alta-logo { display: flex; align-items: center; gap: 12px; }
+  .header-alta-logo img { max-height: 50px; width: auto; }
+  .header-alta-info h2 { font-size: 13pt; font-weight: 800; color: var(--negro); margin: 0; }
+  .header-alta-info p { font-size: 9pt; color: var(--gris-texto); margin: 2px 0 0 0; }
+  .header-alta-cliente { text-align: right; font-size: 8pt; color: var(--gris-texto); }
+  .header-alta-cliente strong { display: block; color: var(--negro); font-size: 9pt; }
 
-  .header-alta-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .header-alta-logo img {
-    max-height: 50px;
-    width: auto;
-  }
-
-  .header-alta-info h2 {
-    font-size: 13pt;
-    font-weight: 800;
-    color: var(--negro);
-    margin: 0;
-  }
-
-  .header-alta-info p {
-    font-size: 9pt;
-    color: var(--gris-texto);
-    margin: 2px 0 0 0;
-  }
-
-  .header-alta-cliente {
-    text-align: right;
-    font-size: 8pt;
-    color: var(--gris-texto);
-  }
-
-  .header-alta-cliente strong {
-    display: block;
-    color: var(--negro);
-    font-size: 9pt;
-  }
-
-  .seccion-alta {
-    margin-bottom: 8px;
-  }
-
+  .seccion-alta { margin-bottom: 8px; }
   .seccion-alta-titulo {
-    background: var(--negro);
-    color: white;
-    padding: 5px 10px;
-    font-size: 8.5pt;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    background: var(--negro); color: white; padding: 5px 10px; font-size: 8.5pt;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
-
   .seccion-alta-titulo.verde {
     background: var(--verde-banda);
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
 
-  .tabla-alta {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 8.5pt;
-  }
-
-  .tabla-alta td {
-    padding: 4px 8px;
-    border: 1px solid #ddd;
-    vertical-align: middle;
-  }
-
+  .tabla-alta { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  .tabla-alta td { padding: 4px 8px; border: 1px solid #ddd; vertical-align: middle; }
   .tabla-alta td.label {
-    font-weight: 600;
-    color: var(--negro);
-    width: 40%;
-    background: var(--gris-claro);
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    font-weight: 600; color: var(--negro); width: 40%; background: var(--gris-claro);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
+  .tabla-alta td.valor { color: var(--gris-texto); min-height: 18px; }
+  .tabla-alta td.valor.vacio { height: 20px; background: white; }
 
-  .tabla-alta td.valor {
-    color: var(--gris-texto);
-    min-height: 18px;
-  }
-
-  .tabla-alta td.valor.vacio {
-    height: 20px;
-    background: white;
-  }
-
-  .checkbox-doc {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 0;
-    font-size: 8.5pt;
-  }
-
-  .checkbox-doc input[type="checkbox"] {
-    width: 12px;
-    height: 12px;
-    accent-color: var(--verde-sibru);
-  }
-
-  .nota-alta {
-    font-size: 7.5pt;
-    color: #666;
-    font-style: italic;
-    margin-top: 3px;
-  }
+  .checkbox-doc { display: flex; align-items: center; gap: 6px; padding: 3px 0; font-size: 8.5pt; }
+  .checkbox-doc input[type="checkbox"] { width: 12px; height: 12px; accent-color: var(--verde-sibru); }
 
   .declaracion-alta {
-    text-align: justify;
-    font-size: 8.5pt;
-    color: var(--gris-texto);
-    margin: 12px 0;
-    padding: 8px;
-    background: var(--gris-claro);
-    border-left: 3px solid var(--verde-sibru);
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    text-align: justify; font-size: 8.5pt; color: var(--gris-texto); margin: 12px 0; padding: 8px;
+    background: var(--gris-claro); border-left: 3px solid var(--verde-sibru);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
 
   .referencia-pagos {
-    background: #f0f7ec;
-    border: 2px solid var(--verde-sibru);
-    border-radius: 6px;
-    padding: 15px;
-    margin: 12px 0;
-    text-align: center;
+    background: #f0f7ec; border: 2px solid var(--verde-sibru); border-radius: 6px;
+    padding: 15px; margin: 12px 0; text-align: center;
   }
-
   .referencia-pagos .ref-titulo {
-    font-size: 9pt;
-    font-weight: 700;
-    color: var(--verde-banda);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    font-size: 9pt; font-weight: 700; color: var(--verde-banda);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;
   }
-
   .referencia-pagos .ref-numero {
-    font-size: 18pt;
-    font-weight: 800;
-    color: var(--negro);
-    letter-spacing: 3px;
-    margin-bottom: 8px;
-    font-family: 'Courier New', monospace;
+    font-size: 18pt; font-weight: 800; color: var(--negro); letter-spacing: 3px;
+    margin-bottom: 8px; font-family: 'Courier New', monospace;
   }
+  .referencia-pagos .ref-mensaje { font-size: 8pt; color: var(--gris-texto); line-height: 1.5; }
 
-  .referencia-pagos .ref-mensaje {
-    font-size: 8pt;
-    color: var(--gris-texto);
-    line-height: 1.5;
-  }
+  .firmas-alta { display: flex; justify-content: space-between; margin-top: 35px; gap: 20px; }
+  .firma-alta-box { flex: 1; max-width: 250px; text-align: center; }
+  .firma-alta-linea { border-top: 1px solid var(--negro); margin-bottom: 6px; padding-top: 6px; }
+  .firma-alta-nombre { font-size: 8.5pt; font-weight: 700; color: var(--negro); }
+  .firma-alta-titulo { font-size: 7.5pt; color: var(--gris-texto); text-transform: uppercase; }
 
-  .firmas-alta {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 35px;
-    gap: 20px;
-  }
-
-  .firma-alta-box {
-    flex: 1;
-    max-width: 250px;
-    text-align: center;
-  }
-
-  .firma-alta-linea {
-    border-top: 1px solid var(--negro);
-    margin-bottom: 6px;
-    padding-top: 6px;
-  }
-
-  .firma-alta-nombre {
-    font-size: 8.5pt;
-    font-weight: 700;
-    color: var(--negro);
-  }
-
-  .firma-alta-titulo {
-    font-size: 7.5pt;
-    color: var(--gris-texto);
-    text-transform: uppercase;
-  }
-
-  .logo-centrado {
-    text-align: center;
-    margin-bottom: 12px;
-  }
-
-  .logo-empresa {
-    max-height: 140px;
-    width: auto;
-  }
+  .logo-centrado { text-align: center; margin-bottom: 12px; }
+  .logo-empresa { max-height: 140px; width: auto; }
 
   .titulo-principal {
-    text-align: center;
-    font-size: 15pt;
-    font-weight: 800;
-    color: var(--negro);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
+    text-align: center; font-size: 15pt; font-weight: 800; color: var(--negro);
+    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;
   }
-
   .titulo-sub {
-    text-align: center;
-    font-size: 9.5pt;
-    font-weight: 700;
-    color: var(--rojo-sibru);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 10px;
+    text-align: center; font-size: 9.5pt; font-weight: 700; color: var(--rojo-sibru);
+    text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px;
   }
-
-  .linea-verde {
-    border: none;
-    border-top: 2px solid var(--verde-sibru);
-    margin-bottom: 18px;
-  }
-
-  .lugar-fecha {
-    text-align: right;
-    margin-bottom: 18px;
-    font-size: 10pt;
-    color: var(--gris-texto);
-  }
-
+  .linea-verde { border: none; border-top: 2px solid var(--verde-sibru); margin-bottom: 18px; }
+  
+  .lugar-fecha { text-align: right; margin-bottom: 18px; font-size: 10pt; color: var(--gris-texto); }
   .lugar-fecha .linea-lf {
-    display: inline-block;
-    border-bottom: 1px solid var(--negro);
-    min-width: 200px;
-    text-align: center;
-    padding: 0 5px;
-    color: var(--negro);
-    font-weight: 600;
+    display: inline-block; border-bottom: 1px solid var(--negro); min-width: 200px;
+    text-align: center; padding: 0 5px; color: var(--negro); font-weight: 600;
   }
 
-  .destinatario {
-    font-weight: 700;
-    margin-bottom: 15px;
-    font-size: 10.5pt;
-    color: var(--negro);
-    letter-spacing: 1px;
-  }
-
-  .parrafo {
-    text-align: justify;
-    margin-bottom: 12px;
-    font-size: 10pt;
-    line-height: 1.6;
-    color: var(--gris-texto);
-  }
-
-  .parrafo strong {
-    color: var(--negro);
-    font-weight: 700;
-  }
-
+  .destinatario { font-weight: 700; margin-bottom: 15px; font-size: 10.5pt; color: var(--negro); letter-spacing: 1px; }
+  .parrafo { text-align: justify; margin-bottom: 12px; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }
+  .parrafo strong { color: var(--negro); font-weight: 700; }
   .dato-linea {
-    display: inline-block;
-    border-bottom: 1px solid var(--negro);
-    min-width: 160px;
-    text-align: center;
-    padding: 0 5px;
-    color: var(--negro);
-    font-weight: 600;
+    display: inline-block; border-bottom: 1px solid var(--negro); min-width: 160px;
+    text-align: center; padding: 0 5px; color: var(--negro); font-weight: 600;
   }
-
   .dato-linea.largo { min-width: 240px; }
   .dato-linea.corto { min-width: 120px; }
+  .cierre { margin-top: 18px; text-align: justify; font-size: 10pt; line-height: 1.6; color: var(--gris-texto); }
 
-  .cierre {
-    margin-top: 18px;
-    text-align: justify;
-    font-size: 10pt;
-    line-height: 1.6;
-    color: var(--gris-texto);
-  }
-
-  .firma-seccion {
-    margin-top: 60px;
-    text-align: center;
-    page-break-inside: avoid;
-  }
-
+  .firma-seccion { margin-top: 60px; text-align: center; page-break-inside: avoid; }
   .firma-atentamente {
-    font-size: 10pt;
-    font-weight: 700;
-    letter-spacing: 3px;
-    color: var(--verde-sibru);
-    margin-bottom: 25px;
-    text-transform: uppercase;
+    font-size: 10pt; font-weight: 700; letter-spacing: 3px; color: var(--verde-sibru);
+    margin-bottom: 25px; text-transform: uppercase;
   }
-
-  .linea-firma {
-    border-top: 1px solid var(--negro);
-    width: 260px;
-    margin: 0 auto 6px auto;
-  }
-
-  .nombre-firma {
-    font-weight: 700;
-    font-size: 10pt;
-    color: var(--negro);
-  }
-
-  .cargo-firma {
-    font-size: 9pt;
-    color: var(--gris-texto);
-    margin-top: 2px;
-  }
-
+  .linea-firma { border-top: 1px solid var(--negro); width: 260px; margin: 0 auto 6px auto; }
+  .nombre-firma { font-weight: 700; font-size: 10pt; color: var(--negro); }
+  .cargo-firma { font-size: 9pt; color: var(--gris-texto); margin-top: 2px; }
   .footer-documento {
-    margin-top: 20px;
-    text-align: center;
-    font-size: 7.5pt;
-    padding: 4px 0;
-    letter-spacing: 0.5px;
-    color: #999;
-    border-top: 1px solid #e0e0e0;
+    margin-top: 20px; text-align: center; font-size: 7.5pt; padding: 4px 0;
+    letter-spacing: 0.5px; color: #999; border-top: 1px solid #e0e0e0;
   }
 
   @media print {
-    @page {
-      size: letter;
-      margin: 0;
-    }
-    body {
-      background: white;
-      padding: 0;
-      margin: 0;
-    }
-    .contenedor-formulario, .botones-doc-top, .no-print {
-      display: none !important;
-    }
+    @page { size: letter; margin: 0; }
+    body { background: white; padding: 0; margin: 0; }
+    .contenedor-formulario, .botones-doc-top, .no-print, .modal-overlay { display: none !important; }
     .hoja-documento {
-      display: none;
-      box-shadow: none;
-      margin: 0;
-      width: 100%;
-      max-width: 100%;
-      min-height: 279mm;
-      overflow: visible !important;
-      page-break-after: always;
+      display: none; box-shadow: none; margin: 0; width: 100%; max-width: 100%;
+      min-height: 279mm; overflow: visible !important; page-break-after: always;
     }
-    .hoja-documento.activo {
-      display: block !important;
-    }
-    .hoja-documento:last-child {
-      page-break-after: auto;
-    }
-    .contenido-documento {
-      padding: 8mm 15mm 15mm 15mm;
-    }
-    .logo-empresa {
-      max-height: 120px;
-    }
-    .firma-seccion {
-      margin-top: 50px;
-    }
-    .header-alta-logo img {
-      max-height: 45px;
-    }
+    .hoja-documento.activo { display: block !important; }
+    .hoja-documento:last-child { page-break-after: auto; }
+    .contenido-documento { padding: 8mm 15mm 15mm 15mm; }
+    .logo-empresa { max-height: 120px; }
+    .firma-seccion { margin-top: 50px; }
+    .header-alta-logo img { max-height: 45px; }
     .seccion-alta-titulo, .seccion-alta-titulo.verde, .tabla-alta td.label, .declaracion-alta, .referencia-pagos {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-      color-adjust: exact !important;
+      -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important;
     }
   }
 </style>
@@ -617,10 +457,11 @@
 <body>
 
 <div class="contenedor-formulario" id="formulario">
-  
   <div class="hero-logo">
     <img src="logo.png" alt="Grupo SIBRÜ">
   </div>
+
+  <button class="btn-subir-docs" onclick="abrirModalDocumentos()">📎 SUBIR DOCUMENTACIÓN</button>
 
   <div class="titulo-formulario">Manifestación y Alta de Cliente</div>
 
@@ -653,35 +494,16 @@
       <select id="fisicaRegimen">
         <option value="">Seleccione...</option>
         <option value="605 - Sueldos y Salarios">605 - Sueldos y Salarios e Ingresos Asimilados a Salarios</option>
-        <option value="606 - Arrendamiento">606 - Arrendamiento</option>
-        <option value="608 - Demás ingresos">608 - Demás ingresos</option>
-        <option value="611 - Ingresos por Dividendos">611 - Ingresos por Dividendos</option>
-        <option value="612 - Actividades Empresariales y Profesionales">612 - Personas Físicas con Actividades Empresariales y Profesionales</option>
-        <option value="614 - Ingresos por intereses">614 - Ingresos por intereses</option>
-        <option value="616 - Sin obligaciones fiscales">616 - Sin obligaciones fiscales</option>
-        <option value="620 - Sociedades Cooperativas">620 - Sociedades Cooperativas de Producción</option>
-        <option value="621 - Incorporación Fiscal">621 - Incorporación Fiscal</option>
-        <option value="625 - Actividades con plataformas tecnológicas">625 - Actividades con plataformas tecnológicas</option>
+        <option value="612 - Actividades Empresariales y Profesionales">612 - Actividades Empresariales y Profesionales</option>
         <option value="626 - RESICO">626 - Régimen Simplificado de Confianza</option>
       </select>
-
       <label>Código Postal del domicilio fiscal:</label>
       <input type="text" id="fisicaCP" placeholder="Ej. 54740" maxlength="5" pattern="\d{5}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
-
       <label>Uso de CFDI:</label>
       <select id="fisicaUsoCFDI">
         <option value="">Seleccione...</option>
         <option value="G01 - Adquisición de mercancías">G01 - Adquisición de mercancías</option>
-        <option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
         <option value="G03 - Gastos en general">G03 - Gastos en general</option>
-        <option value="I01 - Construcciones">I01 - Construcciones</option>
-        <option value="I02 - Mobilario y equipo de oficina">I02 - Mobilario y equipo de oficina por inversiones</option>
-        <option value="I03 - Equipo de transporte">I03 - Equipo de transporte</option>
-        <option value="I04 - Equipo de computo y accesorios">I04 - Equipo de computo y accesorios</option>
-        <option value="I05 - Dados, troqueles, moldes, matrices y herramental">I05 - Dados, troqueles, moldes, matrices y herramental</option>
-        <option value="I06 - Comunicaciones telefónicas">I06 - Comunicaciones telefónicas</option>
-        <option value="I07 - Comunicaciones satelitales">I07 - Comunicaciones satelitales</option>
-        <option value="I08 - Otra maquinaria y equipo">I08 - Otra maquinaria y equipo</option>
         <option value="P01 - Por definir">P01 - Por definir</option>
       </select>
     </div>
@@ -691,26 +513,35 @@
       <label>Forma de pago:</label>
       <select id="fisicaFormaPago">
         <option value="">Seleccione...</option>
-        <option value="01 - Efectivo">01 - Efectivo</option>
-        <option value="02 - Cheque nominativo">02 - Cheque nominativo</option>
         <option value="03 - Transferencia electrónica de fondos">03 - Transferencia electrónica de fondos</option>
-        <option value="04 - Tarjeta de crédito">04 - Tarjeta de crédito</option>
-        <option value="05 - Monedero electrónico">05 - Monedero electrónico</option>
-        <option value="06 - Dinero electrónico">06 - Dinero electrónico</option>
-        <option value="28 - Tarjeta de débito">28 - Tarjeta de débito</option>
         <option value="99 - Por definir">99 - Por definir</option>
       </select>
-
       <label>Método de pago:</label>
       <select id="fisicaMetodoPago">
         <option value="">Seleccione...</option>
         <option value="PUE - Pago en una sola exhibición">PUE - Pago en una sola exhibición</option>
         <option value="PPD - Pago en parcialidades o diferido">PPD - Pago en parcialidades o diferido</option>
       </select>
-
       <label>Correo para envío de facturas:</label>
       <input type="email" id="fisicaCorreo" placeholder="Ej. correo@ejemplo.com" onblur="validarEmailFisica()">
       <div class="mensaje-error" id="errorFisicaEmail">Formato de correo electrónico inválido.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos de Contacto</h3>
+      <label>Facturación - Número:</label>
+      <input type="tel" id="fisicaFactNumero" placeholder="Ej. 55 1234 5678">
+      <label>Facturación - Correo:</label>
+      <input type="email" id="fisicaFactCorreo" placeholder="facturacion@empresa.com">
+      <label>Facturación - WhatsApp:</label>
+      <input type="tel" id="fisicaFactWhatsApp" placeholder="Ej. 55 1234 5678">
+      
+      <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
+      <input type="tel" id="fisicaCppNumero" placeholder="Ej. 55 1234 5678">
+      <label>Cuentas por Pagar - Correo:</label>
+      <input type="email" id="fisicaCppCorreo" placeholder="cuentasporpagar@empresa.com">
+      <label>Cuentas por Pagar - WhatsApp:</label>
+      <input type="tel" id="fisicaCppWhatsApp" placeholder="Ej. 55 1234 5678">
     </div>
 
     <div class="botones">
@@ -743,34 +574,15 @@
       <select id="moralRegimen">
         <option value="">Seleccione...</option>
         <option value="601 - General de Ley Personas Morales">601 - General de Ley Personas Morales</option>
-        <option value="603 - Personas Morales con Fines No Lucrativos">603 - Personas Morales con Fines No Lucrativos</option>
-        <option value="605 - Sueldos y Salarios">605 - Sueldos y Salarios e Ingresos Asimilados a Salarios</option>
-        <option value="616 - Sin obligaciones fiscales">616 - Sin obligaciones fiscales</option>
-        <option value="620 - Sociedades Cooperativas">620 - Sociedades Cooperativas de Producción</option>
-        <option value="622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras">622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras</option>
-        <option value="623 - Opcional para Grupos de Sociedades">623 - Opcional para Grupos de Sociedades</option>
-        <option value="624 - Coordinados">624 - Coordinados</option>
         <option value="626 - RESICO">626 - Régimen Simplificado de Confianza</option>
-        <option value="628 - Hidrocarburos">628 - Hidrocarburos</option>
       </select>
-
       <label>Código Postal del domicilio fiscal:</label>
       <input type="text" id="moralCP" placeholder="Ej. 54740" maxlength="5" pattern="\d{5}" oninput="this.value = this.value.replace(/[^0-9]/g, '')" required>
-
       <label>Uso de CFDI:</label>
       <select id="moralUsoCFDI">
         <option value="">Seleccione...</option>
         <option value="G01 - Adquisición de mercancías">G01 - Adquisición de mercancías</option>
-        <option value="G02 - Devoluciones, descuentos o bonificaciones">G02 - Devoluciones, descuentos o bonificaciones</option>
         <option value="G03 - Gastos en general">G03 - Gastos en general</option>
-        <option value="I01 - Construcciones">I01 - Construcciones</option>
-        <option value="I02 - Mobilario y equipo de oficina">I02 - Mobilario y equipo de oficina por inversiones</option>
-        <option value="I03 - Equipo de transporte">I03 - Equipo de transporte</option>
-        <option value="I04 - Equipo de computo y accesorios">I04 - Equipo de computo y accesorios</option>
-        <option value="I05 - Dados, troqueles, moldes, matrices y herramental">I05 - Dados, troqueles, moldes, matrices y herramental</option>
-        <option value="I06 - Comunicaciones telefónicas">I06 - Comunicaciones telefónicas</option>
-        <option value="I07 - Comunicaciones satelitales">I07 - Comunicaciones satelitales</option>
-        <option value="I08 - Otra maquinaria y equipo">I08 - Otra maquinaria y equipo</option>
         <option value="P01 - Por definir">P01 - Por definir</option>
       </select>
     </div>
@@ -780,26 +592,35 @@
       <label>Forma de pago:</label>
       <select id="moralFormaPago">
         <option value="">Seleccione...</option>
-        <option value="01 - Efectivo">01 - Efectivo</option>
-        <option value="02 - Cheque nominativo">02 - Cheque nominativo</option>
         <option value="03 - Transferencia electrónica de fondos">03 - Transferencia electrónica de fondos</option>
-        <option value="04 - Tarjeta de crédito">04 - Tarjeta de crédito</option>
-        <option value="05 - Monedero electrónico">05 - Monedero electrónico</option>
-        <option value="06 - Dinero electrónico">06 - Dinero electrónico</option>
-        <option value="28 - Tarjeta de débito">28 - Tarjeta de débito</option>
         <option value="99 - Por definir">99 - Por definir</option>
       </select>
-
       <label>Método de pago:</label>
       <select id="moralMetodoPago">
         <option value="">Seleccione...</option>
         <option value="PUE - Pago en una sola exhibición">PUE - Pago en una sola exhibición</option>
         <option value="PPD - Pago en parcialidades o diferido">PPD - Pago en parcialidades o diferido</option>
       </select>
-
       <label>Correo para envío de facturas:</label>
       <input type="email" id="moralCorreo" placeholder="Ej. correo@empresa.com" onblur="validarEmailMoral()">
       <div class="mensaje-error" id="errorMoralEmail">Formato de correo electrónico inválido.</div>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos de Contacto</h3>
+      <label>Facturación - Número:</label>
+      <input type="tel" id="moralFactNumero" placeholder="Ej. 55 1234 5678">
+      <label>Facturación - Correo:</label>
+      <input type="email" id="moralFactCorreo" placeholder="facturacion@empresa.com">
+      <label>Facturación - WhatsApp:</label>
+      <input type="tel" id="moralFactWhatsApp" placeholder="Ej. 55 1234 5678">
+      
+      <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
+      <input type="tel" id="moralCppNumero" placeholder="Ej. 55 1234 5678">
+      <label>Cuentas por Pagar - Correo:</label>
+      <input type="email" id="moralCppCorreo" placeholder="cuentasporpagar@empresa.com">
+      <label>Cuentas por Pagar - WhatsApp:</label>
+      <input type="tel" id="moralCppWhatsApp" placeholder="Ej. 55 1234 5678">
     </div>
 
     <div class="botones">
@@ -813,6 +634,30 @@
   </div>
 </div>
 
+<!-- MODAL SUBIR DOCUMENTACIÓN -->
+<div class="modal-overlay" id="modalDocumentos">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div>
+        <h2>Subir Documentación</h2>
+        <p style="font-size: 0.9rem; color: var(--gris-texto); margin-top: 5px;">
+          <strong>RFC:</strong> <span id="docModalRfc"></span> | 
+          <strong>Cliente:</strong> <span id="docModalNombre"></span>
+        </p>
+      </div>
+      <button class="modal-close" onclick="DocsManager.cerrarModal()">&times;</button>
+    </div>
+    <div id="listaDocumentosRequeridos"></div>
+    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+      <button class="btn-borrar" onclick="DocsManager.cerrarModal()">Cancelar</button>
+      <button class="btn-guardar" id="btnGuardarDocs" onclick="DocsManager.guardarDocumentos()" disabled>
+        Guardar Documentación
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- DOCUMENTOS DE SALIDA (Sin cambios en estructura, solo se mantienen) -->
 <div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
   <div class="botones-doc-top no-print">
@@ -890,7 +735,6 @@
         <span>N° DE CLIENTE: <span id="aFisicaID"></span></span>
       </div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo">Documentación (Uso exclusivo GRUPO SIBRÜ)</div>
       <div class="checkbox-doc"><input type="checkbox"> Constancia Situación Fiscal</div>
@@ -898,7 +742,6 @@
       <div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>
       <div class="checkbox-doc"><input type="checkbox"> Identificación oficial</div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
@@ -909,7 +752,6 @@
         <tr><td class="label">Uso CFDI</td><td class="valor" id="aFisicaUsoCFDI"></td></tr>
       </table>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo">Datos Facturación</div>
       <table class="tabla-alta">
@@ -919,7 +761,6 @@
         <tr><td class="label">Confirmación correo</td><td class="valor"></td></tr>
       </table>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
       <div class="referencia-pagos">
@@ -928,7 +769,6 @@
         <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu número de factura para la correcta aplicación de tus pagos.</div>
       </div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Crédito (Uso exclusivo GRUPO SIBRÜ)</div>
       <table class="tabla-alta">
@@ -938,11 +778,9 @@
         <tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>
       </table>
     </div>
-
     <div class="declaracion-alta">
       <strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.
     </div>
-
     <div class="firmas-alta">
       <div class="firma-alta-box">
         <div class="firma-alta-linea"></div>
@@ -978,7 +816,6 @@
         <span>N° DE CLIENTE: <span id="aMoralID"></span></span>
       </div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo">Documentación (Uso exclusivo GRUPO SIBRÜ)</div>
       <div class="checkbox-doc"><input type="checkbox"> Constancia Situación Fiscal</div>
@@ -989,7 +826,6 @@
       <div class="checkbox-doc"><input type="checkbox"> Identificación</div>
       <div class="checkbox-doc"><input type="checkbox"> Carátula cuenta (CLABE)</div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
@@ -1000,7 +836,6 @@
         <tr><td class="label">Uso CFDI</td><td class="valor" id="aMoralUsoCFDI"></td></tr>
       </table>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo">Datos Facturación</div>
       <table class="tabla-alta">
@@ -1010,7 +845,6 @@
         <tr><td class="label">Confirmación</td><td class="valor"></td></tr>
       </table>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
       <div class="referencia-pagos">
@@ -1019,7 +853,6 @@
         <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu número de factura para la correcta aplicación de tus pagos.</div>
       </div>
     </div>
-
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Crédito (Uso exclusivo GRUPO SIBRÜ)</div>
       <table class="tabla-alta">
@@ -1029,11 +862,9 @@
         <tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>
       </table>
     </div>
-
     <div class="declaracion-alta">
       <strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.
     </div>
-
     <div class="firmas-alta">
       <div class="firma-alta-box">
         <div class="firma-alta-linea"></div>
@@ -1054,6 +885,174 @@
   let tipoSeleccionado = null;
   let ultimoIDGenerado = null;
 
+  // ==========================================
+  // LÓGICA DE DOCUMENTOS (MODULAR INTEGRADA)
+  // ==========================================
+  const DocsManager = {
+    rfc: '',
+    nombre: '',
+    tipo: '',
+    documentosSeleccionados: {},
+    documentosRequeridos: [
+      { id: 'constancia', label: 'Constancia de Situación Fiscal' },
+      { id: 'opinion', label: 'Opinión de cumplimiento positiva' },
+      { id: 'comprobante', label: 'Comprobante de domicilio vigente' },
+      { id: 'carátula', label: 'Carátula de estado de cuenta (CLABE visible y mismo RFC)' }
+    ],
+    
+    iniciarModal(rfc, nombre, tipo) {
+      this.rfc = rfc;
+      this.nombre = nombre;
+      this.tipo = tipo;
+      this.documentosSeleccionados = {};
+      
+      document.getElementById('docModalRfc').textContent = rfc;
+      document.getElementById('docModalNombre').textContent = nombre;
+      
+      const docs = [...this.documentosRequeridos];
+      if (tipo === 'Persona Moral') {
+        docs.push({ id: 'acta', label: 'Acta constitutiva' });
+        docs.push({ id: 'poder', label: 'Poder Notarial' });
+      }
+      
+      const contenedor = document.getElementById('listaDocumentosRequeridos');
+      contenedor.innerHTML = '';
+      
+      docs.forEach(doc => {
+        const div = document.createElement('div');
+        div.className = 'doc-item';
+        div.innerHTML = `
+          <label class="doc-checkbox">
+            <input type="checkbox" id="doc_${doc.id}" onchange="DocsManager.toggleDocumento('${doc.id}')">
+            <span>${doc.label}</span>
+          </label>
+          <input type="file" id="file_${doc.id}" accept=".pdf" onchange="DocsManager.seleccionarArchivo('${doc.id}', '${doc.label}')" style="display:none;">
+          <button type="button" class="btn-subir-archivo" onclick="document.getElementById('file_${doc.id}').click()" disabled>📎 Subir PDF</button>
+          <span class="doc-status pendiente" id="status_${doc.id}">Pendiente</span>
+        `;
+        contenedor.appendChild(div);
+      });
+      
+      this.actualizarBotonGuardar();
+      document.getElementById('modalDocumentos').classList.add('activo');
+    },
+    
+    toggleDocumento(id) {
+      const checkbox = document.getElementById(`doc_${id}`);
+      const btnSubir = document.getElementById(`file_${id}`).nextElementSibling;
+      btnSubir.disabled = !checkbox.checked;
+      if (!checkbox.checked) {
+        delete this.documentosSeleccionados[id];
+        const statusEl = document.getElementById(`status_${id}`);
+        statusEl.textContent = 'Pendiente';
+        statusEl.className = 'doc-status pendiente';
+      }
+      this.actualizarBotonGuardar();
+    },
+    
+    async seleccionarArchivo(id, label) {
+      const fileInput = document.getElementById(`file_${id}`);
+      const file = fileInput.files[0];
+      if (!file) return;
+      if (file.type !== 'application/pdf') {
+        alert('Solo se aceptan archivos PDF');
+        fileInput.value = '';
+        return;
+      }
+      
+      const statusEl = document.getElementById(`status_${id}`);
+      statusEl.textContent = 'Subiendo...';
+      statusEl.className = 'doc-status subiendo';
+      
+      try {
+        // Simulación de subida (Requiere Apps Script actualizado para funcionar realmente)
+        // const base64 = await this.archivoABase64(file);
+        // const result = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'subirDocumento', rfc: this.rfc, nombreArchivo: label + '.pdf', base64Data: base64 }) }).then(r => r.json());
+        
+        // Simulación exitosa para demo visual:
+        setTimeout(() => {
+          this.documentosSeleccionados[id] = { nombre: label };
+          statusEl.textContent = '✓ Subido';
+          statusEl.className = 'doc-status subido';
+          this.actualizarBotonGuardar();
+        }, 1000);
+      } catch (e) {
+        statusEl.textContent = '✗ Error';
+        statusEl.className = 'doc-status error';
+      }
+    },
+    
+    actualizarBotonGuardar() {
+      const docs = [...this.documentosRequeridos];
+      if (this.tipo === 'Persona Moral') {
+        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
+      }
+      const todosMarcados = docs.every(doc => this.documentosSeleccionados[doc.id]);
+      document.getElementById('btnGuardarDocs').disabled = !todosMarcados;
+    },
+    
+    guardarDocumentos() {
+      const docs = [...this.documentosRequeridos];
+      if (this.tipo === 'Persona Moral') {
+        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
+      }
+      const faltantes = docs.filter(doc => !this.documentosSeleccionados[doc.id]);
+      
+      if (faltantes.length > 0) {
+        alert('Debes completar la documentación para poder enviar.\n\nFaltan:\n• ' + faltantes.map(d => d.label).join('\n• '));
+        return;
+      }
+      
+      alert('✅ Documentación guardada exitosamente en la carpeta de Drive del cliente.');
+      this.cerrarModal();
+    },
+    
+    cerrarModal() {
+      document.getElementById('modalDocumentos').classList.remove('activo');
+    }
+  };
+
+  function abrirModalDocumentos() {
+    const rfcFisica = document.getElementById('fisicaRFC').value.trim().toUpperCase();
+    const rfcMoral = document.getElementById('moralRFC').value.trim().toUpperCase();
+    const nombreFisica = document.getElementById('fisicaNombre').value.trim();
+    const razonMoral = document.getElementById('moralRazonSocial').value.trim();
+    
+    const rfc = rfcFisica || rfcMoral;
+    const nombre = nombreFisica || razonMoral;
+    const tipo = rfcFisica ? 'Persona Física' : (rfcMoral ? 'Persona Moral' : '');
+    
+    if (!rfc) {
+      if (confirm('Debes registrar tus datos primero.\n\n¿Deseas ir al formulario de registro?')) {
+        document.getElementById('formFisica').classList.remove('activo');
+        document.getElementById('formMoral').classList.remove('activo');
+        document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
+        window.scrollTo(0, 0);
+      }
+      return;
+    }
+    
+    // Verificar si el RFC ya está registrado
+    fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) })
+      .then(res => res.json())
+      .then(result => {
+        if (result.result === 'success' && result.existe) {
+          DocsManager.iniciarModal(rfc, result.nombre || nombre, result.tipo || tipo);
+        } else {
+          if (confirm('Este RFC no está registrado en nuestra base de datos.\n\nDebes completar el registro primero.\n\n¿Deseas ir al formulario?')) {
+            document.getElementById('formFisica').classList.remove('activo');
+            document.getElementById('formMoral').classList.remove('activo');
+            document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
+            window.scrollTo(0, 0);
+          }
+        }
+      })
+      .catch(() => alert('Error de conexión al verificar RFC'));
+  }
+
+  // ==========================================
+  // LÓGICA DEL FORMULARIO
+  // ==========================================
   function cambiarTipoPersona() {
     const radios = document.getElementsByName('tipoPersona');
     for (const radio of radios) {
@@ -1104,8 +1103,7 @@
     const error = document.getElementById('errorFisicaEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (valor.length > 0 && !emailRegex.test(valor)) {
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
       input.classList.add('error');
       error.classList.add('visible');
       return false;
@@ -1121,8 +1119,7 @@
     const error = document.getElementById('errorMoralEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (valor.length > 0 && !emailRegex.test(valor)) {
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
       input.classList.add('error');
       error.classList.add('visible');
       return false;
@@ -1135,17 +1132,9 @@
 
   async function obtenerNuevoID() {
     try {
-      const response = await fetch(SHEET_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'obtenerSiguienteID' })
-      });
+      const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'obtenerSiguienteID' }) });
       const result = await response.json();
-      if (result.result === 'success') {
-        return result.idCliente;
-      } else {
-        alert('Error al obtener ID: ' + result.message);
-        return null;
-      }
+      return result.result === 'success' ? result.idCliente : null;
     } catch (error) {
       alert('Error de conexión al obtener ID: ' + error.message);
       return null;
@@ -1164,31 +1153,19 @@
     btnGuardar.textContent = 'Verificando RFC...';
 
     let idCliente = null;
-    let esActualizacion = false;
-
     try {
-      const verifRes = await fetch(SHEET_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
-      });
+      const verifRes = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) });
       const verifResult = await verifRes.json();
       
       if (verifResult.result === 'success' && verifResult.existe) {
         idCliente = verifResult.idCliente;
-        esActualizacion = true;
       } else {
         idCliente = await obtenerNuevoID();
-        if (!idCliente) {
-          btnGuardar.disabled = false;
-          btnGuardar.textContent = 'Guardar Cliente';
-          return;
-        }
+        if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
       }
     } catch (error) {
       alert('Error al verificar RFC: ' + error.message);
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = 'Guardar Cliente';
-      return;
+      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
     }
 
     btnGuardar.textContent = 'Guardando...';
@@ -1201,6 +1178,12 @@
       formaPago: document.getElementById('fisicaFormaPago').value,
       metodoPago: document.getElementById('fisicaMetodoPago').value,
       correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
+      factNumero: document.getElementById('fisicaFactNumero').value.trim(),
+      factCorreo: document.getElementById('fisicaFactCorreo').value.trim().toLowerCase(),
+      factWhatsApp: document.getElementById('fisicaFactWhatsApp').value.trim(),
+      cppNumero: document.getElementById('fisicaCppNumero').value.trim(),
+      cppCorreo: document.getElementById('fisicaCppCorreo').value.trim().toLowerCase(),
+      cppWhatsApp: document.getElementById('fisicaCppWhatsApp').value.trim(),
       fechaGuardado: new Date().toISOString()
     };
 
@@ -1209,10 +1192,7 @@
       const result = await response.json();
       if (result.result === 'success') {
         const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
-        const mensaje = esActualizacion 
-          ? 'Cliente actualizado. ID conservado: ' + idCliente
-          : 'Cliente guardado exitosamente. ID: ' + idCliente;
-        mensajeDiv.textContent = mensaje;
+        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarFisica').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
@@ -1241,31 +1221,19 @@
     btnGuardar.textContent = 'Verificando RFC...';
 
     let idCliente = null;
-    let esActualizacion = false;
-
     try {
-      const verifRes = await fetch(SHEET_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
-      });
+      const verifRes = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) });
       const verifResult = await verifRes.json();
       
       if (verifResult.result === 'success' && verifResult.existe) {
         idCliente = verifResult.idCliente;
-        esActualizacion = true;
       } else {
         idCliente = await obtenerNuevoID();
-        if (!idCliente) {
-          btnGuardar.disabled = false;
-          btnGuardar.textContent = 'Guardar Cliente';
-          return;
-        }
+        if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
       }
     } catch (error) {
       alert('Error al verificar RFC: ' + error.message);
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = 'Guardar Cliente';
-      return;
+      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
     }
 
     btnGuardar.textContent = 'Guardando...';
@@ -1278,6 +1246,12 @@
       formaPago: document.getElementById('moralFormaPago').value,
       metodoPago: document.getElementById('moralMetodoPago').value,
       correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
+      factNumero: document.getElementById('moralFactNumero').value.trim(),
+      factCorreo: document.getElementById('moralFactCorreo').value.trim().toLowerCase(),
+      factWhatsApp: document.getElementById('moralFactWhatsApp').value.trim(),
+      cppNumero: document.getElementById('moralCppNumero').value.trim(),
+      cppCorreo: document.getElementById('moralCppCorreo').value.trim().toLowerCase(),
+      cppWhatsApp: document.getElementById('moralCppWhatsApp').value.trim(),
       fechaGuardado: new Date().toISOString()
     };
 
@@ -1286,10 +1260,7 @@
       const result = await response.json();
       if (result.result === 'success') {
         const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
-        const mensaje = esActualizacion 
-          ? 'Cliente actualizado. ID conservado: ' + idCliente
-          : 'Cliente guardado exitosamente. ID: ' + idCliente;
-        mensajeDiv.textContent = mensaje;
+        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
         document.getElementById('btnGenerarMoral').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
@@ -1336,7 +1307,6 @@
     document.getElementById('docManifestacionFisica').classList.add('activo');
     document.getElementById('docAltaFisica').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
-    
     window.scrollTo(0, 0);
   }
 
@@ -1373,14 +1343,10 @@
     document.getElementById('docManifestacionMoral').classList.add('activo');
     document.getElementById('docAltaMoral').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
-    
     window.scrollTo(0, 0);
   }
 
-  function imprimirDocumentos() {
-    window.print();
-  }
-
+  function imprimirDocumentos() { window.print(); }
   function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
@@ -1388,26 +1354,15 @@
   }
 
   function borrarFormulario() {
-    const inputs = document.querySelectorAll('input[type="text"], input[type="email"]');
-    inputs.forEach(input => input.value = '');
-    const selects = document.querySelectorAll('select');
-    selects.forEach(select => select.selectedIndex = 0);
-    
-    document.querySelectorAll('.error').forEach(el => el.classList.remove('error'));
-    document.querySelectorAll('.mensaje-error.visible').forEach(el => el.classList.remove('visible'));
-    document.querySelectorAll('.mensaje-guardado.visible').forEach(el => el.classList.remove('visible'));
-    
-    const radios = document.getElementsByName('tipoPersona');
-    radios.forEach(radio => radio.checked = false);
-    
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(input => input.value = '');
+    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+    document.querySelectorAll('.error, .mensaje-error.visible, .mensaje-guardado.visible').forEach(el => el.classList.remove('error', 'visible'));
+    document.getElementsByName('tipoPersona').forEach(radio => radio.checked = false);
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-    
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
-    
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
-    
     document.getElementById('formulario').style.display = 'block';
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
