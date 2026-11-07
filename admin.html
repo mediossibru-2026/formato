@@ -280,6 +280,16 @@
   .contacto-valor .wa-link { color: #25D366; }
 </style>
 </head>
+<!-- MODAL INCOMPLETO -->
+<div class="modal-overlay" id="modalIncompleto">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>Estado del Cliente</h2>
+      <button class="modal-close" onclick="cerrarModal('modalIncompleto')">&times;</button>
+    </div>
+    <div id="contenidoIncompleto"></div>
+  </div>
+</div>
 <body>
 
 <div class="admin-container" id="adminPanel">
@@ -289,7 +299,7 @@
       <h1>Base General de Clientes</h1>
     </div>
     <div class="admin-header-right">
-      <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button>
+      <!-- ELIMINADO: <button class="btn-header btn-agregar" onclick="abrirModalAgregar()">+ Agregar</button> -->
       <button class="btn-header btn-reset" onclick="abrirModalReset()">⚙️</button>
       <button class="btn-header btn-actualizar" onclick="cargarClientes()">🔄 Actualizar</button>
     </div>
@@ -605,6 +615,79 @@
   </div>
 </div>
 
+function verificarClienteCompleto(cliente) {
+  const faltantes = [];
+  
+  // Campos obligatorios
+  if (!cliente['RFC'] || cliente['RFC'].trim() === '') faltantes.push('RFC');
+  if (!cliente['Nombre/Razón Social'] && !cliente['Nombre']) faltantes.push('Nombre o Razón Social');
+  if (!cliente['Tipo']) faltantes.push('Tipo de persona (Física/Moral)');
+  if (!cliente['Correo Electrónico']) faltantes.push('Correo Electrónico');
+  if (!cliente['Régimen Fiscal']) faltantes.push('Régimen Fiscal');
+  if (!cliente['Código Postal']) faltantes.push('Código Postal');
+  
+  return {
+    completo: faltantes.length === 0,
+    faltantes: faltantes
+  };
+}
+
+async function verificarDocumentosSubidos(rfc) {
+  try {
+    const url = `${SHEET_SCRIPT_URL}?action=listarDocumentos&rfc=${encodeURIComponent(rfc)}`;
+    const res = await fetch(url);
+    const result = await res.json();
+    
+    if (result.result === 'success') {
+      const docsRequeridos = result.documentos.length;
+      const minimoRequerido = 4; // Constancia, Opinión, Comprobante, Carátula
+      return {
+        tieneDocs: docsRequeridos >= minimoRequerido,
+        cantidad: docsRequeridos
+      };
+    }
+    return { tieneDocs: false, cantidad: 0 };
+  } catch (e) {
+    return { tieneDocs: false, cantidad: 0, error: e.message };
+  }
+}
+
+async function mostrarAlertaIncompleto(rfc) {
+  const cliente = clientesData.find(c => c['RFC'] === rfc);
+  if (!cliente) return;
+  
+  const validacion = verificarClienteCompleto(cliente);
+  const docs = await verificarDocumentosSubidos(rfc);
+  
+  let html = `<h3 style="margin-bottom:15px;color:var(--rojo-sibru);">⚠️ Cliente INCOMPLETO</h3>`;
+  html += `<p style="margin-bottom:15px;"><strong>RFC:</strong> ${rfc}</p>`;
+  
+  if (!validacion.completo) {
+    html += `<div class="contacto-seccion"><h4>📋 Datos Faltantes</h4><ul style="padding-left:20px;">`;
+    validacion.faltantes.forEach(f => {
+      html += `<li style="margin-bottom:5px;color:var(--rojo-sibru);">❌ ${f}</li>`;
+    });
+    html += `</ul></div>`;
+  }
+  
+  if (!docs.tieneDocs) {
+    html += `<div class="contacto-seccion"><h4>📁 Documentación</h4>`;
+    html += `<p style="color:var(--rojo-sibru);">❌ No se han subido documentos a Drive</p>`;
+    html += `<p style="font-size:0.85rem;color:var(--gris-texto);">Mínimo requerido: 4 documentos (Constancia, Opinión, Comprobante, Carátula)</p>`;
+    html += `</div>`;
+  } else {
+    html += `<div class="contacto-seccion"><h4>📁Documentación</h4>`;
+    html += `<p style="color:var(--verde-sibru);">✅ ${docs.cantidad} documento(s) subido(s)</p>`;
+    html += `</div>`;
+  }
+  
+  if (validacion.completo && docs.tieneDocs) {
+    html += `<p style="text-align:center;color:var(--verde-sibru);font-weight:700;">✅ Cliente COMPLETO</p>`;
+  }
+  
+  document.getElementById('contenidoIncompleto').innerHTML = html;
+  document.getElementById('modalIncompleto').classList.add('activo');
+}        
 <script>
   // ⚠️ IMPORTANTE: Reemplaza esta URL con la de tu nueva implementación de Apps Script
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
@@ -650,37 +733,60 @@
     }
   }
 
-  function renderizarTabla(datos) {
-    const tbody = document.getElementById('tablaBody');
-    tbody.innerHTML = '';
-    if (datos.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
-      return;
-    }
-    datos.forEach(function(c) {
-      const tr = document.createElement('tr');
-      const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
-      const rfcSafe = (c['RFC'] || '').replace(/'/g, "\\'");
-      
-      tr.innerHTML = 
-        '<td>' + (c['ID Cliente'] || '-') + '</td>' +
-        '<td>' + nombre + '</td>' +
-        '<td>' + (c['RFC'] || '-') + '</td>' +
-        '<td><span class="badge badge-normal">' + (c['Tipo'] || 'N/A') + '</span></td>' +
-        '<td>' + (c['Régimen Fiscal'] || 'N/A') + '</td>' +
-        '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
-        '<td>' + (c['Fecha de Registro'] || 'N/A') + '</td>' +
-        '<td>' +
-          '<button class="btn-accion-small btn-docs-small" title="Ver Documentación" onclick="verDocumentosCliente(\'' + rfcSafe + '\')">📁</button>' +
-          '<button class="btn-accion-small btn-contact-small" title="Ver Contactos" onclick="verContactosCliente(\'' + rfcSafe + '\')">📞</button>' +
-          '<button class="btn-accion-small btn-edit-small" title="Editar" onclick="editarCliente(\'' + rfcSafe + '\')">✏️</button>' +
-          '<button class="btn-accion-small btn-print-small" title="Imprimir" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'imprimir\')">🖨️</button>' +
-          '<button class="btn-accion-small btn-email-small" title="Email" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'email\')">📧</button>' +
-          '<button class="btn-accion-small btn-delete-small" title="Eliminar" onclick="eliminarCliente(\'' + rfcSafe + '\')">🗑️</button>' +
-        '</td>';
-      tbody.appendChild(tr);
-    });
+async function renderizarTabla(datos) {
+  const tbody = document.getElementById('tablaBody');
+  tbody.innerHTML = '';
+  
+  if (datos.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">No se encontraron registros</td></tr>';
+    return;
   }
+  
+  for (const c of datos) {
+    const tr = document.createElement('tr');
+    const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
+    const rfcSafe = (c['RFC'] || '').replace(/'/g, "\\'");
+    
+    // Verificar si está completo
+    const validacion = verificarClienteCompleto(c);
+    const esIncompleto = !validacion.completo;
+    
+    // Verificar modificaciones pendientes
+    const requiereRevision = c['RequiereRevision'] === true || c['RequiereRevision'] === 'TRUE';
+    
+    // Aplicar estilos
+    if (requiereRevision) {
+      tr.style.backgroundColor = '#ffe6e6'; // Rojo tenue
+    }
+    
+    // Badge de estado
+    let badgeEstado = '';
+    if (esIncompleto) {
+      badgeEstado = `<span class="badge badge-baja" style="cursor:pointer;margin-right:5px;" onclick="mostrarAlertaIncompleto('${rfcSafe}')" title="Click para ver detalles">⚠️ INCOMPLETO</span>`;
+    } else {
+      badgeEstado = `<span class="badge badge-activo">✅ Completo</span>`;
+    }
+    
+    tr.innerHTML = 
+      '<td>' + (c['ID Cliente'] || '-') + '</td>' +
+      '<td>' + nombre + '</td>' +
+      '<td>' + (c['RFC'] || '-') + '</td>' +
+      '<td><span class="badge badge-normal">' + (c['Tipo'] || 'N/A') + '</span></td>' +
+      '<td>' + (c['Régimen Fiscal'] || 'N/A') + '</td>' +
+      '<td>' + (c['Correo Electrónico'] || 'N/A') + '</td>' +
+      '<td>' + (c['Fecha de Registro'] || 'N/A') + '</td>' +
+      '<td>' + badgeEstado + '</td>' +
+      '<td>' +
+        '<button class="btn-accion-small btn-docs-small" title="Ver Documentación" onclick="verDocumentosCliente(\'' + rfcSafe + '\')">📁</button>' +
+        '<button class="btn-accion-small btn-contact-small" title="Ver Contactos" onclick="verContactosCliente(\'' + rfcSafe + '\')">📞</button>' +
+        '<button class="btn-accion-small btn-edit-small" title="Editar" onclick="editarCliente(\'' + rfcSafe + '\')">✏️</button>' +
+        '<button class="btn-accion-small btn-print-small" title="Imprimir" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'imprimir\')">🖨️</button>' +
+        '<button class="btn-accion-small btn-email-small" title="Email" onclick="abrirModalAccion(\'' + rfcSafe + '\', \'email\')">📧</button>' +
+        '<button class="btn-accion-small btn-delete-small" title="Eliminar" onclick="eliminarCliente(\'' + rfcSafe + '\')">🗑️</button>' +
+      '</td>';
+    tbody.appendChild(tr);
+  }
+}
 
   function actualizarStats() {
     document.getElementById('statTotal').textContent = clientesData.length;
@@ -791,9 +897,20 @@ function exportarPDF() {
     document.getElementById('modalCliente').classList.add('activo');
   }
 
-  function editarCliente(rfc) {
-    const cliente = clientesData.find(c => c['RFC'] === rfc);
-    if (!cliente) return;
+function editarCliente(rfc) {
+  const cliente = clientesData.find(c => c['RFC'] === rfc);
+  if (!cliente) return;
+  
+  // Marcar como revisado en el servidor
+  fetch(SHEET_SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({ action: 'marcarComoRevisado', rfc: rfc })
+  }).then(() => {
+    // Recargar datos después de marcar
+    setTimeout(() => cargarClientes(), 500);
+  }).catch(e => console.error('Error al marcar como revisado:', e));
+  
+  // ... resto del código existente de editarCliente
     
     document.getElementById('modalTitle').textContent = 'Editar Cliente';
     document.getElementById('clientId').value = cliente['ID Cliente'] || '';
