@@ -1012,43 +1012,85 @@
     }
   };
 
-  function abrirModalDocumentos() {
-    const rfcFisica = document.getElementById('fisicaRFC').value.trim().toUpperCase();
-    const rfcMoral = document.getElementById('moralRFC').value.trim().toUpperCase();
-    const nombreFisica = document.getElementById('fisicaNombre').value.trim();
-    const razonMoral = document.getElementById('moralRazonSocial').value.trim();
+// NUEVO MODAL DE BÚSQUEDA DE RFC (agregar en el HTML antes del modal de documentos)
+function abrirModalBuscarRFC() {
+  const html = `
+    <div class="modal-overlay activo" id="modalBuscarRFC" style="z-index: 1001;">
+      <div class="modal-content small">
+        <div class="modal-header">
+          <h2>📎 Subir Documentación</h2>
+          <button class="modal-close" onclick="cerrarModalBuscarRFC()">&times;</button>
+        </div>
+        <div style="padding: 20px 0;">
+          <div class="form-group" style="margin-bottom: 15px;">
+            <label>Nombre o Razón Social</label>
+            <input type="text" id="buscarRFCNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV">
+          </div>
+          <div class="form-group" style="margin-bottom: 20px;">
+            <label>RFC *</label>
+            <input type="text" id="buscarRFCRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+          </div>
+          <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="btn-borrar" onclick="cerrarModalBuscarRFC()">Cancelar</button>
+            <button class="btn-guardar" onclick="verificarRFCParaDocumentos()">Buscar y Continuar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Insertar el modal en el body
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+  document.body.appendChild(tempDiv.firstChild);
+}
+
+function cerrarModalBuscarRFC() {
+  const modal = document.getElementById('modalBuscarRFC');
+  if (modal) modal.remove();
+}
+
+async function verificarRFCParaDocumentos() {
+  const nombre = document.getElementById('buscarRFCNombre').value.trim();
+  const rfc = document.getElementById('buscarRFCRFC').value.trim().toUpperCase();
+  
+  if (!rfc) {
+    alert('Por favor ingresa el RFC');
+    return;
+  }
+  
+  // Verificar si el RFC existe en la base de datos
+  try {
+    const response = await fetch(SHEET_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+    });
+    const result = await response.json();
     
-    const rfc = rfcFisica || rfcMoral;
-    const nombre = nombreFisica || razonMoral;
-    const tipo = rfcFisica ? 'Persona Física' : (rfcMoral ? 'Persona Moral' : '');
-    
-    if (!rfc) {
-      if (confirm('Debes registrar tus datos primero.\n\n¿Deseas ir al formulario de registro?')) {
+    if (result.result === 'success' && result.existe) {
+      // El RFC existe, abrir modal de documentos
+      cerrarModalBuscarRFC();
+      DocsManager.iniciarModal(rfc, result.nombre || nombre, result.tipo || 'Persona Física');
+    } else {
+      // El RFC NO existe
+      cerrarModalBuscarRFC();
+      if (confirm('El RFC ' + rfc + ' no está registrado en nuestra base de datos.\n\nDebes completar el registro primero.\n\n¿Deseas ir al formulario de registro?')) {
+        // Limpiar formulario y mostrar selector
         document.getElementById('formFisica').classList.remove('activo');
         document.getElementById('formMoral').classList.remove('activo');
         document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
-        window.scrollTo(0, 0);
+        document.getElementById('formulario').scrollIntoView({ behavior: 'smooth' });
       }
-      return;
     }
-    
-    // Verificar si el RFC ya está registrado
-    fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) })
-      .then(res => res.json())
-      .then(result => {
-        if (result.result === 'success' && result.existe) {
-          DocsManager.iniciarModal(rfc, result.nombre || nombre, result.tipo || tipo);
-        } else {
-          if (confirm('Este RFC no está registrado en nuestra base de datos.\n\nDebes completar el registro primero.\n\n¿Deseas ir al formulario?')) {
-            document.getElementById('formFisica').classList.remove('activo');
-            document.getElementById('formMoral').classList.remove('activo');
-            document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
-            window.scrollTo(0, 0);
-          }
-        }
-      })
-      .catch(() => alert('Error de conexión al verificar RFC'));
+  } catch (error) {
+    alert('Error de conexión al verificar RFC: ' + error.message);
   }
+}
+
+// Modificar la función original abrirModalDocumentos
+function abrirModalDocumentos() {
+  abrirModalBuscarRFC();
+}
 
   // ==========================================
   // LÓGICA DEL FORMULARIO
