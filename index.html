@@ -212,7 +212,7 @@
 
   .oculto { display: none !important; }
 
-  /* MODAL ESTILOS */
+  /* MODALES */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -232,6 +232,10 @@
     max-width: 700px;
     max-height: 90vh;
     overflow-y: auto;
+  }
+
+  .modal-content.small {
+    max-width: 500px;
   }
 
   .modal-header {
@@ -298,7 +302,7 @@
   .doc-status.subido { background: #d4edda; color: #155724; }
   .doc-status.error { background: #f8d7da; color: #721c24; }
 
-  /* DOCUMENTOS ESTILOS (Sin cambios) */
+  /* DOCUMENTOS ESTILOS */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
@@ -634,6 +638,30 @@
   </div>
 </div>
 
+<!-- MODAL BUSCAR RFC PARA DOCUMENTOS -->
+<div class="modal-overlay" id="modalBuscarRFC">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>📎 Subir Documentación</h2>
+      <button class="modal-close" onclick="cerrarModalBuscarRFC()">&times;</button>
+    </div>
+    <div style="padding: 10px 0;">
+      <div class="form-group" style="margin-bottom: 15px;">
+        <label>Nombre o Razón Social</label>
+        <input type="text" id="buscarRFCNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV">
+      </div>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>RFC *</label>
+        <input type="text" id="buscarRFCRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="btn-borrar" onclick="cerrarModalBuscarRFC()">Cancelar</button>
+        <button class="btn-guardar" onclick="verificarRFCParaDocumentos()">Buscar y Continuar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL SUBIR DOCUMENTACIÓN -->
 <div class="modal-overlay" id="modalDocumentos">
   <div class="modal-content">
@@ -657,7 +685,7 @@
   </div>
 </div>
 
-<!-- DOCUMENTOS DE SALIDA (Sin cambios en estructura, solo se mantienen) -->
+<!-- DOCUMENTOS DE SALIDA -->
 <div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
   <div class="botones-doc-top no-print">
@@ -965,11 +993,7 @@
       statusEl.className = 'doc-status subiendo';
       
       try {
-        // Simulación de subida (Requiere Apps Script actualizado para funcionar realmente)
-        // const base64 = await this.archivoABase64(file);
-        // const result = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'subirDocumento', rfc: this.rfc, nombreArchivo: label + '.pdf', base64Data: base64 }) }).then(r => r.json());
-        
-        // Simulación exitosa para demo visual:
+        // Simulación de subida (Requiere Apps Script actualizado con 'subirDocumento' para funcionar realmente)
         setTimeout(() => {
           this.documentosSeleccionados[id] = { nombre: label };
           statusEl.textContent = '✓ Subido';
@@ -1012,85 +1036,48 @@
     }
   };
 
-// NUEVO MODAL DE BÚSQUEDA DE RFC (agregar en el HTML antes del modal de documentos)
-function abrirModalBuscarRFC() {
-  const html = `
-    <div class="modal-overlay activo" id="modalBuscarRFC" style="z-index: 1001;">
-      <div class="modal-content small">
-        <div class="modal-header">
-          <h2>📎 Subir Documentación</h2>
-          <button class="modal-close" onclick="cerrarModalBuscarRFC()">&times;</button>
-        </div>
-        <div style="padding: 20px 0;">
-          <div class="form-group" style="margin-bottom: 15px;">
-            <label>Nombre o Razón Social</label>
-            <input type="text" id="buscarRFCNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV">
-          </div>
-          <div class="form-group" style="margin-bottom: 20px;">
-            <label>RFC *</label>
-            <input type="text" id="buscarRFCRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
-          </div>
-          <div style="display: flex; gap: 10px; justify-content: flex-end;">
-            <button class="btn-borrar" onclick="cerrarModalBuscarRFC()">Cancelar</button>
-            <button class="btn-guardar" onclick="verificarRFCParaDocumentos()">Buscar y Continuar</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  
-  // Insertar el modal en el body
-  const tempDiv = document.createElement('div');
-  tempDiv.innerHTML = html;
-  document.body.appendChild(tempDiv.firstChild);
-}
-
-function cerrarModalBuscarRFC() {
-  const modal = document.getElementById('modalBuscarRFC');
-  if (modal) modal.remove();
-}
-
-async function verificarRFCParaDocumentos() {
-  const nombre = document.getElementById('buscarRFCNombre').value.trim();
-  const rfc = document.getElementById('buscarRFCRFC').value.trim().toUpperCase();
-  
-  if (!rfc) {
-    alert('Por favor ingresa el RFC');
-    return;
+  function abrirModalDocumentos() {
+    document.getElementById('modalBuscarRFC').classList.add('activo');
   }
-  
-  // Verificar si el RFC existe en la base de datos
-  try {
-    const response = await fetch(SHEET_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
-    });
-    const result = await response.json();
+
+  function cerrarModalBuscarRFC() {
+    document.getElementById('modalBuscarRFC').classList.remove('activo');
+    document.getElementById('buscarRFCNombre').value = '';
+    document.getElementById('buscarRFCRFC').value = '';
+  }
+
+  async function verificarRFCParaDocumentos() {
+    const nombre = document.getElementById('buscarRFCNombre').value.trim();
+    const rfc = document.getElementById('buscarRFCRFC').value.trim().toUpperCase();
     
-    if (result.result === 'success' && result.existe) {
-      // El RFC existe, abrir modal de documentos
-      cerrarModalBuscarRFC();
-      DocsManager.iniciarModal(rfc, result.nombre || nombre, result.tipo || 'Persona Física');
-    } else {
-      // El RFC NO existe
-      cerrarModalBuscarRFC();
-      if (confirm('El RFC ' + rfc + ' no está registrado en nuestra base de datos.\n\nDebes completar el registro primero.\n\n¿Deseas ir al formulario de registro?')) {
-        // Limpiar formulario y mostrar selector
-        document.getElementById('formFisica').classList.remove('activo');
-        document.getElementById('formMoral').classList.remove('activo');
-        document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
-        document.getElementById('formulario').scrollIntoView({ behavior: 'smooth' });
-      }
+    if (!rfc) {
+      alert('Por favor ingresa el RFC');
+      return;
     }
-  } catch (error) {
-    alert('Error de conexión al verificar RFC: ' + error.message);
+    
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+      });
+      const result = await response.json();
+      
+      if (result.result === 'success' && result.existe) {
+        cerrarModalBuscarRFC();
+        DocsManager.iniciarModal(rfc, result.nombre || nombre, result.tipo || 'Persona Física');
+      } else {
+        cerrarModalBuscarRFC();
+        if (confirm('El RFC ' + rfc + ' no está registrado en nuestra base de datos.\n\nDebes completar el registro primero.\n\n¿Deseas ir al formulario de registro?')) {
+          document.getElementById('formFisica').classList.remove('activo');
+          document.getElementById('formMoral').classList.remove('activo');
+          document.getElementsByName('tipoPersona').forEach(r => r.checked = false);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+    } catch (error) {
+      alert('Error de conexión al verificar RFC: ' + error.message);
+    }
   }
-}
-
-// Modificar la función original abrirModalDocumentos
-function abrirModalDocumentos() {
-  abrirModalBuscarRFC();
-}
 
   // ==========================================
   // LÓGICA DEL FORMULARIO
@@ -1389,6 +1376,7 @@ function abrirModalDocumentos() {
   }
 
   function imprimirDocumentos() { window.print(); }
+  
   function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
     document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
