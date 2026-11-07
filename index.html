@@ -144,19 +144,19 @@
 
   .mensaje-error.visible { display: block; }
 
-.botones {
-  display: flex;
-  gap: 10px;
-  margin-top: 25px;
-  justify-content: space-between;
-}
+  .botones {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    justify-content: space-between;
+  }
 
-.botones-derecha {
-  display: flex;
-  gap: 10px;
-  flex: 1;
-  justify-content: flex-end;
-}
+  .botones-derecha {
+    display: flex;
+    gap: 10px;
+    flex: 1;
+    justify-content: flex-end;
+  }
 
   button {
     flex: 1;
@@ -638,7 +638,7 @@
   <div class="formulario-tipo" id="formFisica">
     <div class="seccion-form">
       <h3>Datos Generales</h3>
-      <label>fecha:</label>
+      <label>Fecha:</label>
       <input type="text" id="fisicaLugarFecha" placeholder="Ej. 5 de noviembre de 2026">
       <label>Nombre PARA FACTURAR:</label>
       <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
@@ -714,13 +714,11 @@
     </div>
 
     <div class="botones">
-<div class="botones">
-  <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
-  <div class="botones-derecha">
-    <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
-    <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
-  </div>
-</div>
+      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+      <div class="botones-derecha">
+        <button class="btn-generar oculto" id="btnGenerarFisica" onclick="generarDocumentosFisica()">Generar Documentos</button>
+        <button class="btn-guardar" id="btnGuardarFisica" onclick="guardarClienteFisica()">Guardar Cliente</button>
+      </div>
     </div>
     <div class="mensaje-guardado" id="mensajeGuardadoFisica"></div>
   </div>
@@ -804,13 +802,13 @@
       <div class="mensaje-error" id="errorMoralEmail">Formato de correo electrónico inválido.</div>
     </div>
 
-<div class="botones">
-  <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
-  <div class="botones-derecha">
-    <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
-    <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
-  </div>
-</div>
+    <div class="botones">
+      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+      <div class="botones-derecha">
+        <button class="btn-generar oculto" id="btnGenerarMoral" onclick="generarDocumentosMoral()">Generar Documentos</button>
+        <button class="btn-guardar" id="btnGuardarMoral" onclick="guardarClienteMoral()">Guardar Cliente</button>
+      </div>
+    </div>
     <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
   </div>
 </div>
@@ -982,7 +980,7 @@
     </div>
 
     <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Documentación (Uso exclusico GRUPO SIBRÜ)</div>
+      <div class="seccion-alta-titulo">Documentación (Uso exclusivo GRUPO SIBRÜ)</div>
       <div class="checkbox-doc"><input type="checkbox"> Constancia Situación Fiscal</div>
       <div class="checkbox-doc"><input type="checkbox"> Opinión cumplimiento</div>
       <div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>
@@ -1154,162 +1152,158 @@
     }
   }
 
-async function guardarClienteFisica() {
-  const btnGuardar = document.getElementById('btnGuardarFisica');
-  const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
-  const nombre = document.getElementById('fisicaNombre').value.trim();
-  if (!rfc || !nombre) { alert('Por favor, complete al menos el RFC y el Nombre.'); return; }
-  if (rfc.length !== 13) { alert('El RFC debe tener exactamente 13 caracteres.'); return; }
-  if (!validarEmailFisica()) { alert('El correo electrónico no tiene un formato válido.'); return; }
+  async function guardarClienteFisica() {
+    const btnGuardar = document.getElementById('btnGuardarFisica');
+    const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
+    const nombre = document.getElementById('fisicaNombre').value.trim();
+    if (!rfc || !nombre) { alert('Por favor, complete al menos el RFC y el Nombre.'); return; }
+    if (rfc.length !== 13) { alert('El RFC debe tener exactamente 13 caracteres.'); return; }
+    if (!validarEmailFisica()) { alert('El correo electrónico no tiene un formato válido.'); return; }
 
-  btnGuardar.disabled = true;
-  btnGuardar.textContent = 'Verificando RFC...';
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Verificando RFC...';
 
-  let idCliente = null;
-  let esActualizacion = false;
+    let idCliente = null;
+    let esActualizacion = false;
 
-  // Primero verificar si el RFC ya existe
-  try {
-    const verifRes = await fetch(SHEET_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
-    });
-    const verifResult = await verifRes.json();
-    
-    if (verifResult.result === 'success' && verifResult.existe) {
-      // RFC existe: usar ID original
-      idCliente = verifResult.idCliente;
-      esActualizacion = true;
-    } else {
-      // RFC nuevo: generar nuevo ID
-      idCliente = await obtenerNuevoID();
-      if (!idCliente) {
-        btnGuardar.disabled = false;
-        btnGuardar.textContent = 'Guardar Cliente';
-        return;
+    try {
+      const verifRes = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+      });
+      const verifResult = await verifRes.json();
+      
+      if (verifResult.result === 'success' && verifResult.existe) {
+        idCliente = verifResult.idCliente;
+        esActualizacion = true;
+      } else {
+        idCliente = await obtenerNuevoID();
+        if (!idCliente) {
+          btnGuardar.disabled = false;
+          btnGuardar.textContent = 'Guardar Cliente';
+          return;
+        }
       }
+    } catch (error) {
+      alert('Error al verificar RFC: ' + error.message);
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+      return;
     }
-  } catch (error) {
-    alert('Error al verificar RFC: ' + error.message);
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = 'Guardar Cliente';
-    return;
-  }
 
-  btnGuardar.textContent = 'Guardando...';
-  const datos = {
-    action: 'guardar', tipo: 'fisica', idCliente: idCliente, rfc: rfc, nombre: nombre,
-    lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(),
-    regimen: document.getElementById('fisicaRegimen').value,
-    cp: document.getElementById('fisicaCP').value.trim(),
-    usoCFDI: document.getElementById('fisicaUsoCFDI').value,
-    formaPago: document.getElementById('fisicaFormaPago').value,
-    metodoPago: document.getElementById('fisicaMetodoPago').value,
-    correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
-    fechaGuardado: new Date().toISOString()
-  };
+    btnGuardar.textContent = 'Guardando...';
+    const datos = {
+      action: 'guardar', tipo: 'fisica', idCliente: idCliente, rfc: rfc, nombre: nombre,
+      lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(),
+      regimen: document.getElementById('fisicaRegimen').value,
+      cp: document.getElementById('fisicaCP').value.trim(),
+      usoCFDI: document.getElementById('fisicaUsoCFDI').value,
+      formaPago: document.getElementById('fisicaFormaPago').value,
+      metodoPago: document.getElementById('fisicaMetodoPago').value,
+      correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
+      fechaGuardado: new Date().toISOString()
+    };
 
-  try {
-    const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
-    const result = await response.json();
-    if (result.result === 'success') {
-      const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
-      const mensaje = esActualizacion 
-        ? 'Cliente actualizado. ID conservado: ' + idCliente
-        : 'Cliente guardado exitosamente. ID: ' + idCliente;
-      mensajeDiv.textContent = mensaje;
-      mensajeDiv.classList.add('visible');
-      document.getElementById('btnGenerarFisica').classList.remove('oculto');
-      ultimoIDGenerado = idCliente;
-      setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
-    } else {
-      alert('Error al guardar: ' + result.message);
-    }
-  } catch (error) {
-    alert('Error de conexión: ' + error.message);
-  } finally {
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = 'Guardar Cliente';
-  }
-}
-
-async function guardarClienteMoral() {
-  const btnGuardar = document.getElementById('btnGuardarMoral');
-  const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
-  const razonSocial = document.getElementById('moralRazonSocial').value.trim();
-  const representante = document.getElementById('moralRepresentante').value.trim();
-  if (!rfc || !razonSocial || !representante) { alert('Por favor, complete al menos el RFC, Razón Social y Representante.'); return; }
-  if (rfc.length !== 12) { alert('El RFC debe tener exactamente 12 caracteres.'); return; }
-  if (!validarEmailMoral()) { alert('El correo electrónico no tiene un formato válido.'); return; }
-
-  btnGuardar.disabled = true;
-  btnGuardar.textContent = 'Verificando RFC...';
-
-  let idCliente = null;
-  let esActualizacion = false;
-
-  // Primero verificar si el RFC ya existe
-  try {
-    const verifRes = await fetch(SHEET_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
-    });
-    const verifResult = await verifRes.json();
-    
-    if (verifResult.result === 'success' && verifResult.existe) {
-      idCliente = verifResult.idCliente;
-      esActualizacion = true;
-    } else {
-      idCliente = await obtenerNuevoID();
-      if (!idCliente) {
-        btnGuardar.disabled = false;
-        btnGuardar.textContent = 'Guardar Cliente';
-        return;
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const result = await response.json();
+      if (result.result === 'success') {
+        const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
+        const mensaje = esActualizacion 
+          ? 'Cliente actualizado. ID conservado: ' + idCliente
+          : 'Cliente guardado exitosamente. ID: ' + idCliente;
+        mensajeDiv.textContent = mensaje;
+        mensajeDiv.classList.add('visible');
+        document.getElementById('btnGenerarFisica').classList.remove('oculto');
+        ultimoIDGenerado = idCliente;
+        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
+      } else {
+        alert('Error al guardar: ' + result.message);
       }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
     }
-  } catch (error) {
-    alert('Error al verificar RFC: ' + error.message);
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = 'Guardar Cliente';
-    return;
   }
 
-  btnGuardar.textContent = 'Guardando...';
-  const datos = {
-    action: 'guardar', tipo: 'moral', idCliente: idCliente, rfc: rfc, razonSocial: razonSocial, representante: representante,
-    lugarFecha: document.getElementById('moralLugarFecha').value.trim(),
-    regimen: document.getElementById('moralRegimen').value,
-    cp: document.getElementById('moralCP').value.trim(),
-    usoCFDI: document.getElementById('moralUsoCFDI').value,
-    formaPago: document.getElementById('moralFormaPago').value,
-    metodoPago: document.getElementById('moralMetodoPago').value,
-    correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
-    fechaGuardado: new Date().toISOString()
-  };
+  async function guardarClienteMoral() {
+    const btnGuardar = document.getElementById('btnGuardarMoral');
+    const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
+    const razonSocial = document.getElementById('moralRazonSocial').value.trim();
+    const representante = document.getElementById('moralRepresentante').value.trim();
+    if (!rfc || !razonSocial || !representante) { alert('Por favor, complete al menos el RFC, Razón Social y Representante.'); return; }
+    if (rfc.length !== 12) { alert('El RFC debe tener exactamente 12 caracteres.'); return; }
+    if (!validarEmailMoral()) { alert('El correo electrónico no tiene un formato válido.'); return; }
 
-  try {
-    const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
-    const result = await response.json();
-    if (result.result === 'success') {
-      const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
-      const mensaje = esActualizacion 
-        ? 'Cliente actualizado. ID conservado: ' + idCliente
-        : 'Cliente guardado exitosamente. ID: ' + idCliente;
-      mensajeDiv.textContent = mensaje;
-      mensajeDiv.classList.add('visible');
-      document.getElementById('btnGenerarMoral').classList.remove('oculto');
-      ultimoIDGenerado = idCliente;
-      setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
-    } else {
-      alert('Error al guardar: ' + result.message);
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Verificando RFC...';
+
+    let idCliente = null;
+    let esActualizacion = false;
+
+    try {
+      const verifRes = await fetch(SHEET_SCRIPT_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+      });
+      const verifResult = await verifRes.json();
+      
+      if (verifResult.result === 'success' && verifResult.existe) {
+        idCliente = verifResult.idCliente;
+        esActualizacion = true;
+      } else {
+        idCliente = await obtenerNuevoID();
+        if (!idCliente) {
+          btnGuardar.disabled = false;
+          btnGuardar.textContent = 'Guardar Cliente';
+          return;
+        }
+      }
+    } catch (error) {
+      alert('Error al verificar RFC: ' + error.message);
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+      return;
     }
-  } catch (error) {
-    alert('Error de conexión: ' + error.message);
-  } finally {
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = 'Guardar Cliente';
+
+    btnGuardar.textContent = 'Guardando...';
+    const datos = {
+      action: 'guardar', tipo: 'moral', idCliente: idCliente, rfc: rfc, razonSocial: razonSocial, representante: representante,
+      lugarFecha: document.getElementById('moralLugarFecha').value.trim(),
+      regimen: document.getElementById('moralRegimen').value,
+      cp: document.getElementById('moralCP').value.trim(),
+      usoCFDI: document.getElementById('moralUsoCFDI').value,
+      formaPago: document.getElementById('moralFormaPago').value,
+      metodoPago: document.getElementById('moralMetodoPago').value,
+      correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
+      fechaGuardado: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const result = await response.json();
+      if (result.result === 'success') {
+        const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
+        const mensaje = esActualizacion 
+          ? 'Cliente actualizado. ID conservado: ' + idCliente
+          : 'Cliente guardado exitosamente. ID: ' + idCliente;
+        mensajeDiv.textContent = mensaje;
+        mensajeDiv.classList.add('visible');
+        document.getElementById('btnGenerarMoral').classList.remove('oculto');
+        ultimoIDGenerado = idCliente;
+        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
+      } else {
+        alert('Error al guardar: ' + result.message);
+      }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+    }
   }
-}
 
   function generarDocumentosFisica() {
     const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
