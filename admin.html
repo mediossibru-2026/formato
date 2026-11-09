@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Panel de Administración - Grupo SIBRÜ</title>
 
-<!-- Firebase SDK (compat) -->
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 
@@ -27,7 +26,6 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Segoe UI', Arial, sans-serif; background: #e8ecef; }
 
-  /* LOGIN SCREEN */
   #loginScreen {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -82,7 +80,6 @@
   .login-box button:hover { background: #005a2d; }
   #loginError { color: var(--rojo-sibru); margin-bottom: 15px; font-size: 0.9rem; min-height: 20px; }
 
-  /* ADMIN PANEL */
   .admin-container { display: none; }
   .admin-container.activo { display: block; }
 
@@ -256,7 +253,6 @@
   .btn-docs-small { background: var(--morado-accion); }
   .btn-contact-small { background: #00897B; }
 
-  /* MODALES */
   .modal-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -294,7 +290,6 @@
   .form-group { margin-bottom: 10px; }
   .form-group label { display: block; margin-bottom: 4px; font-weight: 600; font-size: 0.8rem; color: var(--negro); text-transform: uppercase; }
   .form-group input, .form-group select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 0.9rem; }
-  .form-group input.campo-modificado { background-color: var(--rojo-campo); border-color: var(--rojo-sibru); }
 
   .form-section {
     margin-top: 15px;
@@ -311,7 +306,6 @@
   .btn-modal-secondary { background: var(--gris-texto); }
   .btn-modal-danger { background: var(--rojo-sibru); }
 
-  /* CONTACTOS */
   .contacto-seccion {
     background: var(--gris-claro);
     padding: 15px;
@@ -328,7 +322,6 @@
   .contacto-valor a:hover { text-decoration: underline; }
   .contacto-valor .wa-link { color: #25D366; }
 
-  /* DOCUMENTOS */
   .doc-list-item {
     display: flex;
     justify-content: space-between;
@@ -356,7 +349,6 @@
   .btn-download { background: var(--azul-accion); }
   .btn-view { background: var(--gris-texto); }
 
-  /* INCOMPLETO */
   .incompleto-lista { list-style: none; padding: 0; }
   .incompleto-lista li {
     padding: 8px 12px;
@@ -375,7 +367,6 @@
 </head>
 <body>
 
-<!-- ============ PANTALLA DE LOGIN ============ -->
 <div id="loginScreen">
   <div class="login-box">
     <img src="logo.png" alt="Grupo SIBRÜ">
@@ -389,7 +380,6 @@
   </div>
 </div>
 
-<!-- ============ PANEL ADMIN ============ -->
 <div class="admin-container" id="adminPanel">
   <div class="admin-header">
     <div class="admin-header-left">
@@ -484,7 +474,6 @@
   </div>
 </div>
 
-<!-- ============ MODAL EDITAR CLIENTE ============ -->
 <div class="modal-overlay" id="modalCliente">
   <div class="modal-content">
     <div class="modal-header">
@@ -643,7 +632,6 @@
   </div>
 </div>
 
-<!-- ============ MODAL IMPRIMIR/EMAIL ============ -->
 <div class="modal-overlay" id="modalAccion">
   <div class="modal-content small">
     <div class="modal-header">
@@ -665,18 +653,17 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn-modal btn-modal-secondary" onclick="cerrarModal('modalAccion')">Cancelar</button>
-        <button type="button" class="btn-modal btn-modal-primary" onclick="ejecutarImpresion()">🖨️ Imprimir</button>
-        <button type="button" class="btn-modal" style="background:var(--naranja-accion);" onclick="ejecutarEnvioEmail()">📧 Enviar por Mail</button>
+        <button type="button" class="btn-modal btn-modal-primary" onclick="ejecutarImpresion()">Imprimir</button>
+        <button type="button" class="btn-modal" style="background:var(--naranja-accion);" onclick="ejecutarEnvioEmail()">Enviar por Mail</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ============ MODAL RESET CONTADOR ============ -->
 <div class="modal-overlay" id="modalReset">
   <div class="modal-content small">
     <div class="modal-header">
-      <h2>⚙️</h2>
+      <h2>⚙️ Resetear Contador de ID</h2>
       <button class="modal-close" onclick="cerrarModal('modalReset')">&times;</button>
     </div>
     <div>
@@ -696,11 +683,10 @@
   </div>
 </div>
 
-<!-- ============ MODAL VER DOCUMENTOS ============ -->
 <div class="modal-overlay" id="modalVerDocumentos">
   <div class="modal-content">
     <div class="modal-header">
-      <h2>📁 Documentación del Cliente</h2>
+      <h2>Documentación del Cliente</h2>
       <button class="modal-close" onclick="cerrarModal('modalVerDocumentos')">&times;</button>
     </div>
     <div id="listaDocumentosCliente" style="min-height: 100px;">
@@ -709,18 +695,16 @@
   </div>
 </div>
 
-<!-- ============ MODAL CONTACTOS ============ -->
 <div class="modal-overlay" id="modalContactos">
   <div class="modal-content small">
     <div class="modal-header">
-      <h2>📞 Contactos del Cliente</h2>
+      <h2>Contactos del Cliente</h2>
       <button class="modal-close" onclick="cerrarModal('modalContactos')">&times;</button>
     </div>
     <div id="contenidoContactos"></div>
   </div>
 </div>
 
-<!-- ============ MODAL INCOMPLETO ============ -->
 <div class="modal-overlay" id="modalIncompleto">
   <div class="modal-content small">
     <div class="modal-header">
@@ -731,11 +715,10 @@
   </div>
 </div>
 
-<!-- ============ MODAL CAMBIAR CONTRASEÑA ============ -->
 <div class="modal-overlay" id="modalCambiarPassword">
   <div class="modal-content small">
     <div class="modal-header">
-      <h2>🔑 Cambiar Contraseña</h2>
+      <h2>Cambiar Contraseña</h2>
       <button class="modal-close" onclick="cerrarModal('modalCambiarPassword')">&times;</button>
     </div>
     <div>
@@ -757,17 +740,16 @@
 </div>
 
 <script>
-  // ============ CONFIGURACIÓN ============
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   
-const firebaseConfig = {
-  apiKey: "AIzaSyADG8pdq_DL2nNwESkVJBhs-qm3NHh0VGg",
-  authDomain: "sibru-admin.firebaseapp.com",
-  projectId: "sibru-admin",
-  storageBucket: "sibru-admin.firebasestorage.app",
-  messagingSenderId: "742538018470",
-  appId: "1:742538018470:web:022da8b9a18cca42367e67"
-};
+  const firebaseConfig = {
+    apiKey: "AIzaSyADG8pdq_DL2nNwESkVJBhs-qm3NHh0VGg",
+    authDomain: "sibru-admin.firebaseapp.com",
+    projectId: "sibru-admin",
+    storageBucket: "sibru-admin.firebasestorage.app",
+    messagingSenderId: "742538018470",
+    appId: "1:742538018470:web:022da8b9a18cca42367e67"
+  };
 
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
@@ -775,9 +757,7 @@ const firebaseConfig = {
   let clientesData = [];
   let clientesFiltrados = [];
   let usuarioActual = null;
-  let clienteEditando = null; // Para tracking de modificaciones
 
-  // ============ FIREBASE AUTH ============
   auth.onAuthStateChanged(user => {
     if (user) {
       usuarioActual = user;
@@ -861,7 +841,6 @@ const firebaseConfig = {
     }
   }
 
-  // Permitir Enter en login
   document.getElementById('loginPassword').addEventListener('keypress', function(e) {
     if (e.key === 'Enter') iniciarSesion();
   });
@@ -869,7 +848,6 @@ const firebaseConfig = {
     if (e.key === 'Enter') document.getElementById('loginPassword').focus();
   });
 
-  // ============ UTILIDADES ============
   const Utils = {
     generarLinkWhatsApp: function(numero) {
       if (!numero) return '#';
@@ -892,7 +870,6 @@ const firebaseConfig = {
     }
   }
 
-  // ============ CARGA DE CLIENTES ============
   async function cargarClientes() {
     const tbody = document.getElementById('tablaBody');
     tbody.innerHTML = '<tr><td colspan="9" style="text-align:center; padding: 40px;">Cargando...</td></tr>';
@@ -914,7 +891,6 @@ const firebaseConfig = {
     }
   }
 
-  // ============ VALIDACIÓN DE CLIENTE COMPLETO ============
   function verificarClienteCompleto(cliente) {
     const faltantes = [];
     
@@ -965,13 +941,13 @@ const firebaseConfig = {
     html += '<p style="margin-bottom:15px;"><strong>RFC:</strong> ' + rfc + '</p>';
     
     if (!validacion.completo) {
-      html += '<div class="contacto-seccion"><h4>Datos Faltantes</h4><ul class="incompleto-lista">';
+      html += '<div class="contacto-seccion"><h4>📋 Datos Faltantes</h4><ul class="incompleto-lista">';
       validacion.faltantes.forEach(f => {
         html += '<li>❌ ' + f + '</li>';
       });
       html += '</ul></div>';
     } else {
-      html += '<div class="contacto-seccion"><h4>Datos</h4><ul class="incompleto-lista"><li class="ok">✅ Todos los datos obligatorios completos</li></ul></div>';
+      html += '<div class="contacto-seccion"><h4>📋 Datos</h4><ul class="incompleto-lista"><li class="ok">✅ Todos los datos obligatorios completos</li></ul></div>';
     }
     
     if (!docs.tieneDocs) {
@@ -995,7 +971,6 @@ const firebaseConfig = {
     contenedor.innerHTML = html;
   }
 
-  // ============ RENDERIZADO DE TABLA ============
   async function renderizarTabla(datos) {
     const tbody = document.getElementById('tablaBody');
     tbody.innerHTML = '';
@@ -1010,21 +985,17 @@ const firebaseConfig = {
       const nombre = c['Nombre/Razón Social'] || c['Nombre'] || 'N/A';
       const rfcSafe = (c['RFC'] || '').replace(/'/g, "\\'");
       
-      // Verificar si requiere revisión (fila roja)
       const requiereRevision = c['RequiereRevision'] === true || c['RequiereRevision'] === 'TRUE' || c['RequiereRevision'] === 'true';
       if (requiereRevision) {
         tr.classList.add('fila-modificada');
       }
       
-      // Verificar si está completo
       const validacion = verificarClienteCompleto(c);
       
-      // Badge de estado
       let badgeEstado = '';
       if (!validacion.completo) {
         badgeEstado = '<span class="badge badge-incompleto" onclick="mostrarAlertaIncompleto(\'' + rfcSafe + '\')" title="Click para ver detalles">⚠️ INCOMPLETO</span>';
       } else {
-        // Verificar documentos
         try {
           const docs = await verificarDocumentosSubidos(c['RFC']);
           if (!docs.tieneDocs) {
@@ -1070,7 +1041,6 @@ const firebaseConfig = {
     document.getElementById('statIncompletos').textContent = incompletos;
   }
 
-  // ============ FILTROS ============
   function buscarClientes() {
     const termino = document.getElementById('searchGlobal').value.toLowerCase();
     clientesFiltrados = termino ? clientesData.filter(function(c) {
@@ -1102,7 +1072,6 @@ const firebaseConfig = {
     renderizarTabla(clientesFiltrados);
   }
 
-  // ============ EXPORTAR ============
   function exportarCSV() {
     if (clientesFiltrados.length === 0) { alert('No hay datos para exportar'); return; }
     const headers = ['ID', 'Tipo', 'RFC', 'Nombre/Razón Social', 'Representante', 'Régimen', 'CP', 'Correo', 'Fecha Registro'];
@@ -1145,7 +1114,6 @@ const firebaseConfig = {
     ventana.document.close();
   }
 
-  // ============ MODAL EDITAR ============
   function toggleCamposTipo() {
     const tipo = document.getElementById('clientTipo').value;
     document.getElementById('groupNombre').style.display = tipo === 'Persona Física' ? 'block' : 'none';
@@ -1153,55 +1121,42 @@ const firebaseConfig = {
     document.getElementById('groupRepresentante').style.display = tipo === 'Persona Moral' ? 'block' : 'none';
   }
 
-function editarCliente(rfc) {
-  const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
-  if (!cliente) return;
-  
-  // NO marcamos como revisado aquí aún. Lo haremos cuando GUARDE los cambios.
-  
-  document.getElementById('modalTitle').textContent = 'Editar Cliente';
-  document.getElementById('clientId').value = cliente['ID Cliente'] || '';
-  document.getElementById('clientTipo').value = cliente['Tipo'] || '';
-  document.getElementById('clientRFC').value = cliente['RFC'] || '';
-  document.getElementById('clientRFC').readOnly = true;
-  document.getElementById('clientLugarFecha').value = cliente['Lugar y Fecha'] || '';
-  document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
-  document.getElementById('clientCP').value = cliente['Código Postal'] || '';
-  document.getElementById('clientUsoCFDI').value = cliente['Uso CFDI'] || '';
-  document.getElementById('clientFormaPago').value = cliente['Forma de Pago'] || '';
-  document.getElementById('clientMetodoPago').value = cliente['Método de Pago'] || '';
-  document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
-  document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
-  
-  // Contactos
-  document.getElementById('clientFactNumero').value = cliente['Facturacion Numero'] || '';
-  document.getElementById('clientFactCorreo').value = cliente['Facturacion Correo'] || '';
-  document.getElementById('clientFactWhatsApp').value = cliente['Facturacion WhatsApp'] || '';
-  document.getElementById('clientCppNumero').value = cliente['CuentasPorPagar Numero'] || '';
-  document.getElementById('clientCppCorreo').value = cliente['CuentasPorPagar Correo'] || '';
-  document.getElementById('clientCppWhatsApp').value = cliente['CuentasPorPagar WhatsApp'] || '';
-  
-  toggleCamposTipo();
-  if (cliente['Tipo'] === 'Persona Física') {
-    document.getElementById('clientNombre').value = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
-  } else {
-    document.getElementById('clientRazonSocial').value = cliente['Nombre/Razón Social'] || '';
-    document.getElementById('clientRepresentante').value = cliente['Representante Legal'] || '';
-  }
-  
-  document.getElementById('modalCliente').classList.add('activo');
-}
+  function editarCliente(rfc) {
+    const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
+    if (!cliente) return;
     
-    // Marcar como revisado en servidor (quita fila roja)
-    fetch(SHEET_SCRIPT_URL, {
-      method: 'POST',
-      body: JSON.stringify({ action: 'marcarComoRevisado', rfc: rfc })
-    }).catch(function(e) { console.error('Error al marcar como revisado:', e); });
+    document.getElementById('modalTitle').textContent = 'Editar Cliente';
+    document.getElementById('clientId').value = cliente['ID Cliente'] || '';
+    document.getElementById('clientTipo').value = cliente['Tipo'] || '';
+    document.getElementById('clientRFC').value = cliente['RFC'] || '';
+    document.getElementById('clientRFC').readOnly = true;
+    document.getElementById('clientLugarFecha').value = cliente['Lugar y Fecha'] || '';
+    document.getElementById('clientRegimen').value = cliente['Régimen Fiscal'] || '';
+    document.getElementById('clientCP').value = cliente['Código Postal'] || '';
+    document.getElementById('clientUsoCFDI').value = cliente['Uso CFDI'] || '';
+    document.getElementById('clientFormaPago').value = cliente['Forma de Pago'] || '';
+    document.getElementById('clientMetodoPago').value = cliente['Método de Pago'] || '';
+    document.getElementById('clientCorreo').value = cliente['Correo Electrónico'] || '';
+    document.getElementById('clientStatus').value = cliente['Status'] || 'ACTIVO';
+    
+    document.getElementById('clientFactNumero').value = cliente['Facturacion Numero'] || '';
+    document.getElementById('clientFactCorreo').value = cliente['Facturacion Correo'] || '';
+    document.getElementById('clientFactWhatsApp').value = cliente['Facturacion WhatsApp'] || '';
+    document.getElementById('clientCppNumero').value = cliente['CuentasPorPagar Numero'] || '';
+    document.getElementById('clientCppCorreo').value = cliente['CuentasPorPagar Correo'] || '';
+    document.getElementById('clientCppWhatsApp').value = cliente['CuentasPorPagar WhatsApp'] || '';
+    
+    toggleCamposTipo();
+    if (cliente['Tipo'] === 'Persona Física') {
+      document.getElementById('clientNombre').value = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+    } else {
+      document.getElementById('clientRazonSocial').value = cliente['Nombre/Razón Social'] || '';
+      document.getElementById('clientRepresentante').value = cliente['Representante Legal'] || '';
+    }
     
     document.getElementById('modalCliente').classList.add('activo');
   }
 
-  // Submit del formulario de edición
   document.getElementById('formCliente').addEventListener('submit', async function(e) {
     e.preventDefault();
     
@@ -1252,11 +1207,11 @@ function editarCliente(rfc) {
         alert('✅ Cliente actualizado correctamente. ID: ' + clientId);
         cerrarModal('modalCliente');
         await cargarClientes();
-        // Marcar como revisado DESPUÉS de guardar exitosamente
-fetch(SHEET_SCRIPT_URL, {
-  method: 'POST',
-  body: JSON.stringify({ action: 'marcarComoRevisado', rfc: rfc })
-}).catch(function(e) { console.error('Error al marcar como revisado:', e); });
+        
+        fetch(SHEET_SCRIPT_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'marcarComoRevisado', rfc: rfc })
+        }).catch(function(e) { console.error('Error al marcar como revisado:', e); });
       } else {
         alert('Error: ' + result.message);
       }
@@ -1265,7 +1220,6 @@ fetch(SHEET_SCRIPT_URL, {
     }
   });
 
-  // ============ ELIMINAR ============
   async function eliminarCliente(rfc) {
     if (!usuarioActual) { alert('Debes iniciar sesión'); return; }
     if (!confirm('¿Está seguro de eliminar al cliente con RFC ' + rfc + '?')) return;
@@ -1284,7 +1238,6 @@ fetch(SHEET_SCRIPT_URL, {
     }
   }
 
-  // ============ RESET CONTADOR ============
   function abrirModalReset() {
     document.getElementById('resetContadorValor').value = '1000';
     document.getElementById('modalReset').classList.add('activo');
@@ -1309,7 +1262,6 @@ fetch(SHEET_SCRIPT_URL, {
     }
   }
 
-  // ============ IMPRIMIR / EMAIL ============
   function abrirModalAccion(rfc, tipoAccion) {
     if (!usuarioActual) { alert('Debes iniciar sesión'); return; }
     const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
@@ -1364,7 +1316,6 @@ fetch(SHEET_SCRIPT_URL, {
     cerrarModal('modalAccion');
   }
 
-  // ============ VER DOCUMENTOS ============
   async function verDocumentosCliente(rfc) {
     if (!usuarioActual) { alert('Debes iniciar sesión'); return; }
     const contenedor = document.getElementById('listaDocumentosCliente');
@@ -1377,7 +1328,7 @@ fetch(SHEET_SCRIPT_URL, {
       const result = await res.json();
       
       if (result.result === 'success' && result.documentos && result.documentos.length > 0) {
-        let html = '<div style="margin-bottom:15px;"><a href="' + result.carpetaUrl + '" target="_blank" style="color:var(--azul-accion);text-decoration:none;">📂 Abrir carpeta completa en Drive</a></div>';
+        let html = '<div style="margin-bottom:15px;"><a href="' + result.carpetaUrl + '" target="_blank" style="color:var(--azul-accion);text-decoration:none;">Abrir carpeta completa en Drive</a></div>';
         result.documentos.forEach(function(doc) {
           html += '<div class="doc-list-item">';
           html += '<div class="doc-info"><div class="doc-name">📄 ' + doc.nombre + '</div><div class="doc-date">Subido: ' + doc.fecha + ' | ' + Math.round(doc.size / 1024) + ' KB</div></div>';
@@ -1395,7 +1346,6 @@ fetch(SHEET_SCRIPT_URL, {
     }
   }
 
-  // ============ VER CONTACTOS ============
   function verContactosCliente(rfc) {
     if (!usuarioActual) { alert('Debes iniciar sesión'); return; }
     const cliente = clientesData.find(function(c) { return c['RFC'] === rfc; });
@@ -1411,12 +1361,12 @@ fetch(SHEET_SCRIPT_URL, {
     
     const mailLink = function(correo, asunto) {
       if (!correo) return 'No registrado';
-      return '<a href="' + Utils.generarLinkMail(correo, asunto) + '" target="_blank">' + correo + '</a>';
+      return '<a href="' + Utils.generarLinkMail(correo, asunto) + '" target="_blank">✉️ ' + correo + '</a>';
     };
     
     const waLink = function(numero) {
       if (!numero) return 'No registrado';
-      return '<a href="' + Utils.generarLinkWhatsApp(numero) + '" target="_blank" class="wa-link">' + numero + '</a>';
+      return '<a href="' + Utils.generarLinkWhatsApp(numero) + '" target="_blank" class="wa-link">💬 ' + numero + '</a>';
     };
     
     html += '<div class="contacto-seccion"><h4>Facturación</h4>';
