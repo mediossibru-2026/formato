@@ -465,6 +465,7 @@
     <img src="logo.png" alt="Grupo SIBRÜ">
   </div>
 
+  <button class="btn-subir-docs" onclick="abrirModalActualizarDatos()" style="background: var(--naranja-accion); margin-bottom: 15px;">ACTUALIZAR DATOS</button>
   <button class="btn-subir-docs" onclick="abrirModalDocumentos()">📎 SUBIR DOCUMENTACIÓN</button>
 
   <div class="titulo-formulario">Manifestación y Alta de Cliente</div>
@@ -731,6 +732,53 @@
   </div>
 </div>
 
+  <!-- MODAL BUSCAR RFC PARA ACTUALIZAR -->
+<div class="modal-overlay" id="modalBuscarRFCActualizar">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>Actualizar Datos del Cliente</h2>
+      <button class="modal-close" onclick="cerrarModalActualizar()">&times;</button>
+    </div>
+    <div style="padding: 10px 0;">
+      <p style="margin-bottom: 15px; color: var(--gris-texto);">
+        Ingresa el RFC del cliente que deseas actualizar. Solo se mostrarán los campos editables.
+      </p>
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label>RFC *</label>
+        <input type="text" id="buscarRFCActualizar" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="btn-borrar" onclick="cerrarModalActualizar()">Cancelar</button>
+        <button class="btn-guardar" onclick="buscarClienteParaActualizar()">Buscar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR DATOS EXISTENTES -->
+<div class="modal-overlay" id="modalEditarDatos">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <div>
+        <h2>Editar Datos del Cliente</h2>
+        <p style="font-size: 0.85rem; color: var(--gris-texto); margin-top: 5px;">
+          <strong>RFC:</strong> <span id="editarModalRfc"></span> | 
+          <strong>Cliente:</strong> <span id="editarModalNombre"></span> |
+          <strong>ID:</strong> <span id="editarModalId"></span>
+        </p>
+      </div>
+      <button class="modal-close" onclick="cerrarModalEditarDatos()">&times;</button>
+    </div>
+    <div id="formEditarDatos">
+      <!-- Se llena dinámicamente -->
+    </div>
+    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+      <button class="btn-borrar" onclick="cerrarModalEditarDatos()">Cancelar</button>
+      <button class="btn-guardar" id="btnGuardarActualizacion" onclick="guardarActualizacion()">Guardar Cambios</button>
+    </div>
+  </div>
+</div>
+  
 <!-- DOCUMENTOS DE SALIDA (Se mantienen igual) -->
 <div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
@@ -1472,6 +1520,281 @@
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
   }
+
+  // ==========================================
+// ACTUALIZAR DATOS DE CLIENTE EXISTENTE
+// ==========================================
+let clienteActualEditando = null;
+
+function abrirModalActualizarDatos() {
+  document.getElementById('buscarRFCActualizar').value = '';
+  document.getElementById('modalBuscarRFCActualizar').classList.add('activo');
+}
+
+function cerrarModalActualizar() {
+  document.getElementById('modalBuscarRFCActualizar').classList.remove('activo');
+}
+
+async function buscarClienteParaActualizar() {
+  const rfc = document.getElementById('buscarRFCActualizar').value.trim().toUpperCase();
+  
+  if (!rfc) {
+    alert('Por favor ingresa el RFC');
+    return;
+  }
+  
+  if (rfc.length !== 12 && rfc.length !== 13) {
+    alert('El RFC debe tener 12 (Moral) o 13 (Física) caracteres');
+    return;
+  }
+  
+  try {
+    const response = await fetch(SHEET_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
+    });
+    const result = await response.json();
+    
+    if (result.result === 'success' && result.existe) {
+      // RFC existe, cargar datos en modal de edición
+      cerrarModalActualizar();
+      await cargarDatosParaEditar(result);
+    } else {
+      alert('El RFC ' + rfc + ' no está registrado en nuestra base de datos.\n\nUsa el formulario de registro para dar de alta un nuevo cliente.');
+    }
+  } catch (error) {
+    alert('Error de conexión: ' + error.message);
+  }
+}
+
+async function cargarDatosParaEditar(result) {
+  // Obtener datos completos del cliente desde el admin (llamando al endpoint de listar)
+  try {
+    const response = await fetch(SHEET_SCRIPT_URL);
+    const resultLista = await response.json();
+    
+    if (resultLista.result === 'success') {
+      const cliente = resultLista.data.find(c => c['RFC'] === result.idCliente || c['RFC'] === document.getElementById('buscarRFCActualizar').value.trim().toUpperCase());
+      
+      // Si no lo encuentra por ID, buscar por RFC
+      const rfcBuscado = document.getElementById('buscarRFCActualizar').value.trim().toUpperCase();
+      const clienteEncontrado = resultLista.data.find(c => c['RFC'] === rfcBuscado);
+      
+      if (clienteEncontrado) {
+        clienteActualEditando = clienteEncontrado;
+        renderizarFormularioEditar(clienteEncontrado);
+        document.getElementById('modalEditarDatos').classList.add('activo');
+      } else {
+        alert('No se pudieron cargar los datos del cliente');
+      }
+    }
+  } catch (error) {
+    alert('Error al cargar datos: ' + error.message);
+  }
+}
+
+function renderizarFormularioEditar(cliente) {
+  const rfc = cliente['RFC'] || '';
+  const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+  const tipo = cliente['Tipo'] || 'Persona Física';
+  const idCliente = cliente['ID Cliente'] || 'N/A';
+  
+  document.getElementById('editarModalRfc').textContent = rfc;
+  document.getElementById('editarModalNombre').textContent = nombre;
+  document.getElementById('editarModalId').textContent = idCliente;
+  
+  const form = document.getElementById('formEditarDatos');
+  
+  let html = '';
+  
+  // Campos NO editables (solo lectura)
+  html += '<div class="form-section" style="background: #f0f0f0; border-left-color: #999;">';
+  html += '<h4>Campos no editables</h4>';
+  html += '<div class="form-grid">';
+  html += '<div class="form-group"><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
+  html += '<div class="form-group"><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
+  html += '<div class="form-group"><label>RFC</label><input type="text" value="' + rfc + '" disabled style="background:#eee;"></div>';
+  html += '<div class="form-group"><label>' + (tipo === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
+  html += '</div></div>';
+  
+  // Campos editables
+  html += '<div class="form-section">';
+  html += '<h4>Datos editables</h4>';
+  html += '<div class="form-grid">';
+  
+  if (tipo === 'Persona Moral') {
+    html += '<div class="form-group full-width"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '"></div>';
+  }
+  
+  html += '<div class="form-group"><label>Lugar y Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '"></div>';
+  html += '<div class="form-group"><label>Régimen Fiscal</label><select id="editRegimen">';
+  html += '<option value="">Seleccione...</option>';
+  
+  const regimenes = [
+    '601 - General de Ley Personas Morales',
+    '603 - Personas Morales con Fines No Lucrativos',
+    '605 - Sueldos y Salarios',
+    '606 - Arrendamiento',
+    '608 - Demás ingresos',
+    '611 - Ingresos por Dividendos',
+    '612 - Actividades Empresariales y Profesionales',
+    '614 - Ingresos por intereses',
+    '616 - Sin obligaciones fiscales',
+    '620 - Sociedades Cooperativas',
+    '621 - Incorporación Fiscal',
+    '622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras',
+    '623 - Opcional para Grupos de Sociedades',
+    '624 - Coordinados',
+    '625 - Actividades con plataformas tecnológicas',
+    '626 - RESICO',
+    '628 - Hidrocarburos'
+  ];
+  
+  regimenes.forEach(r => {
+    const selected = cliente['Régimen Fiscal'] === r ? 'selected' : '';
+    html += '<option value="' + r + '" ' + selected + '>' + r + '</option>';
+  });
+  html += '</select></div>';
+  
+  html += '<div class="form-group"><label>Código Postal</label><input type="text" id="editCP" value="' + (cliente['Código Postal'] || '') + '" maxlength="5"></div>';
+  html += '<div class="form-group full-width"><label>Uso de CFDI</label><select id="editUsoCFDI">';
+  html += '<option value="">Seleccione...</option>';
+  
+  const usosCFDI = [
+    'G01 - Adquisición de mercancías',
+    'G02 - Devoluciones, descuentos o bonificaciones',
+    'G03 - Gastos en general',
+    'I01 - Construcciones',
+    'I02 - Mobilario y equipo de oficina',
+    'I03 - Equipo de transporte',
+    'I04 - Equipo de computo y accesorios',
+    'I05 - Dados, troqueles, moldes, matrices y herramental',
+    'I06 - Comunicaciones telefónicas',
+    'I07 - Comunicaciones satelitales',
+    'I08 - Otra maquinaria y equipo',
+    'P01 - Por definir'
+  ];
+  
+  usosCFDI.forEach(u => {
+    const selected = cliente['Uso CFDI'] === u ? 'selected' : '';
+    html += '<option value="' + u + '" ' + selected + '>' + u + '</option>';
+  });
+  html += '</select></div>';
+  
+  html += '</div></div>';
+  
+  // Facturación
+  html += '<div class="form-section">';
+  html += '<h4>Datos de Facturación</h4>';
+  html += '<div class="form-grid">';
+  html += '<div class="form-group"><label>Forma de Pago</label><select id="editFormaPago">';
+  html += '<option value="">Seleccione...</option>';
+  ['01 - Efectivo', '02 - Cheque nominativo', '03 - Transferencia electrónica de fondos', '04 - Tarjeta de crédito', '05 - Monedero electrónico', '06 - Dinero electrónico', '28 - Tarjeta de débito', '99 - Por definir'].forEach(f => {
+    const selected = cliente['Forma de Pago'] === f ? 'selected' : '';
+    html += '<option value="' + f + '" ' + selected + '>' + f + '</option>';
+  });
+  html += '</select></div>';
+  
+  html += '<div class="form-group"><label>Método de Pago</label><select id="editMetodoPago">';
+  html += '<option value="">Seleccione...</option>';
+  ['PUE - Pago en una sola exhibición', 'PPD - Pago en parcialidades o diferido'].forEach(m => {
+    const selected = cliente['Método de Pago'] === m ? 'selected' : '';
+    html += '<option value="' + m + '" ' + selected + '>' + m + '</option>';
+  });
+  html += '</select></div>';
+  
+  html += '<div class="form-group full-width"><label>Correo Electrónico</label><input type="email" id="editCorreo" value="' + (cliente['Correo Electrónico'] || '') + '"></div>';
+  html += '</div></div>';
+  
+  // Contactos
+  html += '<div class="form-section">';
+  html += '<h4>Datos de Contacto</h4>';
+  html += '<div class="form-grid">';
+  html += '<div class="form-group full-width"><label style="color: var(--azul-accion);">Facturación</label></div>';
+  html += '<div class="form-group"><label>Número</label><input type="text" id="editFactNumero" value="' + (cliente['Facturacion Numero'] || '') + '"></div>';
+  html += '<div class="form-group"><label>Correo</label><input type="email" id="editFactCorreo" value="' + (cliente['Facturacion Correo'] || '') + '"></div>';
+  html += '<div class="form-group full-width"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + (cliente['Facturacion WhatsApp'] || '') + '"></div>';
+  
+  html += '<div class="form-group full-width" style="margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
+  html += '<div class="form-group"><label>Número</label><input type="text" id="editCppNumero" value="' + (cliente['CuentasPorPagar Numero'] || '') + '"></div>';
+  html += '<div class="form-group"><label>Correo</label><input type="email" id="editCppCorreo" value="' + (cliente['CuentasPorPagar Correo'] || '') + '"></div>';
+  html += '<div class="form-group full-width"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '"></div>';
+  html += '</div></div>';
+  
+  // Status
+  html += '<div class="form-section">';
+  html += '<h4>Status</h4>';
+  html += '<div class="form-grid">';
+  html += '<div class="form-group"><label>Status</label><select id="editStatus">';
+  html += '<option value="ACTIVO" ' + (cliente['Status'] === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
+  html += '<option value="INACTIVO" ' + (cliente['Status'] === 'INACTIVO' ? 'selected' : '') + '>Inactivo</option>';
+  html += '</select></div>';
+  html += '</div></div>';
+  
+  form.innerHTML = html;
+}
+
+function cerrarModalEditarDatos() {
+  document.getElementById('modalEditarDatos').classList.remove('activo');
+  clienteActualEditando = null;
+}
+
+async function guardarActualizacion() {
+  if (!clienteActualEditando) {
+    alert('No hay cliente seleccionado');
+    return;
+  }
+  
+  const rfc = clienteActualEditando['RFC'];
+  const btn = document.getElementById('btnGuardarActualizacion');
+  btn.disabled = true;
+  btn.textContent = 'Guardando...';
+  
+  const datos = {
+    action: 'actualizarCliente',
+    rfc: rfc,
+    'Lugar y Fecha': document.getElementById('editLugarFecha').value.trim(),
+    'Régimen Fiscal': document.getElementById('editRegimen').value,
+    'Código Postal': document.getElementById('editCP').value.trim(),
+    'Uso CFDI': document.getElementById('editUsoCFDI').value,
+    'Forma de Pago': document.getElementById('editFormaPago').value,
+    'Método de Pago': document.getElementById('editMetodoPago').value,
+    'Correo Electrónico': document.getElementById('editCorreo').value.trim().toLowerCase(),
+    'Status': document.getElementById('editStatus').value,
+    'Facturacion Numero': document.getElementById('editFactNumero').value.trim(),
+    'Facturacion Correo': document.getElementById('editFactCorreo').value.trim().toLowerCase(),
+    'Facturacion WhatsApp': document.getElementById('editFactWhatsApp').value.trim(),
+    'CuentasPorPagar Numero': document.getElementById('editCppNumero').value.trim(),
+    'CuentasPorPagar Correo': document.getElementById('editCppCorreo').value.trim().toLowerCase(),
+    'CuentasPorPagar WhatsApp': document.getElementById('editCppWhatsApp').value.trim()
+  };
+  
+  // Agregar representante si es moral
+  if (clienteActualEditando['Tipo'] === 'Persona Moral') {
+    datos['Representante Legal'] = document.getElementById('editRepresentante').value.trim();
+  }
+  
+  try {
+    const response = await fetch(SHEET_SCRIPT_URL, {
+      method: 'POST',
+      body: JSON.stringify(datos)
+    });
+    const result = await response.json();
+    
+    if (result.result === 'success') {
+      alert('✅ Datos actualizados correctamente.\n\nEl administrador verá los cambios marcados para revisión.');
+      cerrarModalEditarDatos();
+    } else {
+      alert('Error: ' + result.message);
+    }
+  } catch (error) {
+    alert('Error de conexión: ' + error.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Guardar Cambios';
+  }
+}
+  
 </script>
 
 </body>
