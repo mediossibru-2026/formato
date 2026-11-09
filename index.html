@@ -38,33 +38,14 @@
 
   .hero-logo {
     text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid var(--verde-sibru);
+    margin-bottom: 10px;
+    padding-bottom: 10px;
   }
 
   .hero-logo img {
-    max-height: 120px;
+    max-height: 100px;
     width: auto;
   }
-
-  .btn-accion-top {
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto 12px auto;
-    padding: 12px;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    font-weight: 700;
-    cursor: pointer;
-    text-align: center;
-  }
-  .btn-accion-top:hover { opacity: 0.9; }
-  .btn-subir-docs { background: var(--azul-accion); }
-  .btn-actualizar-datos { background: var(--naranja-accion); }
 
   .titulo-formulario {
     text-align: center;
@@ -73,8 +54,33 @@
     color: var(--negro);
     text-transform: uppercase;
     letter-spacing: 1px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--verde-sibru);
   }
+
+  .botones-top {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .btn-accion-top {
+    padding: 12px 20px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    min-width: 200px;
+  }
+  .btn-accion-top:hover { opacity: 0.9; }
+  .btn-subir-docs { background: var(--azul-accion); }
+  .btn-actualizar-datos { background: var(--naranja-accion); }
 
   .selector-tipo {
     display: flex;
@@ -236,9 +242,8 @@
     overflow-y: auto;
   }
 
-  .modal-content.small {
-    max-width: 500px;
-  }
+  .modal-content.small { max-width: 500px; }
+  .modal-content.large { max-width: 900px; }
 
   .modal-header {
     display: flex;
@@ -258,23 +263,27 @@
   }
 
   .doc-item {
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    gap: 10px;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
     padding: 12px;
     border: 1px solid #ddd;
     border-radius: 6px;
     margin-bottom: 8px;
     background: var(--gris-claro);
+    gap: 10px;
   }
 
-  .doc-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+  .doc-label {
+    flex: 1;
     font-weight: 600;
     font-size: 0.9rem;
+  }
+
+  .doc-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
   }
 
   .btn-subir-archivo {
@@ -467,10 +476,12 @@
     <img src="logo.png" alt="Grupo SIBRÜ">
   </div>
 
-  <button class="btn-accion-top btn-actualizar-datos" onclick="abrirModalActualizarDatos()">ACTUALIZAR DATOS</button>
-  <button class="btn-accion-top btn-subir-docs" onclick="abrirModalDocumentos()">SUBIR DOCUMENTACIÓN</button>
-
   <div class="titulo-formulario">Manifestación y Alta de Cliente</div>
+
+  <div class="botones-top">
+    <button class="btn-accion-top btn-actualizar-datos" onclick="abrirModalActualizarDatos()">✏️ ACTUALIZAR DATOS</button>
+    <button class="btn-accion-top btn-subir-docs" onclick="abrirModalDocumentos()">📎 SUBIR DOCUMENTACIÓN</button>
+  </div>
 
   <div class="selector-tipo">
     <label class="opcion-tipo">
@@ -487,11 +498,11 @@
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Fecha:</label>
-      <input type="text" id="fisicaLugarFecha" placeholder="Ej. 5 de noviembre de 2026">
+      <input type="text" id="fisicaLugarFecha" placeholder="Ej. 5 de noviembre de 2026" oninput="this.value = this.value.toUpperCase()">
       <label>Nombre PARA FACTURAR:</label>
-      <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required>
+      <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required oninput="this.value = this.value.toUpperCase()">
       <label>RFC (13 caracteres):</label>
-      <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="validarRFCFisica()" required>
+      <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); validarRFCFisica();" required>
       <div class="mensaje-error" id="errorFisicaRFC">El RFC debe tener exactamente 13 caracteres.</div>
     </div>
 
@@ -560,18 +571,18 @@
     <div class="seccion-form">
       <h3>Datos de Contacto</h3>
       <label>Facturación - Número:</label>
-      <input type="tel" id="fisicaFactNumero" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="fisicaFactNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Facturación - Correo:</label>
       <input type="email" id="fisicaFactCorreo" placeholder="facturacion@empresa.com">
       <label>Facturación - WhatsApp:</label>
-      <input type="tel" id="fisicaFactWhatsApp" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="fisicaFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       
       <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
-      <input type="tel" id="fisicaCppNumero" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="fisicaCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Cuentas por Pagar - Correo:</label>
       <input type="email" id="fisicaCppCorreo" placeholder="cuentasporpagar@empresa.com">
       <label>Cuentas por Pagar - WhatsApp:</label>
-      <input type="tel" id="fisicaCppWhatsApp" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="fisicaCppWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
     </div>
 
     <div class="botones">
@@ -588,13 +599,13 @@
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Lugar y fecha:</label>
-      <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026">
+      <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026" oninput="this.value = this.value.toUpperCase()">
       <label>Nombre del Representante Legal:</label>
-      <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required>
+      <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required oninput="this.value = this.value.toUpperCase()">
       <label>Razón Social:</label>
-      <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required>
+      <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required oninput="this.value = this.value.toUpperCase()">
       <label>RFC (12 caracteres):</label>
-      <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="validarRFCMoral()" required>
+      <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); validarRFCMoral();" required>
       <div class="mensaje-error" id="errorMoralRFC">El RFC debe tener exactamente 12 caracteres.</div>
     </div>
 
@@ -662,18 +673,18 @@
     <div class="seccion-form">
       <h3>Datos de Contacto</h3>
       <label>Facturación - Número:</label>
-      <input type="tel" id="moralFactNumero" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="moralFactNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Facturación - Correo:</label>
       <input type="email" id="moralFactCorreo" placeholder="facturacion@empresa.com">
       <label>Facturación - WhatsApp:</label>
-      <input type="tel" id="moralFactWhatsApp" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="moralFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       
       <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
-      <input type="tel" id="moralCppNumero" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="moralCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Cuentas por Pagar - Correo:</label>
       <input type="email" id="moralCppCorreo" placeholder="cuentasporpagar@empresa.com">
       <label>Cuentas por Pagar - WhatsApp:</label>
-      <input type="tel" id="moralCppWhatsApp" placeholder="Ej. 55 1234 5678">
+      <input type="tel" id="moralCppWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
     </div>
 
     <div class="botones">
@@ -687,52 +698,7 @@
   </div>
 </div>
 
-<!-- MODAL BUSCAR RFC PARA ACTUALIZAR -->
-<div class="modal-overlay" id="modalBuscarRFCActualizar">
-  <div class="modal-content small">
-    <div class="modal-header">
-      <h2>Actualizar Datos del Cliente</h2>
-      <button class="modal-close" onclick="cerrarModalActualizar()">&times;</button>
-    </div>
-    <div style="padding: 10px 0;">
-      <p style="margin-bottom: 15px; color: var(--gris-texto);">
-        Ingresa el RFC del cliente que deseas actualizar. Solo se mostrarán los campos editables.
-      </p>
-      <div style="margin-bottom: 20px;">
-        <label>RFC *</label>
-        <input type="text" id="buscarRFCActualizar" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
-      </div>
-      <div style="display: flex; gap: 10px; justify-content: flex-end;">
-        <button class="btn-borrar" onclick="cerrarModalActualizar()">Cancelar</button>
-        <button class="btn-guardar" onclick="buscarClienteParaActualizar()">Buscar Cliente</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL EDITAR DATOS EXISTENTES -->
-<div class="modal-overlay" id="modalEditarDatos">
-  <div class="modal-content" style="max-width: 800px;">
-    <div class="modal-header">
-      <div>
-        <h2>Editar Datos del Cliente</h2>
-        <p style="font-size: 0.85rem; color: var(--gris-texto); margin-top: 5px;">
-          <strong>RFC:</strong> <span id="editarModalRfc"></span> | 
-          <strong>Cliente:</strong> <span id="editarModalNombre"></span> |
-          <strong>ID:</strong> <span id="editarModalId"></span>
-        </p>
-      </div>
-      <button class="modal-close" onclick="cerrarModalEditarDatos()">&times;</button>
-    </div>
-    <div id="formEditarDatos"></div>
-    <div style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
-      <button class="btn-borrar" onclick="cerrarModalEditarDatos()">Cancelar</button>
-      <button class="btn-guardar" id="btnGuardarActualizacion" onclick="guardarActualizacion()">Guardar Cambios</button>
-    </div>
-  </div>
-</div>
-
-  <!-- MODAL RFC YA EXISTE -->
+<!-- MODAL RFC YA EXISTE -->
 <div class="modal-overlay" id="modalRFCExiste">
   <div class="modal-content small">
     <div class="modal-header">
@@ -754,17 +720,65 @@
   </div>
 </div>
 
+<!-- MODAL BUSCAR RFC PARA ACTUALIZAR -->
+<div class="modal-overlay" id="modalBuscarRFCActualizar">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>✏️ Actualizar Datos del Cliente</h2>
+      <button class="modal-close" onclick="cerrarModalActualizar()">&times;</button>
+    </div>
+    <div style="padding: 10px 0;">
+      <p style="margin-bottom: 15px; color: var(--gris-texto);">
+        Ingresa el RFC del cliente que deseas actualizar.
+      </p>
+      <div style="margin-bottom: 20px;">
+        <label>RFC *</label>
+        <input type="text" id="buscarRFCActualizar" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase()">
+      </div>
+      <div style="display: flex; gap: 10px; justify-content: flex-end;">
+        <button class="btn-borrar" onclick="cerrarModalActualizar()">Cancelar</button>
+        <button class="btn-guardar" onclick="buscarClienteParaActualizar()">Buscar Cliente</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR DATOS EXISTENTES -->
+<div class="modal-overlay" id="modalEditarDatos">
+  <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+      <div>
+        <h2>✏️ Editar Datos del Cliente</h2>
+        <p style="font-size: 0.85rem; color: var(--gris-texto); margin-top: 5px;">
+          <strong>RFC:</strong> <span id="editarModalRfc"></span> | 
+          <strong>Cliente:</strong> <span id="editarModalNombre"></span> |
+          <strong>ID:</strong> <span id="editarModalId"></span>
+        </p>
+      </div>
+      <button class="modal-close" onclick="cerrarModalEditarDatos()">&times;</button>
+    </div>
+    <div id="formEditarDatos"></div>
+    <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
+      <button class="btn-borrar" onclick="cerrarModalEditarDatos()">Cancelar</button>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button class="btn-guardar" id="btnGenerarDesdeEdicion" onclick="generarDocumentosDesdeEdicion()" style="background: var(--verde-sibru);">📄 Generar Documentos</button>
+        <button class="btn-guardar" id="btnGuardarActualizacion" onclick="guardarActualizacion()">💾 Guardar Cambios</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL BUSCAR RFC PARA DOCUMENTOS -->
 <div class="modal-overlay" id="modalBuscarRFC">
   <div class="modal-content small">
     <div class="modal-header">
-      <h2>Subir Documentación</h2>
+      <h2>📎 Subir Documentación</h2>
       <button class="modal-close" onclick="cerrarModalBuscarRFC()">&times;</button>
     </div>
     <div style="padding: 10px 0;">
       <div style="margin-bottom: 15px;">
         <label>Nombre o Razón Social</label>
-        <input type="text" id="buscarRFCNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV">
+        <input type="text" id="buscarRFCNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV" oninput="this.value = this.value.toUpperCase()">
       </div>
       <div style="margin-bottom: 20px;">
         <label>RFC *</label>
@@ -1030,7 +1044,7 @@
   let ultimoIDGenerado = null;
 
   // ==========================================
-  // LÓGICA DE DOCUMENTOS
+  // LÓGICA DE DOCUMENTOS (SIN CHECKBOXES)
   // ==========================================
   const DocsManager = {
     rfc: '',
@@ -1066,31 +1080,17 @@
         const div = document.createElement('div');
         div.className = 'doc-item';
         div.innerHTML = 
-          '<label class="doc-checkbox">' +
-            '<input type="checkbox" id="doc_' + doc.id + '" onchange="DocsManager.toggleDocumento(\'' + doc.id + '\')">' +
-            '<span>' + doc.label + '</span>' +
-          '</label>' +
-          '<input type="file" id="file_' + doc.id + '" accept=".pdf" onchange="DocsManager.seleccionarArchivo(\'' + doc.id + '\', \'' + doc.label + '\')" style="display:none;">' +
-          '<button type="button" class="btn-subir-archivo" onclick="document.getElementById(\'file_' + doc.id + '\').click()" disabled>📎 Subir PDF</button>' +
-          '<span class="doc-status pendiente" id="status_' + doc.id + '">Pendiente</span>';
+          '<span class="doc-label">' + doc.label + '</span>' +
+          '<div class="doc-actions">' +
+            '<input type="file" id="file_' + doc.id + '" accept=".pdf" onchange="DocsManager.seleccionarArchivo(\'' + doc.id + '\', \'' + doc.label + '\')" style="display:none;">' +
+            '<button type="button" class="btn-subir-archivo" onclick="document.getElementById(\'file_' + doc.id + '\').click()">📎 Subir PDF</button>' +
+            '<span class="doc-status pendiente" id="status_' + doc.id + '">Pendiente</span>' +
+          '</div>';
         contenedor.appendChild(div);
       });
       
       this.actualizarBotonGuardar();
       document.getElementById('modalDocumentos').classList.add('activo');
-    },
-    
-    toggleDocumento(id) {
-      const checkbox = document.getElementById('doc_' + id);
-      const btnSubir = document.getElementById('file_' + id).nextElementSibling;
-      btnSubir.disabled = !checkbox.checked;
-      if (!checkbox.checked) {
-        delete this.documentosSeleccionados[id];
-        const statusEl = document.getElementById('status_' + id);
-        statusEl.textContent = 'Pendiente';
-        statusEl.className = 'doc-status pendiente';
-      }
-      this.actualizarBotonGuardar();
     },
     
     async seleccionarArchivo(id, label) {
@@ -1262,7 +1262,7 @@
     
     // Campos NO editables
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
-    html += '<h3>Campos no editables</h3>';
+    html += '<h3>🔒 Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
@@ -1272,35 +1272,26 @@
     
     // Campos editables
     html += '<div class="seccion-form">';
-    html += '<h3>Datos editables</h3>';
+    html += '<h3>✏️ Datos editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     
     if (tipo === 'Persona Moral') {
-      html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '"></div>';
+      html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     }
     
-    html += '<div><label>Lugar y Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '"></div>';
+    html += '<div><label>Lugar y Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Régimen Fiscal</label><select id="editRegimen">';
     html += '<option value="">Seleccione...</option>';
     
     const regimenes = [
-      '601 - General de Ley Personas Morales',
-      '603 - Personas Morales con Fines No Lucrativos',
-      '605 - Sueldos y Salarios',
-      '606 - Arrendamiento',
-      '608 - Demás ingresos',
-      '611 - Ingresos por Dividendos',
-      '612 - Actividades Empresariales y Profesionales',
-      '614 - Ingresos por intereses',
-      '616 - Sin obligaciones fiscales',
-      '620 - Sociedades Cooperativas',
-      '621 - Incorporación Fiscal',
+      '601 - General de Ley Personas Morales', '603 - Personas Morales con Fines No Lucrativos',
+      '605 - Sueldos y Salarios', '606 - Arrendamiento', '608 - Demás ingresos',
+      '611 - Ingresos por Dividendos', '612 - Actividades Empresariales y Profesionales',
+      '614 - Ingresos por intereses', '616 - Sin obligaciones fiscales',
+      '620 - Sociedades Cooperativas', '621 - Incorporación Fiscal',
       '622 - Actividades Agrícolas, Ganaderas, Silvícolas y Pesqueras',
-      '623 - Opcional para Grupos de Sociedades',
-      '624 - Coordinados',
-      '625 - Actividades con plataformas tecnológicas',
-      '626 - RESICO',
-      '628 - Hidrocarburos'
+      '623 - Opcional para Grupos de Sociedades', '624 - Coordinados',
+      '625 - Actividades con plataformas tecnológicas', '626 - RESICO', '628 - Hidrocarburos'
     ];
     
     regimenes.forEach(r => {
@@ -1313,20 +1304,7 @@
     html += '<div style="grid-column: span 2;"><label>Uso de CFDI</label><select id="editUsoCFDI">';
     html += '<option value="">Seleccione...</option>';
     
-    const usosCFDI = [
-      'G01 - Adquisición de mercancías',
-      'G02 - Devoluciones, descuentos o bonificaciones',
-      'G03 - Gastos en general',
-      'I01 - Construcciones',
-      'I02 - Mobilario y equipo de oficina',
-      'I03 - Equipo de transporte',
-      'I04 - Equipo de computo y accesorios',
-      'I05 - Dados, troqueles, moldes, matrices y herramental',
-      'I06 - Comunicaciones telefónicas',
-      'I07 - Comunicaciones satelitales',
-      'I08 - Otra maquinaria y equipo',
-      'P01 - Por definir'
-    ];
+    const usosCFDI = ['G01 - Adquisición de mercancías', 'G02 - Devoluciones, descuentos o bonificaciones', 'G03 - Gastos en general', 'I01 - Construcciones', 'I02 - Mobilario y equipo de oficina', 'I03 - Equipo de transporte', 'I04 - Equipo de computo y accesorios', 'I05 - Dados, troqueles, moldes, matrices y herramental', 'I06 - Comunicaciones telefónicas', 'I07 - Comunicaciones satelitales', 'I08 - Otra maquinaria y equipo', 'P01 - Por definir'];
     
     usosCFDI.forEach(u => {
       const selected = cliente['Uso CFDI'] === u ? 'selected' : '';
@@ -1338,7 +1316,7 @@
     
     // Facturación
     html += '<div class="seccion-form">';
-    html += '<h3>Datos de Facturación</h3>';
+    html += '<h3>💳 Datos de Facturación</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Forma de Pago</label><select id="editFormaPago">';
     html += '<option value="">Seleccione...</option>';
@@ -1361,22 +1339,22 @@
     
     // Contactos
     html += '<div class="seccion-form">';
-    html += '<h3>Datos de Contacto</h3>';
+    html += '<h3>📞 Datos de Contacto</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
-    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Facturación</label></div>';
-    html += '<div><label>Número</label><input type="text" id="editFactNumero" value="' + (cliente['Facturacion Numero'] || '') + '"></div>';
+    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">💼 Facturación</label></div>';
+    html += '<div><label>Número</label><input type="text" id="editFactNumero" value="' + (cliente['Facturacion Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + (cliente['Facturacion Correo'] || '') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + (cliente['Facturacion WhatsApp'] || '') + '"></div>';
+    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + (cliente['Facturacion WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
-    html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
-    html += '<div><label>Número</label><input type="text" id="editCppNumero" value="' + (cliente['CuentasPorPagar Numero'] || '') + '"></div>';
+    html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">💰 Cuentas por Pagar</label></div>';
+    html += '<div><label>Número</label><input type="text" id="editCppNumero" value="' + (cliente['CuentasPorPagar Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + (cliente['CuentasPorPagar Correo'] || '') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '"></div>';
+    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '</div></div>';
     
     // Status
     html += '<div class="seccion-form">';
-    html += '<h3>Status</h3>';
+    html += '<h3>📊 Status</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Status</label><select id="editStatus">';
     html += '<option value="ACTIVO" ' + (cliente['Status'] === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
@@ -1443,8 +1421,110 @@
       alert('Error de conexión: ' + error.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Guardar Cambios';
+      btn.textContent = '💾 Guardar Cambios';
     }
+  }
+
+  async function generarDocumentosDesdeEdicion() {
+    if (!clienteActualEditando) {
+      alert('No hay cliente seleccionado');
+      return;
+    }
+    
+    const cliente = clienteActualEditando;
+    const rfc = cliente['RFC'];
+    const tipo = cliente['Tipo'];
+    
+    const lugarFecha = document.getElementById('editLugarFecha').value.trim();
+    const regimen = document.getElementById('editRegimen').value;
+    const cp = document.getElementById('editCP').value.trim();
+    const usoCFDI = document.getElementById('editUsoCFDI').value;
+    const formaPago = document.getElementById('editFormaPago').value;
+    const metodoPago = document.getElementById('editMetodoPago').value;
+    const correo = document.getElementById('editCorreo').value.trim();
+    
+    ultimoIDGenerado = cliente['ID Cliente'];
+    
+    if (tipo === 'Persona Física') {
+      const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
+      
+      if (!lugarFecha || !nombre || !rfc) { 
+        alert('Para generar documentos se requiere: Lugar y fecha, Nombre y RFC'); 
+        return; 
+      }
+      
+      document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
+      document.getElementById('mFisicaNombre').textContent = nombre;
+      document.getElementById('mFisicaRFC').textContent = rfc;
+      document.getElementById('mFisicaFirmaNombre').textContent = nombre;
+      
+      document.getElementById('aFisicaID').textContent = ultimoIDGenerado;
+      document.getElementById('aFisicaReferencia').textContent = ultimoIDGenerado;
+      document.getElementById('aFisicaNombre').textContent = nombre;
+      document.getElementById('aFisicaRFC').textContent = rfc;
+      document.getElementById('aFisicaRegimen').textContent = regimen;
+      document.getElementById('aFisicaCP').textContent = cp;
+      document.getElementById('aFisicaUsoCFDI').textContent = usoCFDI;
+      document.getElementById('aFisicaFormaPago').textContent = formaPago;
+      document.getElementById('aFisicaMetodoPago').textContent = metodoPago;
+      document.getElementById('aFisicaCorreo').textContent = correo;
+      document.getElementById('aFisicaFirmaCliente').textContent = nombre;
+      
+      document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+      document.getElementById('docManifestacionFisica').classList.add('activo');
+      document.getElementById('docAltaFisica').classList.add('activo');
+      document.getElementById('formulario').style.display = 'none';
+      cerrarModalEditarDatos();
+      window.scrollTo(0, 0);
+      
+    } else {
+      const razonSocial = cliente['Nombre/Razón Social'] || '';
+      const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : (cliente['Representante Legal'] || '');
+      
+      if (!lugarFecha || !representante || !razonSocial || !rfc) { 
+        alert('Para generar documentos se requiere: Lugar y fecha, Representante, Razón Social y RFC'); 
+        return; 
+      }
+      
+      document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
+      document.getElementById('mMoralRepresentante').textContent = representante;
+      document.getElementById('mMoralRazonSocial').textContent = razonSocial;
+      document.getElementById('mMoralRFC').textContent = rfc;
+      document.getElementById('mMoralFirmaNombre').textContent = representante;
+      
+      document.getElementById('aMoralID').textContent = ultimoIDGenerado;
+      document.getElementById('aMoralReferencia').textContent = ultimoIDGenerado;
+      document.getElementById('aMoralRazonSocial').textContent = razonSocial;
+      document.getElementById('aMoralRFC').textContent = rfc;
+      document.getElementById('aMoralRegimen').textContent = regimen;
+      document.getElementById('aMoralCP').textContent = cp;
+      document.getElementById('aMoralUsoCFDI').textContent = usoCFDI;
+      document.getElementById('aMoralFormaPago').textContent = formaPago;
+      document.getElementById('aMoralMetodoPago').textContent = metodoPago;
+      document.getElementById('aMoralCorreo').textContent = correo;
+      document.getElementById('aMoralFirmaCliente').textContent = representante;
+      
+      document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+      document.getElementById('docManifestacionMoral').classList.add('activo');
+      document.getElementById('docAltaMoral').classList.add('activo');
+      document.getElementById('formulario').style.display = 'none';
+      cerrarModalEditarDatos();
+      window.scrollTo(0, 0);
+    }
+  }
+
+  // ==========================================
+  // MODAL RFC YA EXISTE
+  // ==========================================
+  function cerrarModalRFCExiste() {
+    document.getElementById('modalRFCExiste').classList.remove('activo');
+  }
+
+  function irAActualizarDesdeAlerta() {
+    const rfc = document.getElementById('rfcExistenteMensaje').textContent;
+    cerrarModalRFCExiste();
+    document.getElementById('buscarRFCActualizar').value = rfc;
+    document.getElementById('modalBuscarRFCActualizar').classList.add('activo');
   }
 
   // ==========================================
@@ -1601,7 +1681,11 @@
       const verifResult = await verifRes.json();
       
       if (verifResult.result === 'success' && verifResult.existe) {
-        idCliente = verifResult.idCliente;
+        document.getElementById('rfcExistenteMensaje').textContent = rfc;
+        document.getElementById('modalRFCExiste').classList.add('activo');
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = 'Guardar Cliente';
+        return;
       } else {
         idCliente = await obtenerNuevoID();
         if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
@@ -1669,7 +1753,11 @@
       const verifResult = await verifRes.json();
       
       if (verifResult.result === 'success' && verifResult.existe) {
-        idCliente = verifResult.idCliente;
+        document.getElementById('rfcExistenteMensaje').textContent = rfc;
+        document.getElementById('modalRFCExiste').classList.add('activo');
+        btnGuardar.disabled = false;
+        btnGuardar.textContent = 'Guardar Cliente';
+        return;
       } else {
         idCliente = await obtenerNuevoID();
         if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
