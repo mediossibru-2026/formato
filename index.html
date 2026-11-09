@@ -732,6 +732,28 @@
   </div>
 </div>
 
+  <!-- MODAL RFC YA EXISTE -->
+<div class="modal-overlay" id="modalRFCExiste">
+  <div class="modal-content small">
+    <div class="modal-header">
+      <h2>⚠️ Cliente ya registrado</h2>
+      <button class="modal-close" onclick="cerrarModalRFCExiste()">&times;</button>
+    </div>
+    <div style="padding: 20px 0; text-align: center;">
+      <p style="font-size: 1.1rem; margin-bottom: 10px;">
+        El RFC <strong id="rfcExistenteMensaje"></strong> ya se encuentra en nuestra base de datos.
+      </p>
+      <p style="color: var(--gris-texto); margin-bottom: 25px;">
+        No es posible registrar un cliente duplicado. Si necesitas modificar sus datos, usa la opción de actualizar.
+      </p>
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn-borrar" onclick="cerrarModalRFCExiste()" style="max-width: 200px;">Cancelar</button>
+        <button class="btn-guardar" onclick="irAActualizarDesdeAlerta()" style="max-width: 200px; background: var(--naranja-accion);">✏️ ACTUALIZAR DATOS</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL BUSCAR RFC PARA DOCUMENTOS -->
 <div class="modal-overlay" id="modalBuscarRFC">
   <div class="modal-content small">
