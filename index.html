@@ -42,10 +42,7 @@
     padding-bottom: 10px;
   }
 
-  .hero-logo img {
-    max-height: 100px;
-    width: auto;
-  }
+  .hero-logo img { max-height: 100px; width: auto; }
 
   .titulo-formulario {
     text-align: center;
@@ -262,7 +259,7 @@
     color: var(--gris-texto);
   }
 
-  /* NUEVOS ESTILOS PARA VALIDACIÓN RFC */
+  /* VALIDACIÓN RFC */
   .rfc-busqueda-container {
     background: var(--gris-claro);
     padding: 20px;
@@ -282,10 +279,7 @@
     background: #fff5f5;
   }
 
-  .rfc-busqueda-container label {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-  }
+  .rfc-busqueda-container label { font-size: 0.95rem; margin-bottom: 8px; }
 
   .rfc-busqueda-container input {
     font-size: 1.1rem;
@@ -324,15 +318,8 @@
     border-left: 4px solid var(--azul-accion);
   }
 
-  .rfc-resultado .icono {
-    font-size: 1.2rem;
-    font-weight: 700;
-  }
-
-  .rfc-resultado .nombre-cliente {
-    font-weight: 700;
-    margin-left: 5px;
-  }
+  .rfc-resultado .icono { font-size: 1.2rem; font-weight: 700; }
+  .rfc-resultado .nombre-cliente { font-weight: 700; margin-left: 5px; }
 
   .spinner-busqueda {
     display: inline-block;
@@ -363,7 +350,6 @@
   }
 
   .doc-label { flex: 1; font-weight: 600; font-size: 0.9rem; }
-
   .doc-actions { display: flex; gap: 8px; align-items: center; }
 
   .btn-subir-archivo {
@@ -390,7 +376,7 @@
   .doc-status.subido { background: #d4edda; color: #155724; }
   .doc-status.error { background: #f8d7da; color: #721c24; }
 
-  /* DOCUMENTOS ESTILOS */
+  /* DOCUMENTOS */
   .hoja-documento {
     max-width: 216mm;
     min-height: 279mm;
@@ -653,7 +639,6 @@
       <input type="email" id="fisicaFactCorreo" placeholder="facturacion@empresa.com">
       <label>Facturación - WhatsApp:</label>
       <input type="tel" id="fisicaFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      
       <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
       <input type="tel" id="fisicaCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Cuentas por Pagar - Correo:</label>
@@ -755,7 +740,6 @@
       <input type="email" id="moralFactCorreo" placeholder="facturacion@empresa.com">
       <label>Facturación - WhatsApp:</label>
       <input type="tel" id="moralFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      
       <label style="margin-top: 15px;">Cuentas por Pagar - Número:</label>
       <input type="tel" id="moralCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
       <label>Cuentas por Pagar - Correo:</label>
@@ -791,22 +775,22 @@
       </p>
       <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
         <button class="btn-borrar" onclick="cerrarModalRFCExiste()" style="max-width: 200px;">Cancelar</button>
-        <button class="btn-guardar" onclick="irAActualizarDesdeAlerta()" style="max-width: 200px; background: var(--naranja-accion);">ACTUALIZAR DATOS</button>
+        <button class="btn-guardar" onclick="irAActualizarDesdeAlerta()" style="max-width: 200px; background: var(--naranja-accion);">✏️ ACTUALIZAR DATOS</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL ACTUALIZAR DATOS CON VALIDACIÓN RFC -->
+<!-- MODAL ACTUALIZAR DATOS -->
 <div class="modal-overlay" id="modalBuscarRFCActualizar">
   <div class="modal-content small">
     <div class="modal-header">
-      <h2>Actualizar Datos del Cliente</h2>
+      <h2>✏️ Actualizar Datos del Cliente</h2>
       <button class="modal-close" onclick="cerrarModalActualizar()">&times;</button>
     </div>
     <div>
       <div class="rfc-busqueda-container" id="containerActualizarRFC">
-        <label style="font-size: 0.95rem;">RFC del cliente (obligatorio) *</label>
+        <label style="font-size: 0.95rem;">🔍 RFC del cliente (obligatorio) *</label>
         <input type="text" id="buscarRFCActualizar" placeholder="Ingresa el RFC (12 o 13 caracteres)" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); buscarRFCEnTiempoReal('actualizar')">
         <div class="rfc-resultado" id="resultadoActualizarRFC"></div>
       </div>
@@ -818,12 +802,12 @@
   </div>
 </div>
 
-<!-- MODAL EDITAR DATOS EXISTENTES -->
+<!-- MODAL EDITAR DATOS -->
 <div class="modal-overlay" id="modalEditarDatos">
   <div class="modal-content" style="max-width: 800px;">
     <div class="modal-header">
       <div>
-        <h2>Editar Datos del Cliente</h2>
+        <h2>✏️ Editar Datos del Cliente</h2>
         <p style="font-size: 0.85rem; color: var(--gris-texto); margin-top: 5px;">
           <strong>RFC:</strong> <span id="editarModalRfc"></span> | 
           <strong>Cliente:</strong> <span id="editarModalNombre"></span> |
@@ -836,14 +820,14 @@
     <div style="margin-top: 20px; display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
       <button class="btn-borrar" onclick="cerrarModalEditarDatos()">Cancelar</button>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <button class="btn-guardar" id="btnGenerarDesdeEdicion" onclick="generarDocumentosDesdeEdicion()" style="background: var(--verde-sibru);">📄 Generar Documentos</button>
-        <button class="btn-guardar" id="btnGuardarActualizacion" onclick="guardarActualizacion()">Guardar Cambios</button>
+        <button class="btn-guardar" onclick="generarDocumentosDesdeEdicion()" style="background: var(--verde-sibru);">📄 Generar Documentos</button>
+        <button class="btn-guardar" id="btnGuardarActualizacion" onclick="guardarActualizacion()">💾 Guardar Cambios</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- MODAL SUBIR DOCUMENTACIÓN CON VALIDACIÓN RFC -->
+<!-- MODAL SUBIR DOCUMENTACIÓN - BÚSQUEDA RFC -->
 <div class="modal-overlay" id="modalBuscarRFC">
   <div class="modal-content small">
     <div class="modal-header">
@@ -852,7 +836,7 @@
     </div>
     <div>
       <div class="rfc-busqueda-container" id="containerDocsRFC">
-        <label style="font-size: 0.95rem;">RFC del cliente (obligatorio) *</label>
+        <label style="font-size: 0.95rem;">🔍 RFC del cliente (obligatorio) *</label>
         <input type="text" id="buscarRFCRFC" placeholder="Ingresa el RFC (12 o 13 caracteres)" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); buscarRFCEnTiempoReal('documentos')">
         <div class="rfc-resultado" id="resultadoDocsRFC"></div>
       </div>
@@ -864,7 +848,7 @@
   </div>
 </div>
 
-<!-- MODAL SUBIR DOCUMENTOS (lista) -->
+<!-- MODAL SUBIR DOCUMENTOS -->
 <div class="modal-overlay" id="modalDocumentos">
   <div class="modal-content">
     <div class="modal-header">
@@ -1114,14 +1098,13 @@
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   let tipoSeleccionado = null;
   let ultimoIDGenerado = null;
-
-  // ==========================================
-  // VALIDACIÓN RFC EN TIEMPO REAL
-  // ==========================================
   let debounceTimer = null;
   let rfcValidadoActualizar = null;
   let rfcValidadoDocs = null;
 
+  // ==========================================
+  // VALIDACIÓN RFC EN TIEMPO REAL
+  // ==========================================
   function buscarRFCEnTiempoReal(tipo) {
     const inputId = tipo === 'actualizar' ? 'buscarRFCActualizar' : 'buscarRFCRFC';
     const resultadoId = tipo === 'actualizar' ? 'resultadoActualizarRFC' : 'resultadoDocsRFC';
@@ -1133,7 +1116,6 @@
     const containerEl = document.getElementById(containerId);
     const btnEl = document.getElementById(btnId);
     
-    // Limpiar estado
     containerEl.classList.remove('encontrado', 'no-encontrado');
     resultadoEl.classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
     btnEl.disabled = true;
@@ -1141,7 +1123,6 @@
     if (tipo === 'actualizar') rfcValidadoActualizar = null;
     else rfcValidadoDocs = null;
     
-    // Validar longitud mínima
     if (rfc.length < 12) {
       if (rfc.length > 0) {
         resultadoEl.innerHTML = '<span class="icono">ℹ️</span><span>El RFC debe tener 12 (Moral) o 13 (Física) caracteres. Llevas ' + rfc.length + '.</span>';
@@ -1157,21 +1138,18 @@
       return;
     }
     
-    // Mostrar "buscando..."
     resultadoEl.innerHTML = '<span class="spinner-busqueda"></span><span>Buscando en la base de datos...</span>';
     resultadoEl.classList.add('visible', 'buscar');
     
-    // Debounce para no saturar
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function() {
       fetch(SHEET_SCRIPT_URL, {
         method: 'POST',
         body: JSON.stringify({ action: 'verificarRFC', rfc: rfc })
       })
-      .then(res => res.json())
-      .then(result => {
+      .then(function(res) { return res.json(); })
+      .then(function(result) {
         if (result.result === 'success' && result.existe) {
-          // RFC ENCONTRADO
           const nombreCliente = result.nombre || 'Cliente';
           const tipoCliente = result.tipo || '';
           
@@ -1187,7 +1165,6 @@
             rfcValidadoDocs = { rfc: rfc, nombre: nombreCliente, tipo: tipoCliente };
           }
         } else {
-          // RFC NO ENCONTRADO
           resultadoEl.innerHTML = '<span class="icono">❌</span><span>El RFC <strong>' + rfc + '</strong> no está registrado. Usa el formulario de alta.</span>';
           resultadoEl.classList.add('visible', 'no-encontrado');
           containerEl.classList.add('no-encontrado');
@@ -1195,13 +1172,13 @@
           btnEl.disabled = true;
         }
       })
-      .catch(error => {
+      .catch(function(error) {
         resultadoEl.innerHTML = '<span class="icono">⚠️</span><span>Error de conexión: ' + error.message + '</span>';
         resultadoEl.classList.add('visible', 'no-encontrado');
         containerEl.classList.add('no-encontrado');
         btnEl.disabled = true;
       });
-    }, 500); // 500ms de debounce
+    }, 500);
   }
 
   function continuarActualizar() {
@@ -1217,12 +1194,19 @@
       alert('Primero debes ingresar un RFC válido y registrado');
       return;
     }
-    cerrarModalBuscarRFC();
-    DocsManager.iniciarModal(rfcValidadoDocs.rfc, rfcValidadoDocs.nombre, rfcValidadoDocs.tipo);
+    
+    try {
+      document.getElementById('modalBuscarRFC').classList.remove('activo');
+      DocsManager.iniciarModal(rfcValidadoDocs.rfc, rfcValidadoDocs.nombre, rfcValidadoDocs.tipo);
+      rfcValidadoDocs = null;
+    } catch (error) {
+      console.error('Error al abrir modal de documentos:', error);
+      alert('Error al abrir el formulario de documentos: ' + error.message);
+    }
   }
 
   // ==========================================
-  // LÓGICA DE DOCUMENTOS
+  // DOCS MANAGER (SINTAXIS TRADICIONAL)
   // ==========================================
   const DocsManager = {
     rfc: '',
@@ -1236,116 +1220,170 @@
       { id: 'carátula', label: 'Carátula de estado de cuenta (CLABE visible y mismo RFC)' }
     ],
     
-    iniciarModal(rfc, nombre, tipo) {
-      this.rfc = rfc;
-      this.nombre = nombre;
-      this.tipo = tipo;
-      this.documentosSeleccionados = {};
-      
-      document.getElementById('docModalRfc').textContent = rfc;
-      document.getElementById('docModalNombre').textContent = nombre;
-      
-      const docs = [...this.documentosRequeridos];
-      if (tipo === 'Persona Moral') {
-        docs.push({ id: 'acta', label: 'Acta constitutiva' });
-        docs.push({ id: 'poder', label: 'Poder Notarial' });
+    iniciarModal: function(rfc, nombre, tipo) {
+      try {
+        this.rfc = rfc;
+        this.nombre = nombre;
+        this.tipo = tipo;
+        this.documentosSeleccionados = {};
+        
+        document.getElementById('docModalRfc').textContent = rfc;
+        document.getElementById('docModalNombre').textContent = nombre;
+        
+        const docs = [];
+        this.documentosRequeridos.forEach(function(d) { docs.push(d); });
+        if (tipo === 'Persona Moral') {
+          docs.push({ id: 'acta', label: 'Acta constitutiva' });
+          docs.push({ id: 'poder', label: 'Poder Notarial' });
+        }
+        
+        const contenedor = document.getElementById('listaDocumentosRequeridos');
+        contenedor.innerHTML = '';
+        
+        docs.forEach(function(doc) {
+          const div = document.createElement('div');
+          div.className = 'doc-item';
+          
+          const label = document.createElement('span');
+          label.className = 'doc-label';
+          label.textContent = doc.label;
+          
+          const actions = document.createElement('div');
+          actions.className = 'doc-actions';
+          
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.id = 'file_' + doc.id;
+          fileInput.accept = '.pdf';
+          fileInput.style.display = 'none';
+          fileInput.onchange = function() {
+            DocsManager.seleccionarArchivo(doc.id, doc.label);
+          };
+          
+          const btnSubir = document.createElement('button');
+          btnSubir.type = 'button';
+          btnSubir.className = 'btn-subir-archivo';
+          btnSubir.textContent = '📎 Subir PDF';
+          btnSubir.onclick = function() {
+            document.getElementById('file_' + doc.id).click();
+          };
+          
+          const status = document.createElement('span');
+          status.className = 'doc-status pendiente';
+          status.id = 'status_' + doc.id;
+          status.textContent = 'Pendiente';
+          
+          actions.appendChild(fileInput);
+          actions.appendChild(btnSubir);
+          actions.appendChild(status);
+          
+          div.appendChild(label);
+          div.appendChild(actions);
+          contenedor.appendChild(div);
+        });
+        
+        this.actualizarBotonGuardar();
+        document.getElementById('modalDocumentos').classList.add('activo');
+        
+      } catch (error) {
+        console.error('Error en iniciarModal:', error);
+        alert('Error al cargar el formulario de documentos: ' + error.message);
       }
-      
-      const contenedor = document.getElementById('listaDocumentosRequeridos');
-      contenedor.innerHTML = '';
-      
-      docs.forEach(doc => {
-        const div = document.createElement('div');
-        div.className = 'doc-item';
-        div.innerHTML = 
-          '<span class="doc-label">' + doc.label + '</span>' +
-          '<div class="doc-actions">' +
-            '<input type="file" id="file_' + doc.id + '" accept=".pdf" onchange="DocsManager.seleccionarArchivo(\'' + doc.id + '\', \'' + doc.label + '\')" style="display:none;">' +
-            '<button type="button" class="btn-subir-archivo" onclick="document.getElementById(\'file_' + doc.id + '\').click()">📎 Subir PDF</button>' +
-            '<span class="doc-status pendiente" id="status_' + doc.id + '">Pendiente</span>' +
-          '</div>';
-        contenedor.appendChild(div);
-      });
-      
-      this.actualizarBotonGuardar();
-      document.getElementById('modalDocumentos').classList.add('activo');
     },
     
-    async seleccionarArchivo(id, label) {
-      const fileInput = document.getElementById('file_' + id);
-      const file = fileInput.files[0];
-      if (!file) return;
-      if (file.type !== 'application/pdf') {
-        alert('Solo se aceptan archivos PDF');
-        fileInput.value = '';
-        return;
-      }
-      
-      const statusEl = document.getElementById('status_' + id);
-      statusEl.textContent = 'Subiendo...';
-      statusEl.className = 'doc-status subiendo';
-      
+    seleccionarArchivo: function(id, label) {
       try {
-        const base64 = await this.archivoABase64(file);
-        
-        const result = await fetch(SHEET_SCRIPT_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'subirDocumento',
-            rfc: this.rfc,
-            nombreArchivo: id + '_' + label.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf',
-            base64Data: base64,
-            mimeType: 'application/pdf'
-          })
-        }).then(r => r.json());
-        
-        if (result.result === 'success') {
-          this.documentosSeleccionados[id] = {
-            nombre: label,
-            archivoId: result.archivoId,
-            url: result.archivoUrl
-          };
-          statusEl.textContent = '✓ Subido';
-          statusEl.className = 'doc-status subido';
-        } else {
-          throw new Error(result.message || 'Error desconocido');
+        const fileInput = document.getElementById('file_' + id);
+        const file = fileInput.files[0];
+        if (!file) return;
+        if (file.type !== 'application/pdf') {
+          alert('Solo se aceptan archivos PDF');
+          fileInput.value = '';
+          return;
         }
-      } catch (e) {
-        statusEl.textContent = '✗ Error';
-        statusEl.className = 'doc-status error';
-        alert('Error al subir: ' + e.message);
+        
+        const statusEl = document.getElementById('status_' + id);
+        statusEl.textContent = 'Subiendo...';
+        statusEl.className = 'doc-status subiendo';
+        
+        const self = this;
+        this.archivoABase64(file).then(function(base64) {
+          return fetch(SHEET_SCRIPT_URL, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'subirDocumento',
+              rfc: self.rfc,
+              nombreArchivo: id + '_' + label.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf',
+              base64Data: base64,
+              mimeType: 'application/pdf'
+            })
+          }).then(function(r) { return r.json(); });
+        }).then(function(result) {
+          if (result.result === 'success') {
+            self.documentosSeleccionados[id] = {
+              nombre: label,
+              archivoId: result.archivoId,
+              url: result.archivoUrl
+            };
+            statusEl.textContent = '✓ Subido';
+            statusEl.className = 'doc-status subido';
+          } else {
+            throw new Error(result.message || 'Error desconocido');
+          }
+          self.actualizarBotonGuardar();
+        }).catch(function(e) {
+          statusEl.textContent = '✗ Error';
+          statusEl.className = 'doc-status error';
+          alert('Error al subir: ' + e.message);
+          self.actualizarBotonGuardar();
+        });
+      } catch (error) {
+        console.error('Error en seleccionarArchivo:', error);
+        alert('Error: ' + error.message);
       }
-      
-      this.actualizarBotonGuardar();
     },
 
-    archivoABase64(file) {
-      return new Promise((resolve, reject) => {
+    archivoABase64: function(file) {
+      return new Promise(function(resolve, reject) {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
+        reader.onload = function() { resolve(reader.result); };
         reader.onerror = reject;
         reader.readAsDataURL(file);
       });
     },
 
-    actualizarBotonGuardar() {
-      const docs = [...this.documentosRequeridos];
-      if (this.tipo === 'Persona Moral') {
-        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
+    actualizarBotonGuardar: function() {
+      try {
+        const docs = [];
+        this.documentosRequeridos.forEach(function(d) { docs.push(d); });
+        if (this.tipo === 'Persona Moral') {
+          docs.push({ id: 'acta', label: 'Acta constitutiva' });
+          docs.push({ id: 'poder', label: 'Poder Notarial' });
+        }
+        const self = this;
+        const todosMarcados = docs.every(function(doc) {
+          return self.documentosSeleccionados[doc.id];
+        });
+        document.getElementById('btnGuardarDocs').disabled = !todosMarcados;
+      } catch (error) {
+        console.error('Error en actualizarBotonGuardar:', error);
       }
-      const todosMarcados = docs.every(doc => this.documentosSeleccionados[doc.id]);
-      document.getElementById('btnGuardarDocs').disabled = !todosMarcados;
     },
     
-    guardarDocumentos() {
-      const docs = [...this.documentosRequeridos];
+    guardarDocumentos: function() {
+      const docs = [];
+      this.documentosRequeridos.forEach(function(d) { docs.push(d); });
       if (this.tipo === 'Persona Moral') {
-        docs.push({ id: 'acta', label: 'Acta constitutiva' }, { id: 'poder', label: 'Poder Notarial' });
+        docs.push({ id: 'acta', label: 'Acta constitutiva' });
+        docs.push({ id: 'poder', label: 'Poder Notarial' });
       }
-      const faltantes = docs.filter(doc => !this.documentosSeleccionados[doc.id]);
+      const self = this;
+      const faltantes = docs.filter(function(doc) {
+        return !self.documentosSeleccionados[doc.id];
+      });
       
       if (faltantes.length > 0) {
-        alert('Debes completar la documentación para poder enviar.\n\nFaltan:\n• ' + faltantes.map(d => d.label).join('\n• '));
+        alert('Debes completar la documentación para poder enviar.\n\nFaltan:\n• ' + faltantes.map(function(d) { return d.label; }).join('\n• '));
         return;
       }
       
@@ -1353,13 +1391,13 @@
       this.cerrarModal();
     },
     
-    cerrarModal() {
+    cerrarModal: function() {
       document.getElementById('modalDocumentos').classList.remove('activo');
     }
   };
 
   // ==========================================
-  // ACTUALIZAR DATOS DE CLIENTE EXISTENTE
+  // ACTUALIZAR DATOS
   // ==========================================
   let clienteActualEditando = null;
 
@@ -1370,7 +1408,7 @@
     document.getElementById('btnContinuarActualizar').disabled = true;
     rfcValidadoActualizar = null;
     document.getElementById('modalBuscarRFCActualizar').classList.add('activo');
-    setTimeout(() => document.getElementById('buscarRFCActualizar').focus(), 100);
+    setTimeout(function() { document.getElementById('buscarRFCActualizar').focus(); }, 100);
   }
 
   function cerrarModalActualizar() {
@@ -1384,7 +1422,7 @@
       const resultLista = await response.json();
       
       if (resultLista.result === 'success') {
-        const clienteEncontrado = resultLista.data.find(c => c['RFC'] === rfc);
+        const clienteEncontrado = resultLista.data.find(function(c) { return c['RFC'] === rfc; });
         
         if (clienteEncontrado) {
           clienteActualEditando = clienteEncontrado;
@@ -1414,9 +1452,8 @@
     
     let html = '';
     
-    // Campos NO editables
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
-    html += '<h3>Campos no editables</h3>';
+    html += '<h3>🔒 Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
@@ -1424,9 +1461,8 @@
     html += '<div><label>' + (tipo === 'Persona Física' ? 'Nombre' : 'Razón Social') + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
     html += '</div></div>';
     
-    // Campos editables
     html += '<div class="seccion-form">';
-    html += '<h3>Datos editables</h3>';
+    html += '<h3>✏️ Datos editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     
     if (tipo === 'Persona Moral') {
@@ -1448,7 +1484,7 @@
       '625 - Actividades con plataformas tecnológicas', '626 - RESICO', '628 - Hidrocarburos'
     ];
     
-    regimenes.forEach(r => {
+    regimenes.forEach(function(r) {
       const selected = cliente['Régimen Fiscal'] === r ? 'selected' : '';
       html += '<option value="' + r + '" ' + selected + '>' + r + '</option>';
     });
@@ -1460,7 +1496,7 @@
     
     const usosCFDI = ['G01 - Adquisición de mercancías', 'G02 - Devoluciones, descuentos o bonificaciones', 'G03 - Gastos en general', 'I01 - Construcciones', 'I02 - Mobilario y equipo de oficina', 'I03 - Equipo de transporte', 'I04 - Equipo de computo y accesorios', 'I05 - Dados, troqueles, moldes, matrices y herramental', 'I06 - Comunicaciones telefónicas', 'I07 - Comunicaciones satelitales', 'I08 - Otra maquinaria y equipo', 'P01 - Por definir'];
     
-    usosCFDI.forEach(u => {
+    usosCFDI.forEach(function(u) {
       const selected = cliente['Uso CFDI'] === u ? 'selected' : '';
       html += '<option value="' + u + '" ' + selected + '>' + u + '</option>';
     });
@@ -1468,13 +1504,12 @@
     
     html += '</div></div>';
     
-    // Facturación
     html += '<div class="seccion-form">';
-    html += '<h3>Datos de Facturación</h3>';
+    html += '<h3>💳 Datos de Facturación</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Forma de Pago</label><select id="editFormaPago">';
     html += '<option value="">Seleccione...</option>';
-    ['01 - Efectivo', '02 - Cheque nominativo', '03 - Transferencia electrónica de fondos', '04 - Tarjeta de crédito', '05 - Monedero electrónico', '06 - Dinero electrónico', '28 - Tarjeta de débito', '99 - Por definir'].forEach(f => {
+    ['01 - Efectivo', '02 - Cheque nominativo', '03 - Transferencia electrónica de fondos', '04 - Tarjeta de crédito', '05 - Monedero electrónico', '06 - Dinero electrónico', '28 - Tarjeta de débito', '99 - Por definir'].forEach(function(f) {
       const selected = cliente['Forma de Pago'] === f ? 'selected' : '';
       html += '<option value="' + f + '" ' + selected + '>' + f + '</option>';
     });
@@ -1482,7 +1517,7 @@
     
     html += '<div><label>Método de Pago</label><select id="editMetodoPago">';
     html += '<option value="">Seleccione...</option>';
-    ['PUE - Pago en una sola exhibición', 'PPD - Pago en parcialidades o diferido'].forEach(m => {
+    ['PUE - Pago en una sola exhibición', 'PPD - Pago en parcialidades o diferido'].forEach(function(m) {
       const selected = cliente['Método de Pago'] === m ? 'selected' : '';
       html += '<option value="' + m + '" ' + selected + '>' + m + '</option>';
     });
@@ -1491,24 +1526,22 @@
     html += '<div style="grid-column: span 2;"><label>Correo Electrónico</label><input type="email" id="editCorreo" value="' + (cliente['Correo Electrónico'] || '') + '"></div>';
     html += '</div></div>';
     
-    // Contactos
     html += '<div class="seccion-form">';
-    html += '<h3>Datos de Contacto</h3>';
+    html += '<h3>📞 Datos de Contacto</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
-    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Facturación</label></div>';
+    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">💼 Facturación</label></div>';
     html += '<div><label>Número</label><input type="text" id="editFactNumero" value="' + (cliente['Facturacion Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + (cliente['Facturacion Correo'] || '') + '"></div>';
     html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + (cliente['Facturacion WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
-    html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
+    html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">💰 Cuentas por Pagar</label></div>';
     html += '<div><label>Número</label><input type="text" id="editCppNumero" value="' + (cliente['CuentasPorPagar Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + (cliente['CuentasPorPagar Correo'] || '') + '"></div>';
     html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '</div></div>';
     
-    // Status
     html += '<div class="seccion-form">';
-    html += '<h3>Status</h3>';
+    html += '<h3>📊 Status</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Status</label><select id="editStatus">';
     html += '<option value="ACTIVO" ' + (cliente['Status'] === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
@@ -1575,7 +1608,7 @@
       alert('Error de conexión: ' + error.message);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'Guardar Cambios';
+      btn.textContent = '💾 Guardar Cambios';
     }
   }
 
@@ -1624,7 +1657,7 @@
       document.getElementById('aFisicaCorreo').textContent = correo;
       document.getElementById('aFisicaFirmaCliente').textContent = nombre;
       
-      document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+      document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
       document.getElementById('docManifestacionFisica').classList.add('activo');
       document.getElementById('docAltaFisica').classList.add('activo');
       document.getElementById('formulario').style.display = 'none';
@@ -1658,7 +1691,7 @@
       document.getElementById('aMoralCorreo').textContent = correo;
       document.getElementById('aMoralFirmaCliente').textContent = representante;
       
-      document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+      document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
       document.getElementById('docManifestacionMoral').classList.add('activo');
       document.getElementById('docAltaMoral').classList.add('activo');
       document.getElementById('formulario').style.display = 'none';
@@ -1678,7 +1711,7 @@
     const rfc = document.getElementById('rfcExistenteMensaje').textContent;
     cerrarModalRFCExiste();
     abrirModalActualizarDatos();
-    setTimeout(() => {
+    setTimeout(function() {
       document.getElementById('buscarRFCActualizar').value = rfc;
       buscarRFCEnTiempoReal('actualizar');
     }, 300);
@@ -1694,7 +1727,7 @@
     document.getElementById('btnContinuarDocs').disabled = true;
     rfcValidadoDocs = null;
     document.getElementById('modalBuscarRFC').classList.add('activo');
-    setTimeout(() => document.getElementById('buscarRFCRFC').focus(), 100);
+    setTimeout(function() { document.getElementById('buscarRFCRFC').focus(); }, 100);
   }
 
   function cerrarModalBuscarRFC() {
@@ -1707,9 +1740,9 @@
   // ==========================================
   function cambiarTipoPersona() {
     const radios = document.getElementsByName('tipoPersona');
-    for (const radio of radios) {
-      if (radio.checked) {
-        tipoSeleccionado = radio.value;
+    for (let i = 0; i < radios.length; i++) {
+      if (radios[i].checked) {
+        tipoSeleccionado = radios[i].value;
         break;
       }
     }
@@ -1963,7 +1996,7 @@
     document.getElementById('aFisicaCorreo').textContent = document.getElementById('fisicaCorreo').value.trim().toLowerCase();
     document.getElementById('aFisicaFirmaCliente').textContent = nombre;
 
-    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     document.getElementById('docManifestacionFisica').classList.add('activo');
     document.getElementById('docAltaFisica').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
@@ -1999,7 +2032,7 @@
     document.getElementById('aMoralCorreo').textContent = document.getElementById('moralCorreo').value.trim().toLowerCase();
     document.getElementById('aMoralFirmaCliente').textContent = representante;
 
-    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     document.getElementById('docManifestacionMoral').classList.add('activo');
     document.getElementById('docAltaMoral').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
@@ -2010,18 +2043,18 @@
   
   function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
-    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     window.scrollTo(0, 0);
   }
 
   function borrarFormulario() {
-    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(input => input.value = '');
-    document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
-    document.querySelectorAll('.error, .mensaje-error.visible, .mensaje-guardado.visible').forEach(el => el.classList.remove('error', 'visible'));
-    document.getElementsByName('tipoPersona').forEach(radio => radio.checked = false);
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(function(input) { input.value = ''; });
+    document.querySelectorAll('select').forEach(function(select) { select.selectedIndex = 0; });
+    document.querySelectorAll('.error, .mensaje-error.visible, .mensaje-guardado.visible').forEach(function(el) { el.classList.remove('error', 'visible'); });
+    document.getElementsByName('tipoPersona').forEach(function(radio) { radio.checked = false; });
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-    document.querySelectorAll('.hoja-documento').forEach(doc => doc.classList.remove('activo'));
+    document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
     document.getElementById('formulario').style.display = 'block';
