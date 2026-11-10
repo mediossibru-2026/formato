@@ -20,11 +20,9 @@
 <meta name="twitter:description" content="Formulario de manifestación y alta de cliente - Grupo SIBRÜ">
 <meta name="twitter:image" content="https://mediossibru-2026.github.io/formato/og-image.png">
 
-<link rel="icon" type="image/png" href="logo.png">
-
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="logo.png">
-<title>Manifestación y Alta de Cliente - Grupo SIBRÜ</title>
+
 <style>
   :root {
     --verde-sibru: #6BAE3E;
@@ -582,7 +580,7 @@
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Fecha:</label>
-      <input type="text" id="fisicaLugarFecha" placeholder="Ej. 5 de noviembre de 2026" oninput="this.value = this.value.toUpperCase()">
+      <input type="text" id="fisicaLugarFecha" placeholder="Fecha automática" oninput="this.value = this.value.toUpperCase()">
       <label>Nombre PARA FACTURAR:</label>
       <input type="text" id="fisicaNombre" placeholder="Ej. Juan Pérez García" required oninput="this.value = this.value.toUpperCase()">
       <label>RFC (13 caracteres):</label>
@@ -681,8 +679,8 @@
   <div class="formulario-tipo" id="formMoral">
     <div class="seccion-form">
       <h3>Datos Generales</h3>
-      <label>Lugar y fecha:</label>
-      <input type="text" id="moralLugarFecha" placeholder="Ej. Cuautitlán Izcalli, Edo. Méx., a 5 de noviembre de 2026" oninput="this.value = this.value.toUpperCase()">
+      <label>Fecha:</label>
+      <input type="text" id="moralLugarFecha" placeholder="Fecha automática" oninput="this.value = this.value.toUpperCase()">
       <label>Nombre del Representante Legal:</label>
       <input type="text" id="moralRepresentante" placeholder="Ej. Juan Pérez García" required oninput="this.value = this.value.toUpperCase()">
       <label>Razón Social:</label>
@@ -857,7 +855,7 @@
     </div>
     <div>
       <div class="rfc-busqueda-container" id="containerDocsRFC">
-        <label style="font-size: 0.95rem;">🔍 RFC del cliente (obligatorio) *</label>
+        <label style="font-size: 0.95rem;"> RFC del cliente (obligatorio) *</label>
         <input type="text" id="buscarRFCRFC" placeholder="Ingresa el RFC (12 o 13 caracteres)" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); buscarRFCEnTiempoReal('documentos')">
         <div class="rfc-resultado" id="resultadoDocsRFC"></div>
       </div>
@@ -892,7 +890,7 @@
   </div>
 </div>
 
-<!-- DOCUMENTOS DE SALIDA -->
+<!-- DOCUMENTOS DE SALIDA (se mantienen igual) -->
 <div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
   <div class="botones-doc-top no-print">
@@ -1124,6 +1122,32 @@
   let rfcValidadoDocs = null;
 
   // ==========================================
+  // FECHA AUTOMÁTICA EN ESPAÑOL
+  // ==========================================
+  function obtenerFechaHoy() {
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const hoy = new Date();
+    const dia = hoy.getDate();
+    const mes = meses[hoy.getMonth()];
+    const anio = hoy.getFullYear();
+    return dia + ' de ' + mes + ' de ' + anio;
+  }
+
+  function aplicarFechaHoy() {
+    const fecha = obtenerFechaHoy();
+    const campoFisica = document.getElementById('fisicaLugarFecha');
+    const campoMoral = document.getElementById('moralLugarFecha');
+    
+    if (campoFisica && !campoFisica.value.trim()) {
+      campoFisica.value = fecha;
+    }
+    if (campoMoral && !campoMoral.value.trim()) {
+      campoMoral.value = fecha;
+    }
+  }
+
+  // ==========================================
   // VALIDACIÓN RFC EN TIEMPO REAL
   // ==========================================
   function buscarRFCEnTiempoReal(tipo) {
@@ -1227,7 +1251,7 @@
   }
 
   // ==========================================
-  // DOCS MANAGER (SINTAXIS TRADICIONAL)
+  // DOCS MANAGER (CON 2 DOCUMENTOS NUEVOS)
   // ==========================================
   const DocsManager = {
     rfc: '',
@@ -1238,7 +1262,9 @@
       { id: 'constancia', label: 'Constancia de Situación Fiscal' },
       { id: 'opinion', label: 'Opinión de cumplimiento positiva' },
       { id: 'comprobante', label: 'Comprobante de domicilio vigente' },
-      { id: 'carátula', label: 'Carátula de estado de cuenta (CLABE visible y mismo RFC)' }
+      { id: 'carátula', label: 'Carátula de estado de cuenta (CLABE visible y mismo RFC)' },
+      { id: 'alta', label: 'Alta de cliente' },
+      { id: 'manifestacion', label: 'Manifestación escrita' }
     ],
     
     iniciarModal: function(rfc, nombre, tipo) {
@@ -1284,7 +1310,7 @@
           const btnSubir = document.createElement('button');
           btnSubir.type = 'button';
           btnSubir.className = 'btn-subir-archivo';
-          btnSubir.textContent = '📎 Subir PDF';
+          btnSubir.textContent = ' Subir PDF';
           btnSubir.onclick = function() {
             document.getElementById('file_' + doc.id).click();
           };
@@ -1450,12 +1476,24 @@
           renderizarFormularioEditar(clienteEncontrado);
           document.getElementById('modalBuscarRFCActualizar').classList.remove('activo');
           document.getElementById('modalEditarDatos').classList.add('activo');
+          // Aplicar fecha automática al modal de edición
+          setTimeout(function() {
+            aplicarFechaHoyEnModalEditar();
+          }, 100);
         } else {
           alert('No se pudieron cargar los datos del cliente');
         }
       }
     } catch (error) {
       alert('Error al cargar datos: ' + error.message);
+    }
+  }
+
+  function aplicarFechaHoyEnModalEditar() {
+    const fecha = obtenerFechaHoy();
+    const campoEditar = document.getElementById('editLugarFecha');
+    if (campoEditar && !campoEditar.value.trim()) {
+      campoEditar.value = fecha;
     }
   }
 
@@ -1474,7 +1512,7 @@
     let html = '';
     
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
-    html += '<h3>🔒 Campos no editables</h3>';
+    html += '<h3> Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
@@ -1490,7 +1528,7 @@
       html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     }
     
-    html += '<div><label>Lugar y Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Régimen Fiscal</label><select id="editRegimen">';
     html += '<option value="">Seleccione...</option>';
     
@@ -1657,7 +1695,7 @@
       const nombre = cliente['Nombre/Razón Social'] || cliente['Nombre'] || '';
       
       if (!lugarFecha || !nombre || !rfc) { 
-        alert('Para generar documentos se requiere: Lugar y fecha, Nombre y RFC'); 
+        alert('Para generar documentos se requiere: Fecha, Nombre y RFC'); 
         return; 
       }
       
@@ -1690,7 +1728,7 @@
       const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : (cliente['Representante Legal'] || '');
       
       if (!lugarFecha || !representante || !razonSocial || !rfc) { 
-        alert('Para generar documentos se requiere: Lugar y fecha, Representante, Razón Social y RFC'); 
+        alert('Para generar documentos se requiere: Fecha, Representante, Razón Social y RFC'); 
         return; 
       }
       
@@ -1774,6 +1812,7 @@
     } else if (tipoSeleccionado === 'moral') {
       document.getElementById('formMoral').classList.add('activo');
     }
+    aplicarFechaHoy();
   }
 
   function validarRFCFisica() {
@@ -2082,6 +2121,11 @@
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
   }
+
+  // Aplicar fecha automáticamente al cargar la página
+  document.addEventListener('DOMContentLoaded', function() {
+    aplicarFechaHoy();
+  });
 </script>
 
 </body>
