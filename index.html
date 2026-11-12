@@ -1293,6 +1293,19 @@
   let modoBusquedaDocs = 'rfc';
 
   // ==========================================
+  // OBTENER DATO (TOLERA ACENTOS)
+  // ==========================================
+  function obtenerDato(cliente, clave) {
+    if (cliente[clave] !== undefined && cliente[clave] !== null) return cliente[clave];
+    const norm = clave.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    for (const k in cliente) {
+      const kNorm = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      if (kNorm === norm) return cliente[k];
+    }
+    return '';
+  }
+
+  // ==========================================
   // FECHA AUTOMATICA EN ESPANOL
   // ==========================================
   function obtenerFechaHoy() {
@@ -1775,11 +1788,11 @@
         
         if (datosValidados.modo === 'id') {
           clienteEncontrado = resultLista.data.find(function(c) { 
-            return String(c['ID Cliente']) === String(datosValidados.identificador); 
+            return String(obtenerDato(c, 'ID Cliente')) === String(datosValidados.identificador); 
           });
         } else {
           clienteEncontrado = resultLista.data.find(function(c) { 
-            return c['RFC'] === datosValidados.identificador; 
+            return obtenerDato(c, 'RFC') === datosValidados.identificador; 
           });
         }
         
@@ -1809,10 +1822,10 @@
   }
 
   function renderizarFormularioEditar(cliente) {
-    const rfc = cliente['RFC'] || '';
-    const nombre = cliente['Nombre/Razon Social'] || cliente['Nombre'] || '';
-    const tipo = cliente['Tipo'] || 'Persona Fisica';
-    const idCliente = cliente['ID Cliente'] || 'N/A';
+    const rfc = obtenerDato(cliente, 'RFC');
+    const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
+    const tipo = obtenerDato(cliente, 'Tipo') || 'Persona Física';
+    const idCliente = obtenerDato(cliente, 'ID Cliente') || 'N/A';
     const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
     
     document.getElementById('editarModalRfc').textContent = rfc;
@@ -1829,18 +1842,19 @@
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
     html += '<div><label>RFC</label><input type="text" value="' + rfc + '" disabled style="background:#eee;"></div>';
-    html += '<div><label>' + (tipo === 'Persona Fisica' ? 'Nombre' : 'Razon Social') + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
+    const etiquetaNombre = esSinRFC ? 'Nombre / Razon Social' : (tipo === 'Persona Física' ? 'Nombre' : 'Razon Social');
+    html += '<div><label>' + etiquetaNombre + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
     html += '</div></div>';
     
     html += '<div class="seccion-form">';
     html += '<h3>Datos editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     
-    html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + obtenerDato(cliente, 'Lugar y Fecha') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
     if (!esSinRFC) {
       if (tipo === 'Persona Moral') {
-        html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+        html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + obtenerDato(cliente, 'Representante Legal') + '" oninput="this.value = this.value.toUpperCase()"></div>';
       }
       
       html += '<div><label>Regimen Fiscal</label><select id="editRegimen">';
@@ -1857,20 +1871,22 @@
         '625 - Actividades con plataformas tecnologicas', '626 - RESICO', '628 - Hidrocarburos'
       ];
       
+      const regimenCliente = obtenerDato(cliente, 'Régimen Fiscal');
       regimenes.forEach(function(r) {
-        const selected = cliente['Regimen Fiscal'] === r ? 'selected' : '';
+        const selected = regimenCliente === r ? 'selected' : '';
         html += '<option value="' + r + '" ' + selected + '>' + r + '</option>';
       });
       html += '</select></div>';
       
-      html += '<div><label>Codigo Postal</label><input type="text" id="editCP" value="' + (cliente['Codigo Postal'] || '') + '" maxlength="5"></div>';
+      html += '<div><label>Codigo Postal</label><input type="text" id="editCP" value="' + obtenerDato(cliente, 'Código Postal') + '" maxlength="5"></div>';
       html += '<div style="grid-column: span 2;"><label>Uso de CFDI</label><select id="editUsoCFDI">';
       html += '<option value="">Seleccione...</option>';
       
       const usosCFDI = ['G01 - Adquisicion de mercancias', 'G02 - Devoluciones, descuentos o bonificaciones', 'G03 - Gastos en general', 'I01 - Construcciones', 'I02 - Mobilario y equipo de oficina', 'I03 - Equipo de transporte', 'I04 - Equipo de computo y accesorios', 'I05 - Dados, troqueles, moldes, matrices y herramental', 'I06 - Comunicaciones telefonicas', 'I07 - Comunicaciones satelitales', 'I08 - Otra maquinaria y equipo', 'P01 - Por definir'];
       
+      const usoCliente = obtenerDato(cliente, 'Uso CFDI');
       usosCFDI.forEach(function(u) {
-        const selected = cliente['Uso CFDI'] === u ? 'selected' : '';
+        const selected = usoCliente === u ? 'selected' : '';
         html += '<option value="' + u + '" ' + selected + '>' + u + '</option>';
       });
       html += '</select></div>';
@@ -1884,21 +1900,23 @@
       html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
       html += '<div><label>Forma de Pago</label><select id="editFormaPago">';
       html += '<option value="">Seleccione...</option>';
+      const formaCliente = obtenerDato(cliente, 'Forma de Pago');
       ['01 - Efectivo', '02 - Cheque nominativo', '03 - Transferencia electronica de fondos', '04 - Tarjeta de credito', '05 - Monedero electronico', '06 - Dinero electronico', '28 - Tarjeta de debito', '99 - Por definir'].forEach(function(f) {
-        const selected = cliente['Forma de Pago'] === f ? 'selected' : '';
+        const selected = formaCliente === f ? 'selected' : '';
         html += '<option value="' + f + '" ' + selected + '>' + f + '</option>';
       });
       html += '</select></div>';
       
       html += '<div><label>Metodo de Pago</label><select id="editMetodoPago">';
       html += '<option value="">Seleccione...</option>';
+      const metodoCliente = obtenerDato(cliente, 'Método de Pago');
       ['PUE - Pago en una sola exhibicion', 'PPD - Pago en parcialidades o diferido'].forEach(function(m) {
-        const selected = cliente['Metodo de Pago'] === m ? 'selected' : '';
+        const selected = metodoCliente === m ? 'selected' : '';
         html += '<option value="' + m + '" ' + selected + '>' + m + '</option>';
       });
       html += '</select></div>';
       
-      html += '<div style="grid-column: span 2;"><label>Correo Electronico</label><input type="email" id="editCorreo" value="' + (cliente['Correo Electronico'] || '') + '"></div>';
+      html += '<div style="grid-column: span 2;"><label>Correo Electronico</label><input type="email" id="editCorreo" value="' + obtenerDato(cliente, 'Correo Electrónico') + '"></div>';
       html += '</div></div>';
     }
     
@@ -1906,22 +1924,22 @@
     html += '<h3>Datos de Contacto</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Facturacion</label></div>';
-    html += '<div><label>Numero</label><input type="text" id="editFactNumero" value="' + (cliente['Facturacion Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
-    html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + (cliente['Facturacion Correo'] || '') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + (cliente['Facturacion WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Numero</label><input type="text" id="editFactNumero" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + obtenerDato(cliente, 'Facturacion Correo') + '"></div>';
+    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + obtenerDato(cliente, 'Facturacion WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
     html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
-    html += '<div><label>Numero</label><input type="text" id="editCppNumero" value="' + (cliente['CuentasPorPagar Numero'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
-    html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + (cliente['CuentasPorPagar Correo'] || '') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Numero</label><input type="text" id="editCppNumero" value="' + obtenerDato(cliente, 'CuentasPorPagar Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + obtenerDato(cliente, 'CuentasPorPagar Correo') + '"></div>';
+    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + obtenerDato(cliente, 'CuentasPorPagar WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '</div></div>';
     
     html += '<div class="seccion-form">';
     html += '<h3>Status</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Status</label><select id="editStatus">';
-    html += '<option value="ACTIVO" ' + (cliente['Status'] === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
-    html += '<option value="INACTIVO" ' + (cliente['Status'] === 'INACTIVO' ? 'selected' : '') + '>Inactivo</option>';
+    html += '<option value="ACTIVO" ' + (obtenerDato(cliente, 'Status') === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
+    html += '<option value="INACTIVO" ' + (obtenerDato(cliente, 'Status') === 'INACTIVO' ? 'selected' : '') + '>Inactivo</option>';
     html += '</select></div>';
     html += '</div></div>';
     
@@ -1939,12 +1957,12 @@
       return;
     }
     
-    const rfc = clienteActualEditando['RFC'];
+    const rfc = obtenerDato(clienteActualEditando, 'RFC');
     const btn = document.getElementById('btnGuardarActualizacion');
     btn.disabled = true;
     btn.textContent = 'Guardando...';
     
-    const tipo = clienteActualEditando['Tipo'] || 'Persona Fisica';
+    const tipo = obtenerDato(clienteActualEditando, 'Tipo') || 'Persona Física';
     const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
     
     const datos = {
@@ -1961,12 +1979,12 @@
     };
     
     if (!esSinRFC) {
-      datos['Regimen Fiscal'] = document.getElementById('editRegimen').value;
-      datos['Codigo Postal'] = document.getElementById('editCP').value.trim();
+      datos['Régimen Fiscal'] = document.getElementById('editRegimen').value;
+      datos['Código Postal'] = document.getElementById('editCP').value.trim();
       datos['Uso CFDI'] = document.getElementById('editUsoCFDI').value;
       datos['Forma de Pago'] = document.getElementById('editFormaPago').value;
-      datos['Metodo de Pago'] = document.getElementById('editMetodoPago').value;
-      datos['Correo Electronico'] = document.getElementById('editCorreo').value.trim().toLowerCase();
+      datos['Método de Pago'] = document.getElementById('editMetodoPago').value;
+      datos['Correo Electrónico'] = document.getElementById('editCorreo').value.trim().toLowerCase();
       
       if (tipo === 'Persona Moral') {
         datos['Representante Legal'] = document.getElementById('editRepresentante').value.trim();
@@ -2001,16 +2019,16 @@
     }
     
     const cliente = clienteActualEditando;
-    const rfc = cliente['RFC'];
-    const tipo = cliente['Tipo'];
+    const rfc = obtenerDato(cliente, 'RFC');
+    const tipo = obtenerDato(cliente, 'Tipo');
     const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
     
     const lugarFecha = document.getElementById('editLugarFecha').value.trim();
     
-    ultimoIDGenerado = cliente['ID Cliente'];
+    ultimoIDGenerado = obtenerDato(cliente, 'ID Cliente');
     
     if (esSinRFC) {
-      const nombre = cliente['Nombre/Razon Social'] || cliente['Nombre'] || '';
+      const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
       const telefono = document.getElementById('editFactNumero').value.trim();
       const correo = document.getElementById('editFactCorreo').value.trim();
       const whatsapp = document.getElementById('editFactWhatsApp').value.trim();
@@ -2035,8 +2053,8 @@
       cerrarModalEditarDatos();
       window.scrollTo(0, 0);
       
-    } else if (tipo === 'Persona Fisica') {
-      const nombre = cliente['Nombre/Razon Social'] || cliente['Nombre'] || '';
+    } else if (tipo === 'Persona Física') {
+      const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
       const regimen = document.getElementById('editRegimen').value;
       const cp = document.getElementById('editCP').value.trim();
       const usoCFDI = document.getElementById('editUsoCFDI').value;
@@ -2074,8 +2092,8 @@
       window.scrollTo(0, 0);
       
     } else {
-      const razonSocial = cliente['Nombre/Razon Social'] || '';
-      const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : (cliente['Representante Legal'] || '');
+      const razonSocial = obtenerDato(cliente, 'Nombre/Razón Social');
+      const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : obtenerDato(cliente, 'Representante Legal');
       const regimen = document.getElementById('editRegimen').value;
       const cp = document.getElementById('editCP').value.trim();
       const usoCFDI = document.getElementById('editUsoCFDI').value;
@@ -2432,7 +2450,7 @@
     btnGuardar.textContent = 'Guardando...';
     const datos = {
       action: 'guardar',
-      tipo: 'sinrfc', // CORREGIDO: Debe ser 'sinrfc' en minúsculas para que el Apps Script lo reconozca
+      tipo: 'sinrfc',
       idCliente: idCliente,
       rfc: 'SIN_RFC_' + idCliente,
       nombre: nombre,
