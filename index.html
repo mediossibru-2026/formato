@@ -1567,15 +1567,12 @@
           document.getElementById('docModalId').textContent = identificador;
         }
         
-        // Determinar que documentos mostrar segun el tipo
         let docs = [];
         const esSinRFC = (tipo === 'Sin RFC' || identificador.startsWith('SIN_RFC_'));
         
         if (esSinRFC) {
-          // Solo 3 documentos para Sin RFC
           docs = [...this.documentosSinRFC];
         } else {
-          // Documentos completos para Fisica/Moral
           docs = [...this.documentosRequeridos];
           if (tipo === 'Persona Moral') {
             docs.push({ id: 'acta', label: 'Acta constitutiva' });
@@ -1826,7 +1823,6 @@
     
     let html = '';
     
-    // Campos no editables
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
     html += '<h3>Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
@@ -1836,14 +1832,12 @@
     html += '<div><label>' + (tipo === 'Persona Fisica' ? 'Nombre' : 'Razon Social') + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
     html += '</div></div>';
     
-    // Datos editables - Fecha siempre visible
     html += '<div class="seccion-form">';
     html += '<h3>Datos editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     
     html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + (cliente['Lugar y Fecha'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
-    // Solo mostrar campos fiscales si NO es Sin RFC
     if (!esSinRFC) {
       if (tipo === 'Persona Moral') {
         html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + (cliente['Representante Legal'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
@@ -1884,7 +1878,6 @@
     
     html += '</div></div>';
     
-    // Datos de Facturacion - SOLO si NO es Sin RFC
     if (!esSinRFC) {
       html += '<div class="seccion-form">';
       html += '<h3>Datos de Facturacion</h3>';
@@ -1909,7 +1902,6 @@
       html += '</div></div>';
     }
     
-    // Datos de Contacto - SIEMPRE visible (para todos los tipos)
     html += '<div class="seccion-form">';
     html += '<h3>Datos de Contacto</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
@@ -1924,7 +1916,6 @@
     html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + (cliente['CuentasPorPagar WhatsApp'] || '') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '</div></div>';
     
-    // Status
     html += '<div class="seccion-form">';
     html += '<h3>Status</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
@@ -1969,7 +1960,6 @@
       'CuentasPorPagar WhatsApp': document.getElementById('editCppWhatsApp').value.trim()
     };
     
-    // Solo agregar campos fiscales si NO es Sin RFC
     if (!esSinRFC) {
       datos['Regimen Fiscal'] = document.getElementById('editRegimen').value;
       datos['Codigo Postal'] = document.getElementById('editCP').value.trim();
@@ -2020,7 +2010,6 @@
     ultimoIDGenerado = cliente['ID Cliente'];
     
     if (esSinRFC) {
-      // Generar Alta Sin RFC
       const nombre = cliente['Nombre/Razon Social'] || cliente['Nombre'] || '';
       const telefono = document.getElementById('editFactNumero').value.trim();
       const correo = document.getElementById('editFactCorreo').value.trim();
@@ -2085,7 +2074,6 @@
       window.scrollTo(0, 0);
       
     } else {
-      // Persona Moral
       const razonSocial = cliente['Nombre/Razon Social'] || '';
       const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : (cliente['Representante Legal'] || '');
       const regimen = document.getElementById('editRegimen').value;
@@ -2420,7 +2408,7 @@
   }
 
   // ==========================================
-  // GUARDAR CLIENTE SIN RFC - TIPO "Sin RFC"
+  // GUARDAR CLIENTE SIN RFC
   // ==========================================
   async function guardarClienteSinRFC() {
     const btnGuardar = document.getElementById('btnGuardarSinRFC');
@@ -2444,7 +2432,7 @@
     btnGuardar.textContent = 'Guardando...';
     const datos = {
       action: 'guardar',
-      tipo: 'Sin RFC',
+      tipo: 'sinrfc', // CORREGIDO: Debe ser 'sinrfc' en minúsculas para que el Apps Script lo reconozca
       idCliente: idCliente,
       rfc: 'SIN_RFC_' + idCliente,
       nombre: nombre,
