@@ -178,6 +178,12 @@
     background: #fff5f5;
   }
 
+  input[disabled] {
+    background-color: #e9ecef;
+    color: #495057;
+    cursor: not-allowed;
+  }
+
   .mensaje-error {
     color: var(--rojo-sibru);
     font-size: 0.8rem;
@@ -601,8 +607,8 @@
       Persona Moral
     </label>
     <label class="opcion-tipo">
-      <input type="radio" name="tipoPersona" value="sinrfc" onchange="cambiarTipoPersona()">
-      Sin RFC
+      <input type="radio" name="tipoPersona" value="sinfactura" onchange="cambiarTipoPersona()">
+      Sin Factura
     </label>
   </div>
 
@@ -611,8 +617,8 @@
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Fecha:</label>
-      <input type="text" id="fisicaLugarFecha" placeholder="Fecha automatica" oninput="this.value = this.value.toUpperCase()">
-      <label>Nombre PARA FACTURAR:</label>
+      <input type="text" id="fisicaLugarFecha" placeholder="Fecha automatica" disabled>
+      <label>Nombre Comercial:</label>
       <input type="text" id="fisicaNombre" placeholder="Ej. Juan Perez Garcia" required oninput="this.value = this.value.toUpperCase()">
       <label>RFC (13 caracteres):</label>
       <input type="text" id="fisicaRFC" placeholder="Ej. PEGJ800101HDFRRL09" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); validarRFCFisica();" required>
@@ -683,17 +689,17 @@
 
     <div class="seccion-form">
       <h3>Datos de Contacto</h3>
-      <label>Facturacion - Numero:</label>
+      <label>Contacto de Facturacion Telefono Local:</label>
       <input type="tel" id="fisicaFactNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Facturacion - Correo:</label>
+      <label>Correo de Facturacion:</label>
       <input type="email" id="fisicaFactCorreo" placeholder="facturacion@empresa.com">
-      <label>Facturacion - WhatsApp:</label>
+      <label>WhatsApp de Facturacion:</label>
       <input type="tel" id="fisicaFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label style="margin-top: 15px;">Cuentas por Pagar - Numero:</label>
+      <label style="margin-top: 15px;">Cuentas por Pagar - Contacto Local:</label>
       <input type="tel" id="fisicaCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Cuentas por Pagar - Correo:</label>
+      <label>Correo de Cuentas por Pagar:</label>
       <input type="email" id="fisicaCppCorreo" placeholder="cuentasporpagar@empresa.com">
-      <label>Cuentas por Pagar - WhatsApp:</label>
+      <label>WhatsApp de Cuentas por Pagar:</label>
       <input type="tel" id="fisicaCppWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
     </div>
 
@@ -712,10 +718,10 @@
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Fecha:</label>
-      <input type="text" id="moralLugarFecha" placeholder="Fecha automatica" oninput="this.value = this.value.toUpperCase()">
+      <input type="text" id="moralLugarFecha" placeholder="Fecha automatica" disabled>
       <label>Nombre del Representante Legal:</label>
       <input type="text" id="moralRepresentante" placeholder="Ej. Juan Perez Garcia" required oninput="this.value = this.value.toUpperCase()">
-      <label>Razon Social:</label>
+      <label>Nombre Comercial:</label>
       <input type="text" id="moralRazonSocial" placeholder="Ej. EMPRESA SA DE CV" required oninput="this.value = this.value.toUpperCase()">
       <label>RFC (12 caracteres):</label>
       <input type="text" id="moralRFC" placeholder="Ej. EMP800101ABC" maxlength="12" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); validarRFCMoral();" required>
@@ -785,17 +791,17 @@
 
     <div class="seccion-form">
       <h3>Datos de Contacto</h3>
-      <label>Facturacion - Numero:</label>
+      <label>Contacto de Facturacion Telefono Local:</label>
       <input type="tel" id="moralFactNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Facturacion - Correo:</label>
+      <label>Correo de Facturacion:</label>
       <input type="email" id="moralFactCorreo" placeholder="facturacion@empresa.com">
-      <label>Facturacion - WhatsApp:</label>
+      <label>WhatsApp de Facturacion:</label>
       <input type="tel" id="moralFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label style="margin-top: 15px;">Cuentas por Pagar - Numero:</label>
+      <label style="margin-top: 15px;">Cuentas por Pagar - Contacto Local:</label>
       <input type="tel" id="moralCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Cuentas por Pagar - Correo:</label>
+      <label>Correo de Cuentas por Pagar:</label>
       <input type="email" id="moralCppCorreo" placeholder="cuentasporpagar@empresa.com">
-      <label>Cuentas por Pagar - WhatsApp:</label>
+      <label>WhatsApp de Cuentas por Pagar:</label>
       <input type="tel" id="moralCppWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
     </div>
 
@@ -809,48 +815,35 @@
     <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
   </div>
 
-  <!-- FORMULARIO SIN RFC -->
-  <div class="formulario-tipo" id="formSinRFC">
+  <!-- FORMULARIO SIN FACTURA -->
+  <div class="formulario-tipo" id="formSinFactura">
     <div class="seccion-form">
       <h3>Datos Generales</h3>
       <label>Fecha:</label>
-      <input type="text" id="sinrfcLugarFecha" placeholder="Fecha automatica" oninput="this.value = this.value.toUpperCase()">
-      <label>Nombre / Razon Social:</label>
-      <input type="text" id="sinrfcNombre" placeholder="Ej. Juan Perez Garcia o EMPRESA SA DE CV" required oninput="this.value = this.value.toUpperCase()">
+      <input type="text" id="sinfacturaLugarFecha" placeholder="Fecha automatica" disabled>
+      <label>Nombre Comercial:</label>
+      <input type="text" id="sinfacturaNombre" placeholder="Ej. Juan Perez Garcia o EMPRESA SA DE CV" required oninput="this.value = this.value.toUpperCase()">
     </div>
 
     <div class="seccion-form">
       <h3>Datos de Contacto</h3>
-      <label>Facturacion - Numero:</label>
-      <input type="tel" id="sinrfcFactNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Facturacion - Correo:</label>
-      <input type="email" id="sinrfcFactCorreo" placeholder="facturacion@empresa.com" onblur="validarEmailSinRFC()">
-      <div class="mensaje-error" id="errorSinRFCEmail">Formato de correo electronico invalido.</div>
-      <label>Facturacion - WhatsApp:</label>
-      <input type="tel" id="sinrfcFactWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      
-      <label style="margin-top: 15px;">Cuentas por Pagar - Numero:</label>
-      <input type="tel" id="sinrfcCppNumero" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-      <label>Cuentas por Pagar - Correo:</label>
-      <input type="email" id="sinrfcCppCorreo" placeholder="cuentasporpagar@empresa.com">
-      <label>Cuentas por Pagar - WhatsApp:</label>
-      <input type="tel" id="sinrfcCppWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
-    </div>
-
-    <div class="seccion-form">
-      <h3>Notas Adicionales</h3>
-      <label>Observaciones:</label>
-      <input type="text" id="sinrfcNotas" placeholder="Notas adicionales (opcional)" oninput="this.value = this.value.toUpperCase()">
+      <label>Contacto Local:</label>
+      <input type="tel" id="sinfacturaContactoLocal" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
+      <label>Mail:</label>
+      <input type="email" id="sinfacturaMail" placeholder="contacto@empresa.com" onblur="validarEmailSinFactura()">
+      <div class="mensaje-error" id="errorSinFacturaEmail">Formato de correo electronico invalido.</div>
+      <label>WhatsApp:</label>
+      <input type="tel" id="sinfacturaWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
     </div>
 
     <div class="botones">
       <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
       <div class="botones-derecha">
-        <button class="btn-generar oculto" id="btnGenerarSinRFC" onclick="generarDocumentoSinRFC()">Generar Alta</button>
-        <button class="btn-guardar" id="btnGuardarSinRFC" onclick="guardarClienteSinRFC()">Guardar Cliente</button>
+        <button class="btn-generar oculto" id="btnGenerarSinFactura" onclick="generarDocumentoSinFactura()">Generar Alta</button>
+        <button class="btn-guardar" id="btnGuardarSinFactura" onclick="guardarClienteSinFactura()">Guardar Cliente</button>
       </div>
     </div>
-    <div class="mensaje-guardado" id="mensajeGuardadoSinRFC"></div>
+    <div class="mensaje-guardado" id="mensajeGuardadoSinFactura"></div>
   </div>
 </div>
 
@@ -1063,7 +1056,7 @@
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
-        <tr><td class="label">Nombre a facturar</td><td class="valor" id="aFisicaNombre"></td></tr>
+        <tr><td class="label">Nombre Comercial</td><td class="valor" id="aFisicaNombre"></td></tr>
         <tr><td class="label">RFC</td><td class="valor" id="aFisicaRFC"></td></tr>
         <tr><td class="label">Regimen Fiscal</td><td class="valor" id="aFisicaRegimen"></td></tr>
         <tr><td class="label">Codigo Postal</td><td class="valor" id="aFisicaCP"></td></tr>
@@ -1147,7 +1140,7 @@
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos Fiscales</div>
       <table class="tabla-alta">
-        <tr><td class="label">Razon Social</td><td class="valor" id="aMoralRazonSocial"></td></tr>
+        <tr><td class="label">Nombre Comercial</td><td class="valor" id="aMoralRazonSocial"></td></tr>
         <tr><td class="label">RFC</td><td class="valor" id="aMoralRFC"></td></tr>
         <tr><td class="label">Regimen Fiscal</td><td class="valor" id="aMoralRegimen"></td></tr>
         <tr><td class="label">Codigo Postal</td><td class="valor" id="aMoralCP"></td></tr>
@@ -1198,8 +1191,8 @@
   </div>
 </div>
 
-<!-- ALTA DE CLIENTE SIN RFC -->
-<div class="hoja-documento" id="docAltaSinRFC">
+<!-- ALTA DE CLIENTE SIN FACTURA -->
+<div class="hoja-documento" id="docAltaSinFactura">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
   <div class="botones-doc-top no-print">
     <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
@@ -1216,7 +1209,7 @@
       </div>
       <div class="header-alta-cliente">
         <strong>ALTA DE CLIENTE</strong>
-        <span>N° DE CLIENTE: <span id="aSinRFCID"></span></span>
+        <span>N° DE CLIENTE: <span id="aSinFacturaID"></span></span>
       </div>
     </div>
 
@@ -1230,17 +1223,10 @@
     <div class="seccion-alta">
       <div class="seccion-alta-titulo verde">Datos del Cliente</div>
       <table class="tabla-alta">
-        <tr><td class="label">Nombre / Razon Social</td><td class="valor" id="aSinRFCNombre"></td></tr>
-        <tr><td class="label">Telefono</td><td class="valor" id="aSinRFCTelefono"></td></tr>
-        <tr><td class="label">Correo Electronico</td><td class="valor" id="aSinRFCCorreo"></td></tr>
-        <tr><td class="label">WhatsApp</td><td class="valor" id="aSinRFCWhatsApp"></td></tr>
-      </table>
-    </div>
-
-    <div class="seccion-alta">
-      <div class="seccion-alta-titulo">Observaciones</div>
-      <table class="tabla-alta">
-        <tr><td class="label">Notas</td><td class="valor" id="aSinRFCNotas"></td></tr>
+        <tr><td class="label">Nombre Comercial</td><td class="valor" id="aSinFacturaNombre"></td></tr>
+        <tr><td class="label">Contacto Local</td><td class="valor" id="aSinFacturaContacto"></td></tr>
+        <tr><td class="label">Mail</td><td class="valor" id="aSinFacturaMail"></td></tr>
+        <tr><td class="label">WhatsApp</td><td class="valor" id="aSinFacturaWhatsApp"></td></tr>
       </table>
     </div>
 
@@ -1248,7 +1234,7 @@
       <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
       <div class="referencia-pagos">
         <div class="ref-titulo">Este es tu numero de referencia</div>
-        <div class="ref-numero" id="aSinRFCReferencia"></div>
+        <div class="ref-numero" id="aSinFacturaReferencia"></div>
         <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu numero de factura para la correcta aplicacion de tus pagos.</div>
       </div>
     </div>
@@ -1270,7 +1256,7 @@
     <div class="firmas-alta">
       <div class="firma-alta-box">
         <div class="firma-alta-linea"></div>
-        <div class="firma-alta-nombre" id="aSinRFCFirmaCliente"></div>
+        <div class="firma-alta-nombre" id="aSinFacturaFirmaCliente"></div>
         <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
       </div>
       <div class="firma-alta-box">
@@ -1320,10 +1306,10 @@
 
   function aplicarFechaHoy() {
     const fecha = obtenerFechaHoy();
-    const campos = ['fisicaLugarFecha', 'moralLugarFecha', 'sinrfcLugarFecha'];
+    const campos = ['fisicaLugarFecha', 'moralLugarFecha', 'sinfacturaLugarFecha'];
     campos.forEach(function(id) {
       const campo = document.getElementById(id);
-      if (campo && !campo.value.trim()) {
+      if (campo) {
         campo.value = fecha;
       }
     });
@@ -1556,7 +1542,7 @@
       { id: 'alta', label: 'Alta de cliente' },
       { id: 'manifestacion', label: 'Manifestacion escrita' }
     ],
-    documentosSinRFC: [
+    documentosSinFactura: [
       { id: 'comprobante', label: 'Comprobante de domicilio' },
       { id: 'alta', label: 'Alta de cliente' },
       { id: 'identificacion', label: 'Identificacion oficial' }
@@ -1581,10 +1567,10 @@
         }
         
         let docs = [];
-        const esSinRFC = (tipo === 'Sin RFC' || identificador.startsWith('SIN_RFC_'));
+        const esSinFactura = (tipo === 'Sin Factura' || identificador.startsWith('SIN_FACTURA_'));
         
-        if (esSinRFC) {
-          docs = [...this.documentosSinRFC];
+        if (esSinFactura) {
+          docs = [...this.documentosSinFactura];
         } else {
           docs = [...this.documentosRequeridos];
           if (tipo === 'Persona Moral') {
@@ -1710,10 +1696,10 @@
 
     actualizarBotonGuardar: function() {
       try {
-        const esSinRFC = (this.tipo === 'Sin RFC' || this.rfc.startsWith('SIN_RFC_'));
-        const docs = esSinRFC ? [...this.documentosSinRFC] : [...this.documentosRequeridos];
+        const esSinFactura = (this.tipo === 'Sin Factura' || this.rfc.startsWith('SIN_FACTURA_'));
+        const docs = esSinFactura ? [...this.documentosSinFactura] : [...this.documentosRequeridos];
         
-        if (!esSinRFC && this.tipo === 'Persona Moral') {
+        if (!esSinFactura && this.tipo === 'Persona Moral') {
           docs.push({ id: 'acta', label: 'Acta constitutiva' });
           docs.push({ id: 'poder', label: 'Poder Notarial' });
         }
@@ -1729,10 +1715,10 @@
     },
     
     guardarDocumentos: function() {
-      const esSinRFC = (this.tipo === 'Sin RFC' || this.rfc.startsWith('SIN_RFC_'));
-      const docs = esSinRFC ? [...this.documentosSinRFC] : [...this.documentosRequeridos];
+      const esSinFactura = (this.tipo === 'Sin Factura' || this.rfc.startsWith('SIN_FACTURA_'));
+      const docs = esSinFactura ? [...this.documentosSinFactura] : [...this.documentosRequeridos];
       
-      if (!esSinRFC && this.tipo === 'Persona Moral') {
+      if (!esSinFactura && this.tipo === 'Persona Moral') {
         docs.push({ id: 'acta', label: 'Acta constitutiva' });
         docs.push({ id: 'poder', label: 'Poder Notarial' });
       }
@@ -1826,7 +1812,7 @@
     const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
     const tipo = obtenerDato(cliente, 'Tipo') || 'Persona Física';
     const idCliente = obtenerDato(cliente, 'ID Cliente') || 'N/A';
-    const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
+    const esSinFactura = (tipo === 'Sin Factura' || rfc.startsWith('SIN_FACTURA_'));
     
     document.getElementById('editarModalRfc').textContent = rfc;
     document.getElementById('editarModalNombre').textContent = nombre;
@@ -1842,8 +1828,7 @@
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
     html += '<div><label>RFC</label><input type="text" value="' + rfc + '" disabled style="background:#eee;"></div>';
-    const etiquetaNombre = esSinRFC ? 'Nombre / Razon Social' : (tipo === 'Persona Física' ? 'Nombre' : 'Razon Social');
-    html += '<div><label>' + etiquetaNombre + '</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
+    html += '<div><label>Nombre Comercial</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
     html += '</div></div>';
     
     html += '<div class="seccion-form">';
@@ -1852,7 +1837,7 @@
     
     html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + obtenerDato(cliente, 'Lugar y Fecha') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
-    if (!esSinRFC) {
+    if (!esSinFactura) {
       if (tipo === 'Persona Moral') {
         html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + obtenerDato(cliente, 'Representante Legal') + '" oninput="this.value = this.value.toUpperCase()"></div>';
       }
@@ -1894,7 +1879,7 @@
     
     html += '</div></div>';
     
-    if (!esSinRFC) {
+    if (!esSinFactura) {
       html += '<div class="seccion-form">';
       html += '<h3>Datos de Facturacion</h3>';
       html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
@@ -1923,15 +1908,17 @@
     html += '<div class="seccion-form">';
     html += '<h3>Datos de Contacto</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
-    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Facturacion</label></div>';
-    html += '<div><label>Numero</label><input type="text" id="editFactNumero" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Contacto de Facturacion</label></div>';
+    html += '<div><label>Telefono Local</label><input type="text" id="editFactNumero" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + obtenerDato(cliente, 'Facturacion Correo') + '"></div>';
     html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + obtenerDato(cliente, 'Facturacion WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     
-    html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
-    html += '<div><label>Numero</label><input type="text" id="editCppNumero" value="' + obtenerDato(cliente, 'CuentasPorPagar Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
-    html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + obtenerDato(cliente, 'CuentasPorPagar Correo') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + obtenerDato(cliente, 'CuentasPorPagar WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    if (!esSinFactura) {
+      html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
+      html += '<div><label>Telefono Local</label><input type="text" id="editCppNumero" value="' + obtenerDato(cliente, 'CuentasPorPagar Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+      html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + obtenerDato(cliente, 'CuentasPorPagar Correo') + '"></div>';
+      html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + obtenerDato(cliente, 'CuentasPorPagar WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    }
     html += '</div></div>';
     
     html += '<div class="seccion-form">';
@@ -1963,7 +1950,7 @@
     btn.textContent = 'Guardando...';
     
     const tipo = obtenerDato(clienteActualEditando, 'Tipo') || 'Persona Física';
-    const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
+    const esSinFactura = (tipo === 'Sin Factura' || rfc.startsWith('SIN_FACTURA_'));
     
     const datos = {
       action: 'actualizarCliente',
@@ -1978,7 +1965,7 @@
       'CuentasPorPagar WhatsApp': document.getElementById('editCppWhatsApp').value.trim()
     };
     
-    if (!esSinRFC) {
+    if (!esSinFactura) {
       datos['Régimen Fiscal'] = document.getElementById('editRegimen').value;
       datos['Código Postal'] = document.getElementById('editCP').value.trim();
       datos['Uso CFDI'] = document.getElementById('editUsoCFDI').value;
@@ -2021,34 +2008,33 @@
     const cliente = clienteActualEditando;
     const rfc = obtenerDato(cliente, 'RFC');
     const tipo = obtenerDato(cliente, 'Tipo');
-    const esSinRFC = (tipo === 'Sin RFC' || rfc.startsWith('SIN_RFC_'));
+    const esSinFactura = (tipo === 'Sin Factura' || rfc.startsWith('SIN_FACTURA_'));
     
     const lugarFecha = document.getElementById('editLugarFecha').value.trim();
     
     ultimoIDGenerado = obtenerDato(cliente, 'ID Cliente');
     
-    if (esSinRFC) {
+    if (esSinFactura) {
       const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
-      const telefono = document.getElementById('editFactNumero').value.trim();
-      const correo = document.getElementById('editFactCorreo').value.trim();
+      const contacto = document.getElementById('editFactNumero').value.trim();
+      const mail = document.getElementById('editFactCorreo').value.trim();
       const whatsapp = document.getElementById('editFactWhatsApp').value.trim();
       
       if (!lugarFecha || !nombre) { 
-        alert('Para generar documentos se requiere: Fecha y Nombre'); 
+        alert('Para generar documentos se requiere: Fecha y Nombre Comercial'); 
         return; 
       }
       
-      document.getElementById('aSinRFCID').textContent = ultimoIDGenerado;
-      document.getElementById('aSinRFCReferencia').textContent = ultimoIDGenerado;
-      document.getElementById('aSinRFCNombre').textContent = nombre;
-      document.getElementById('aSinRFCTelefono').textContent = telefono || 'N/A';
-      document.getElementById('aSinRFCCorreo').textContent = correo || 'N/A';
-      document.getElementById('aSinRFCWhatsApp').textContent = whatsapp || 'N/A';
-      document.getElementById('aSinRFCNotas').textContent = 'Sin observaciones';
-      document.getElementById('aSinRFCFirmaCliente').textContent = nombre;
+      document.getElementById('aSinFacturaID').textContent = ultimoIDGenerado;
+      document.getElementById('aSinFacturaReferencia').textContent = ultimoIDGenerado;
+      document.getElementById('aSinFacturaNombre').textContent = nombre;
+      document.getElementById('aSinFacturaContacto').textContent = contacto || 'N/A';
+      document.getElementById('aSinFacturaMail').textContent = mail || 'N/A';
+      document.getElementById('aSinFacturaWhatsApp').textContent = whatsapp || 'N/A';
+      document.getElementById('aSinFacturaFirmaCliente').textContent = nombre;
       
       document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
-      document.getElementById('docAltaSinRFC').classList.add('activo');
+      document.getElementById('docAltaSinFactura').classList.add('activo');
       document.getElementById('formulario').style.display = 'none';
       cerrarModalEditarDatos();
       window.scrollTo(0, 0);
@@ -2063,7 +2049,7 @@
       const correo = document.getElementById('editCorreo').value.trim();
       
       if (!lugarFecha || !nombre || !rfc) { 
-        alert('Para generar documentos se requiere: Fecha, Nombre y RFC'); 
+        alert('Para generar documentos se requiere: Fecha, Nombre Comercial y RFC'); 
         return; 
       }
       
@@ -2102,7 +2088,7 @@
       const correo = document.getElementById('editCorreo').value.trim();
       
       if (!lugarFecha || !representante || !razonSocial || !rfc) { 
-        alert('Para generar documentos se requiere: Fecha, Representante, Razon Social y RFC'); 
+        alert('Para generar documentos se requiere: Fecha, Representante, Nombre Comercial y RFC'); 
         return; 
       }
       
@@ -2183,14 +2169,14 @@
     }
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-    document.getElementById('formSinRFC').classList.remove('activo');
+    document.getElementById('formSinFactura').classList.remove('activo');
     
     if (tipoSeleccionado === 'fisica') {
       document.getElementById('formFisica').classList.add('activo');
     } else if (tipoSeleccionado === 'moral') {
       document.getElementById('formMoral').classList.add('activo');
-    } else if (tipoSeleccionado === 'sinrfc') {
-      document.getElementById('formSinRFC').classList.add('activo');
+    } else if (tipoSeleccionado === 'sinfactura') {
+      document.getElementById('formSinFactura').classList.add('activo');
     }
     aplicarFechaHoy();
   }
@@ -2255,9 +2241,9 @@
     }
   }
 
-  function validarEmailSinRFC() {
-    const input = document.getElementById('sinrfcFactCorreo');
-    const error = document.getElementById('errorSinRFCEmail');
+  function validarEmailSinFactura() {
+    const input = document.getElementById('sinfacturaMail');
+    const error = document.getElementById('errorSinFacturaEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
     if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
@@ -2286,7 +2272,7 @@
     const btnGuardar = document.getElementById('btnGuardarFisica');
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
     const nombre = document.getElementById('fisicaNombre').value.trim();
-    if (!rfc || !nombre) { alert('Por favor, complete al menos el RFC y el Nombre.'); return; }
+    if (!rfc || !nombre) { alert('Por favor, complete al menos el RFC y el Nombre Comercial.'); return; }
     if (rfc.length !== 13) { alert('El RFC debe tener exactamente 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
@@ -2358,7 +2344,7 @@
     const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
     const razonSocial = document.getElementById('moralRazonSocial').value.trim();
     const representante = document.getElementById('moralRepresentante').value.trim();
-    if (!rfc || !razonSocial || !representante) { alert('Por favor, complete al menos el RFC, Razon Social y Representante.'); return; }
+    if (!rfc || !razonSocial || !representante) { alert('Por favor, complete al menos el RFC, Nombre Comercial y Representante.'); return; }
     if (rfc.length !== 12) { alert('El RFC debe tener exactamente 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
@@ -2426,14 +2412,14 @@
   }
 
   // ==========================================
-  // GUARDAR CLIENTE SIN RFC
+  // GUARDAR CLIENTE SIN FACTURA
   // ==========================================
-  async function guardarClienteSinRFC() {
-    const btnGuardar = document.getElementById('btnGuardarSinRFC');
-    const nombre = document.getElementById('sinrfcNombre').value.trim();
+  async function guardarClienteSinFactura() {
+    const btnGuardar = document.getElementById('btnGuardarSinFactura');
+    const nombre = document.getElementById('sinfacturaNombre').value.trim();
     
-    if (!nombre) { alert('Por favor, ingresa el Nombre o Razon Social.'); return; }
-    if (!validarEmailSinRFC()) { alert('El correo electronico no tiene un formato valido.'); return; }
+    if (!nombre) { alert('Por favor, ingresa el Nombre Comercial.'); return; }
+    if (!validarEmailSinFactura()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
     btnGuardar.disabled = true;
     btnGuardar.textContent = 'Obteniendo ID...';
@@ -2450,23 +2436,23 @@
     btnGuardar.textContent = 'Guardando...';
     const datos = {
       action: 'guardar',
-      tipo: 'sinrfc',
+      tipo: 'sinfactura',
       idCliente: idCliente,
-      rfc: 'SIN_RFC_' + idCliente,
+      rfc: 'SIN_FACTURA_' + idCliente,
       nombre: nombre,
-      lugarFecha: document.getElementById('sinrfcLugarFecha').value.trim(),
+      lugarFecha: document.getElementById('sinfacturaLugarFecha').value.trim(),
       regimen: '',
       cp: '',
       usoCFDI: '',
       formaPago: '99 - Por definir',
       metodoPago: 'PUE - Pago en una sola exhibicion',
-      correo: document.getElementById('sinrfcFactCorreo').value.trim().toLowerCase(),
-      factNumero: document.getElementById('sinrfcFactNumero').value.trim(),
-      factCorreo: document.getElementById('sinrfcFactCorreo').value.trim().toLowerCase(),
-      factWhatsApp: document.getElementById('sinrfcFactWhatsApp').value.trim(),
-      cppNumero: document.getElementById('sinrfcCppNumero').value.trim(),
-      cppCorreo: document.getElementById('sinrfcCppCorreo').value.trim().toLowerCase(),
-      cppWhatsApp: document.getElementById('sinrfcCppWhatsApp').value.trim(),
+      correo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(),
+      factNumero: document.getElementById('sinfacturaContactoLocal').value.trim(),
+      factCorreo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(),
+      factWhatsApp: document.getElementById('sinfacturaWhatsApp').value.trim(),
+      cppNumero: '',
+      cppCorreo: '',
+      cppWhatsApp: '',
       fechaGuardado: new Date().toISOString()
     };
 
@@ -2474,10 +2460,10 @@
       const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
       const result = await response.json();
       if (result.result === 'success') {
-        const mensajeDiv = document.getElementById('mensajeGuardadoSinRFC');
+        const mensajeDiv = document.getElementById('mensajeGuardadoSinFactura');
         mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
         mensajeDiv.classList.add('visible');
-        document.getElementById('btnGenerarSinRFC').classList.remove('oculto');
+        document.getElementById('btnGenerarSinFactura').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
         setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
       } else {
@@ -2561,31 +2547,29 @@
     window.scrollTo(0, 0);
   }
 
-  function generarDocumentoSinRFC() {
-    const lugarFecha = document.getElementById('sinrfcLugarFecha').value.trim();
-    const nombre = document.getElementById('sinrfcNombre').value.trim();
-    const telefono = document.getElementById('sinrfcFactNumero').value.trim();
-    const correo = document.getElementById('sinrfcFactCorreo').value.trim();
-    const whatsapp = document.getElementById('sinrfcFactWhatsApp').value.trim();
-    const notas = document.getElementById('sinrfcNotas').value.trim();
+  function generarDocumentoSinFactura() {
+    const lugarFecha = document.getElementById('sinfacturaLugarFecha').value.trim();
+    const nombre = document.getElementById('sinfacturaNombre').value.trim();
+    const contacto = document.getElementById('sinfacturaContactoLocal').value.trim();
+    const mail = document.getElementById('sinfacturaMail').value.trim();
+    const whatsapp = document.getElementById('sinfacturaWhatsApp').value.trim();
 
     if (!lugarFecha || !nombre) { 
-      alert('Por favor, complete Fecha y Nombre.'); 
+      alert('Por favor, complete Fecha y Nombre Comercial.'); 
       return; 
     }
 
     const idMostrar = ultimoIDGenerado || '__________';
-    document.getElementById('aSinRFCID').textContent = idMostrar;
-    document.getElementById('aSinRFCReferencia').textContent = idMostrar;
-    document.getElementById('aSinRFCNombre').textContent = nombre;
-    document.getElementById('aSinRFCTelefono').textContent = telefono || 'N/A';
-    document.getElementById('aSinRFCCorreo').textContent = correo || 'N/A';
-    document.getElementById('aSinRFCWhatsApp').textContent = whatsapp || 'N/A';
-    document.getElementById('aSinRFCNotas').textContent = notas || 'Sin observaciones';
-    document.getElementById('aSinRFCFirmaCliente').textContent = nombre;
+    document.getElementById('aSinFacturaID').textContent = idMostrar;
+    document.getElementById('aSinFacturaReferencia').textContent = idMostrar;
+    document.getElementById('aSinFacturaNombre').textContent = nombre;
+    document.getElementById('aSinFacturaContacto').textContent = contacto || 'N/A';
+    document.getElementById('aSinFacturaMail').textContent = mail || 'N/A';
+    document.getElementById('aSinFacturaWhatsApp').textContent = whatsapp || 'N/A';
+    document.getElementById('aSinFacturaFirmaCliente').textContent = nombre;
 
     document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
-    document.getElementById('docAltaSinRFC').classList.add('activo');
+    document.getElementById('docAltaSinFactura').classList.add('activo');
     document.getElementById('formulario').style.display = 'none';
     window.scrollTo(0, 0);
   }
@@ -2599,19 +2583,22 @@
   }
 
   function borrarFormulario() {
-    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(function(input) { input.value = ''; });
+    document.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]').forEach(function(input) { 
+      if (!input.disabled) input.value = ''; 
+    });
     document.querySelectorAll('select').forEach(function(select) { select.selectedIndex = 0; });
     document.querySelectorAll('.error, .mensaje-error.visible, .mensaje-guardado.visible').forEach(function(el) { el.classList.remove('error', 'visible'); });
     document.getElementsByName('tipoPersona').forEach(function(radio) { radio.checked = false; });
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
-    document.getElementById('formSinRFC').classList.remove('activo');
+    document.getElementById('formSinFactura').classList.remove('activo');
     document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
-    document.getElementById('btnGenerarSinRFC').classList.add('oculto');
+    document.getElementById('btnGenerarSinFactura').classList.add('oculto');
     document.getElementById('formulario').style.display = 'block';
     tipoSeleccionado = null;
+    aplicarFechaHoy();
     window.scrollTo(0, 0);
   }
 
