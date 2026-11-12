@@ -33,6 +33,7 @@
     --gris-claro: #f5f5f5;
     --azul-accion: #1976D2;
     --naranja-accion: #FF9800;
+    --morado-accion: #9C27B0;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -100,12 +101,13 @@
 
   .selector-tipo {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
     margin-bottom: 25px;
     padding: 15px;
     background: var(--gris-claro);
     border-radius: 6px;
+    flex-wrap: wrap;
   }
 
   .opcion-tipo {
@@ -574,8 +576,13 @@
       <input type="radio" name="tipoPersona" value="moral" onchange="cambiarTipoPersona()">
       Persona Moral
     </label>
+    <label class="opcion-tipo">
+      <input type="radio" name="tipoPersona" value="sinrfc" onchange="cambiarTipoPersona()">
+      Sin RFC
+    </label>
   </div>
 
+  <!-- FORMULARIO PERSONA FÍSICA -->
   <div class="formulario-tipo" id="formFisica">
     <div class="seccion-form">
       <h3>Datos Generales</h3>
@@ -676,6 +683,7 @@
     <div class="mensaje-guardado" id="mensajeGuardadoFisica"></div>
   </div>
 
+  <!-- FORMULARIO PERSONA MORAL -->
   <div class="formulario-tipo" id="formMoral">
     <div class="seccion-form">
       <h3>Datos Generales</h3>
@@ -776,6 +784,49 @@
     </div>
     <div class="mensaje-guardado" id="mensajeGuardadoMoral"></div>
   </div>
+
+  <!-- FORMULARIO SIN RFC -->
+  <div class="formulario-tipo" id="formSinRFC">
+    <div class="seccion-form">
+      <h3>Datos Generales</h3>
+      <label>Fecha:</label>
+      <input type="text" id="sinrfcLugarFecha" placeholder="Fecha automática" oninput="this.value = this.value.toUpperCase()">
+      <label>Nombre / Razón Social:</label>
+      <input type="text" id="sinrfcNombre" placeholder="Ej. Juan Pérez García o EMPRESA SA DE CV" required oninput="this.value = this.value.toUpperCase()">
+      <label>Tipo de Cliente:</label>
+      <select id="sinrfcTipoCliente">
+        <option value="">Seleccione...</option>
+        <option value="Persona Física">Persona Física</option>
+        <option value="Persona Moral">Persona Moral</option>
+      </select>
+    </div>
+
+    <div class="seccion-form">
+      <h3>Datos de Contacto</h3>
+      <label>Correo Electrónico:</label>
+      <input type="email" id="sinrfcCorreo" placeholder="Ej. correo@ejemplo.com" onblur="validarEmailSinRFC()">
+      <div class="mensaje-error" id="errorSinRFCEmail">Formato de correo electrónico inválido.</div>
+      <label>Teléfono / Número:</label>
+      <input type="tel" id="sinrfcTelefono" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
+      <label>WhatsApp:</label>
+      <input type="tel" id="sinrfcWhatsApp" placeholder="Ej. 55 1234 5678" oninput="this.value = this.value.toUpperCase()">
+    </div>
+
+    <div class="seccion-form">
+      <h3>Notas Adicionales</h3>
+      <label>Observaciones:</label>
+      <input type="text" id="sinrfcNotas" placeholder="Notas adicionales (opcional)" oninput="this.value = this.value.toUpperCase()">
+    </div>
+
+    <div class="botones">
+      <button class="btn-borrar" onclick="borrarFormulario()">Borrar Formulario</button>
+      <div class="botones-derecha">
+        <button class="btn-generar oculto" id="btnGenerarSinRFC" onclick="generarDocumentoSinRFC()">📄 Generar Alta</button>
+        <button class="btn-guardar" id="btnGuardarSinRFC" onclick="guardarClienteSinRFC()">Guardar Cliente</button>
+      </div>
+    </div>
+    <div class="mensaje-guardado" id="mensajeGuardadoSinRFC"></div>
+  </div>
 </div>
 
 <!-- MODAL RFC YA EXISTE -->
@@ -855,7 +906,7 @@
     </div>
     <div>
       <div class="rfc-busqueda-container" id="containerDocsRFC">
-        <label style="font-size: 0.95rem;"> RFC del cliente (obligatorio) *</label>
+        <label style="font-size: 0.95rem;">🔍 RFC del cliente (obligatorio) *</label>
         <input type="text" id="buscarRFCRFC" placeholder="Ingresa el RFC (12 o 13 caracteres)" maxlength="13" style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase(); buscarRFCEnTiempoReal('documentos')">
         <div class="rfc-resultado" id="resultadoDocsRFC"></div>
       </div>
@@ -874,8 +925,9 @@
       <div>
         <h2>Subir Documentación</h2>
         <p style="font-size: 0.9rem; color: var(--gris-texto); margin-top: 5px;">
-          <strong>RFC:</strong> <span id="docModalRfc"></span> | 
           <strong>Cliente:</strong> <span id="docModalNombre"></span>
+          <br>
+          <strong id="docModalIdLabel">ID:</strong> <span id="docModalId"></span>
         </p>
       </div>
       <button class="modal-close" onclick="DocsManager.cerrarModal()">&times;</button>
@@ -890,7 +942,7 @@
   </div>
 </div>
 
-<!-- DOCUMENTOS DE SALIDA (se mantienen igual) -->
+<!-- DOCUMENTOS DE SALIDA -->
 <div class="hoja-documento" id="docManifestacionFisica">
   <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
   <div class="botones-doc-top no-print">
@@ -1113,6 +1165,91 @@
   </div>
 </div>
 
+<!-- ALTA DE CLIENTE SIN RFC -->
+<div class="hoja-documento" id="docAltaSinRFC">
+  <div class="barras-superiores"><div class="barra-verde"></div><div class="barra-naranja"></div></div>
+  <div class="botones-doc-top no-print">
+    <button class="btn-imprimir" onclick="imprimirDocumentos()">Imprimir / Guardar como PDF</button>
+    <button class="btn-editar" onclick="editarDocumentos()">Editar Datos</button>
+  </div>
+  <div class="contenido-documento">
+    <div class="header-alta">
+      <div class="header-alta-logo">
+        <img src="logo.png" alt="Grupo SIBRÜ">
+        <div class="header-alta-info">
+          <h2>GRUPO SIBRÜ</h2>
+          <p>ISRAEL SILVA ZAMORA</p>
+        </div>
+      </div>
+      <div class="header-alta-cliente">
+        <strong>ALTA DE CLIENTE</strong>
+        <span>N° DE CLIENTE: <span id="aSinRFCID"></span></span>
+      </div>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Documentación (Uso exclusivo GRUPO SIBRÜ)</div>
+      <div class="checkbox-doc"><input type="checkbox"> Identificación oficial</div>
+      <div class="checkbox-doc"><input type="checkbox"> Comprobante domicilio</div>
+      <div class="checkbox-doc"><input type="checkbox"> Otro documento</div>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos del Cliente</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Nombre / Razón Social</td><td class="valor" id="aSinRFCNombre"></td></tr>
+        <tr><td class="label">Tipo de Cliente</td><td class="valor" id="aSinRFCTipo"></td></tr>
+        <tr><td class="label">Teléfono</td><td class="valor" id="aSinRFCTelefono"></td></tr>
+        <tr><td class="label">Correo Electrónico</td><td class="valor" id="aSinRFCCorreo"></td></tr>
+        <tr><td class="label">WhatsApp</td><td class="valor" id="aSinRFCWhatsApp"></td></tr>
+      </table>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo">Observaciones</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Notas</td><td class="valor" id="aSinRFCNotas"></td></tr>
+      </table>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Referencia de Pagos</div>
+      <div class="referencia-pagos">
+        <div class="ref-titulo">Este es tu número de referencia</div>
+        <div class="ref-numero" id="aSinRFCReferencia"></div>
+        <div class="ref-mensaje">En tus operaciones bancarias te solicitamos colocar esta referencia junto con tu número de factura para la correcta aplicación de tus pagos.</div>
+      </div>
+    </div>
+
+    <div class="seccion-alta">
+      <div class="seccion-alta-titulo verde">Datos Crédito (Uso exclusivo GRUPO SIBRÜ)</div>
+      <table class="tabla-alta">
+        <tr><td class="label">Línea crédito</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Días crédito</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Autorizado por</td><td class="valor vacio"></td></tr>
+        <tr><td class="label">Fecha</td><td class="valor vacio"></td></tr>
+      </table>
+    </div>
+
+    <div class="declaracion-alta">
+      <strong>DECLARACIÓN:</strong> El cliente declara que la información es verídica y actual.
+    </div>
+
+    <div class="firmas-alta">
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre" id="aSinRFCFirmaCliente"></div>
+        <div class="firma-alta-titulo">NOMBRE Y FIRMA DEL CLIENTE</div>
+      </div>
+      <div class="firma-alta-box">
+        <div class="firma-alta-linea"></div>
+        <div class="firma-alta-nombre">&nbsp;</div>
+        <div class="firma-alta-titulo">NOMBRE DEL VENDEDOR</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
   const SHEET_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby82BiPZHGH_g3y5ABQWtCOLylcg0O_JUjCwEcT-uUmCfz_tz6tK9Mjv_MNm8jd-P3b/exec';
   let tipoSeleccionado = null;
@@ -1136,15 +1273,13 @@
 
   function aplicarFechaHoy() {
     const fecha = obtenerFechaHoy();
-    const campoFisica = document.getElementById('fisicaLugarFecha');
-    const campoMoral = document.getElementById('moralLugarFecha');
-    
-    if (campoFisica && !campoFisica.value.trim()) {
-      campoFisica.value = fecha;
-    }
-    if (campoMoral && !campoMoral.value.trim()) {
-      campoMoral.value = fecha;
-    }
+    const campos = ['fisicaLugarFecha', 'moralLugarFecha', 'sinrfcLugarFecha'];
+    campos.forEach(function(id) {
+      const campo = document.getElementById(id);
+      if (campo && !campo.value.trim()) {
+        campo.value = fecha;
+      }
+    });
   }
 
   // ==========================================
@@ -1274,8 +1409,9 @@
         this.tipo = tipo;
         this.documentosSeleccionados = {};
         
-        document.getElementById('docModalRfc').textContent = rfc;
         document.getElementById('docModalNombre').textContent = nombre;
+        document.getElementById('docModalIdLabel').textContent = 'RFC:';
+        document.getElementById('docModalId').textContent = rfc;
         
         const docs = [];
         this.documentosRequeridos.forEach(function(d) { docs.push(d); });
@@ -1310,7 +1446,7 @@
           const btnSubir = document.createElement('button');
           btnSubir.type = 'button';
           btnSubir.className = 'btn-subir-archivo';
-          btnSubir.textContent = ' Subir PDF';
+          btnSubir.textContent = '📎 Subir PDF';
           btnSubir.onclick = function() {
             document.getElementById('file_' + doc.id).click();
           };
@@ -1334,6 +1470,76 @@
         
       } catch (error) {
         console.error('Error en iniciarModal:', error);
+        alert('Error al cargar el formulario de documentos: ' + error.message);
+      }
+    },
+    
+    iniciarModalSinRFC: function(idCliente, nombre) {
+      try {
+        this.rfc = 'SIN_RFC_' + idCliente;
+        this.nombre = nombre;
+        this.tipo = 'Sin RFC';
+        this.documentosSeleccionados = {};
+        
+        document.getElementById('docModalNombre').textContent = nombre;
+        document.getElementById('docModalIdLabel').textContent = 'ID:';
+        document.getElementById('docModalId').textContent = idCliente;
+        
+        const docs = [
+          { id: 'identificacion', label: 'Identificación oficial' },
+          { id: 'comprobante', label: 'Comprobante de domicilio' }
+        ];
+        
+        const contenedor = document.getElementById('listaDocumentosRequeridos');
+        contenedor.innerHTML = '';
+        
+        docs.forEach(function(doc) {
+          const div = document.createElement('div');
+          div.className = 'doc-item';
+          
+          const label = document.createElement('span');
+          label.className = 'doc-label';
+          label.textContent = doc.label;
+          
+          const actions = document.createElement('div');
+          actions.className = 'doc-actions';
+          
+          const fileInput = document.createElement('input');
+          fileInput.type = 'file';
+          fileInput.id = 'file_' + doc.id;
+          fileInput.accept = '.pdf';
+          fileInput.style.display = 'none';
+          fileInput.onchange = function() {
+            DocsManager.seleccionarArchivo(doc.id, doc.label);
+          };
+          
+          const btnSubir = document.createElement('button');
+          btnSubir.type = 'button';
+          btnSubir.className = 'btn-subir-archivo';
+          btnSubir.textContent = '📎 Subir PDF';
+          btnSubir.onclick = function() {
+            document.getElementById('file_' + doc.id).click();
+          };
+          
+          const status = document.createElement('span');
+          status.className = 'doc-status pendiente';
+          status.id = 'status_' + doc.id;
+          status.textContent = 'Pendiente';
+          
+          actions.appendChild(fileInput);
+          actions.appendChild(btnSubir);
+          actions.appendChild(status);
+          
+          div.appendChild(label);
+          div.appendChild(actions);
+          contenedor.appendChild(div);
+        });
+        
+        this.actualizarBotonGuardar();
+        document.getElementById('modalDocumentos').classList.add('activo');
+        
+      } catch (error) {
+        console.error('Error en iniciarModalSinRFC:', error);
         alert('Error al cargar el formulario de documentos: ' + error.message);
       }
     },
@@ -1476,7 +1682,6 @@
           renderizarFormularioEditar(clienteEncontrado);
           document.getElementById('modalBuscarRFCActualizar').classList.remove('activo');
           document.getElementById('modalEditarDatos').classList.add('activo');
-          // Aplicar fecha automática al modal de edición
           setTimeout(function() {
             aplicarFechaHoyEnModalEditar();
           }, 100);
@@ -1512,7 +1717,7 @@
     let html = '';
     
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
-    html += '<h3> Campos no editables</h3>';
+    html += '<h3>🔒 Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
@@ -1807,10 +2012,14 @@
     }
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
+    document.getElementById('formSinRFC').classList.remove('activo');
+    
     if (tipoSeleccionado === 'fisica') {
       document.getElementById('formFisica').classList.add('activo');
     } else if (tipoSeleccionado === 'moral') {
       document.getElementById('formMoral').classList.add('activo');
+    } else if (tipoSeleccionado === 'sinrfc') {
+      document.getElementById('formSinRFC').classList.add('activo');
     }
     aplicarFechaHoy();
   }
@@ -1862,6 +2071,22 @@
   function validarEmailMoral() {
     const input = document.getElementById('moralCorreo');
     const error = document.getElementById('errorMoralEmail');
+    const valor = input.value.trim().toLowerCase();
+    input.value = valor;
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
+      input.classList.add('error');
+      error.classList.add('visible');
+      return false;
+    } else {
+      input.classList.remove('error');
+      error.classList.remove('visible');
+      return true;
+    }
+  }
+
+  function validarEmailSinRFC() {
+    const input = document.getElementById('sinrfcCorreo');
+    const error = document.getElementById('errorSinRFCEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
     if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
@@ -2029,6 +2254,74 @@
     }
   }
 
+  // ==========================================
+  // GUARDAR CLIENTE SIN RFC
+  // ==========================================
+  async function guardarClienteSinRFC() {
+    const btnGuardar = document.getElementById('btnGuardarSinRFC');
+    const nombre = document.getElementById('sinrfcNombre').value.trim();
+    const tipoCliente = document.getElementById('sinrfcTipoCliente').value;
+    
+    if (!nombre) { alert('Por favor, ingresa el Nombre o Razón Social.'); return; }
+    if (!tipoCliente) { alert('Por favor, selecciona el Tipo de Cliente.'); return; }
+    if (!validarEmailSinRFC()) { alert('El correo electrónico no tiene un formato válido.'); return; }
+
+    btnGuardar.disabled = true;
+    btnGuardar.textContent = 'Obteniendo ID...';
+
+    let idCliente = null;
+    try {
+      idCliente = await obtenerNuevoID();
+      if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
+    } catch (error) {
+      alert('Error al obtener ID: ' + error.message);
+      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
+    }
+
+    btnGuardar.textContent = 'Guardando...';
+    const datos = {
+      action: 'guardar',
+      tipo: 'sinrfc',
+      idCliente: idCliente,
+      rfc: 'SIN_RFC_' + idCliente,
+      nombre: nombre,
+      lugarFecha: document.getElementById('sinrfcLugarFecha').value.trim(),
+      regimen: '',
+      cp: '',
+      usoCFDI: '',
+      formaPago: '99 - Por definir',
+      metodoPago: 'PUE - Pago en una sola exhibición',
+      correo: document.getElementById('sinrfcCorreo').value.trim().toLowerCase(),
+      factNumero: document.getElementById('sinrfcTelefono').value.trim(),
+      factCorreo: document.getElementById('sinrfcCorreo').value.trim().toLowerCase(),
+      factWhatsApp: document.getElementById('sinrfcWhatsApp').value.trim(),
+      cppNumero: '',
+      cppCorreo: '',
+      cppWhatsApp: '',
+      fechaGuardado: new Date().toISOString()
+    };
+
+    try {
+      const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
+      const result = await response.json();
+      if (result.result === 'success') {
+        const mensajeDiv = document.getElementById('mensajeGuardadoSinRFC');
+        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
+        mensajeDiv.classList.add('visible');
+        document.getElementById('btnGenerarSinRFC').classList.remove('oculto');
+        ultimoIDGenerado = idCliente;
+        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
+      } else {
+        alert('Error al guardar: ' + result.message);
+      }
+    } catch (error) {
+      alert('Error de conexión: ' + error.message);
+    } finally {
+      btnGuardar.disabled = false;
+      btnGuardar.textContent = 'Guardar Cliente';
+    }
+  }
+
   function generarDocumentosFisica() {
     const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
     const nombre = document.getElementById('fisicaNombre').value.trim();
@@ -2099,6 +2392,37 @@
     window.scrollTo(0, 0);
   }
 
+  function generarDocumentoSinRFC() {
+    const lugarFecha = document.getElementById('sinrfcLugarFecha').value.trim();
+    const nombre = document.getElementById('sinrfcNombre').value.trim();
+    const tipoCliente = document.getElementById('sinrfcTipoCliente').value;
+    const telefono = document.getElementById('sinrfcTelefono').value.trim();
+    const correo = document.getElementById('sinrfcCorreo').value.trim();
+    const whatsapp = document.getElementById('sinrfcWhatsApp').value.trim();
+    const notas = document.getElementById('sinrfcNotas').value.trim();
+
+    if (!lugarFecha || !nombre || !tipoCliente) { 
+      alert('Por favor, complete Fecha, Nombre y Tipo de Cliente.'); 
+      return; 
+    }
+
+    const idMostrar = ultimoIDGenerado || '__________';
+    document.getElementById('aSinRFCID').textContent = idMostrar;
+    document.getElementById('aSinRFCReferencia').textContent = idMostrar;
+    document.getElementById('aSinRFCNombre').textContent = nombre;
+    document.getElementById('aSinRFCTipo').textContent = tipoCliente;
+    document.getElementById('aSinRFCTelefono').textContent = telefono || 'N/A';
+    document.getElementById('aSinRFCCorreo').textContent = correo || 'N/A';
+    document.getElementById('aSinRFCWhatsApp').textContent = whatsapp || 'N/A';
+    document.getElementById('aSinRFCNotas').textContent = notas || 'Sin observaciones';
+    document.getElementById('aSinRFCFirmaCliente').textContent = nombre;
+
+    document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
+    document.getElementById('docAltaSinRFC').classList.add('activo');
+    document.getElementById('formulario').style.display = 'none';
+    window.scrollTo(0, 0);
+  }
+
   function imprimirDocumentos() { window.print(); }
   
   function editarDocumentos() {
@@ -2114,9 +2438,11 @@
     document.getElementsByName('tipoPersona').forEach(function(radio) { radio.checked = false; });
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
+    document.getElementById('formSinRFC').classList.remove('activo');
     document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
     document.getElementById('btnGenerarFisica').classList.add('oculto');
     document.getElementById('btnGenerarMoral').classList.add('oculto');
+    document.getElementById('btnGenerarSinRFC').classList.add('oculto');
     document.getElementById('formulario').style.display = 'block';
     tipoSeleccionado = null;
     window.scrollTo(0, 0);
