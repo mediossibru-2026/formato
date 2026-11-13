@@ -1278,9 +1278,6 @@
   let modoBusquedaActualizar = 'rfc';
   let modoBusquedaDocs = 'rfc';
 
-  // ==========================================
-  // OBTENER DATO (TOLERA ACENTOS)
-  // ==========================================
   function obtenerDato(cliente, clave) {
     if (cliente[clave] !== undefined && cliente[clave] !== null) return cliente[clave];
     const norm = clave.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
@@ -1291,42 +1288,27 @@
     return '';
   }
 
-  // ==========================================
-  // FECHA AUTOMATICA EN ESPANOL
-  // ==========================================
   function obtenerFechaHoy() {
-    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
-                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+    const meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
     const hoy = new Date();
-    const dia = hoy.getDate();
-    const mes = meses[hoy.getMonth()];
-    const anio = hoy.getFullYear();
-    return dia + ' de ' + mes + ' de ' + anio;
+    return hoy.getDate() + ' de ' + meses[hoy.getMonth()] + ' de ' + hoy.getFullYear();
   }
 
   function aplicarFechaHoy() {
     const fecha = obtenerFechaHoy();
-    const campos = ['fisicaLugarFecha', 'moralLugarFecha', 'sinfacturaLugarFecha'];
-    campos.forEach(function(id) {
+    ['fisicaLugarFecha', 'moralLugarFecha', 'sinfacturaLugarFecha'].forEach(function(id) {
       const campo = document.getElementById(id);
-      if (campo) {
-        campo.value = fecha;
-      }
+      if (campo && !campo.value.trim()) campo.value = fecha;
     });
   }
 
-  // ==========================================
-  // CAMBIO DE MODO DE BUSQUEDA (RFC / ID)
-  // ==========================================
   function cambiarModoBusqueda(tipo, modo) {
     if (tipo === 'actualizar') {
       modoBusquedaActualizar = modo;
       document.getElementById('btnModoRFCActualizar').classList.toggle('activo', modo === 'rfc');
       document.getElementById('btnModoIDActualizar').classList.toggle('activo', modo === 'id');
-      
       const input = document.getElementById('buscarRFCActualizar');
       const label = document.getElementById('labelBuscarActualizar');
-      
       if (modo === 'id') {
         input.placeholder = 'Ingresa el ID (4 digitos)';
         input.maxLength = 4;
@@ -1338,21 +1320,17 @@
         input.style.textTransform = 'uppercase';
         label.textContent = 'RFC del cliente (obligatorio) *';
       }
-      
       input.value = '';
       document.getElementById('containerActualizarRFC').classList.remove('encontrado', 'no-encontrado');
       document.getElementById('resultadoActualizarRFC').classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
       document.getElementById('btnContinuarActualizar').disabled = true;
       rfcValidadoActualizar = null;
-      
     } else if (tipo === 'documentos') {
       modoBusquedaDocs = modo;
       document.getElementById('btnModoRFCDocs').classList.toggle('activo', modo === 'rfc');
       document.getElementById('btnModoIDDocs').classList.toggle('activo', modo === 'id');
-      
       const input = document.getElementById('buscarRFCRFC');
       const label = document.getElementById('labelBuscarDocs');
-      
       if (modo === 'id') {
         input.placeholder = 'Ingresa el ID (4 digitos)';
         input.maxLength = 4;
@@ -1364,7 +1342,6 @@
         input.style.textTransform = 'uppercase';
         label.textContent = 'RFC del cliente (obligatorio) *';
       }
-      
       input.value = '';
       document.getElementById('containerDocsRFC').classList.remove('encontrado', 'no-encontrado');
       document.getElementById('resultadoDocsRFC').classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
@@ -1373,9 +1350,6 @@
     }
   }
 
-  // ==========================================
-  // BUSQUEDA EN TIEMPO REAL (RFC O ID)
-  // ==========================================
   function buscarEnTiempoReal(tipo) {
     const modo = tipo === 'actualizar' ? modoBusquedaActualizar : modoBusquedaDocs;
     const inputId = tipo === 'actualizar' ? 'buscarRFCActualizar' : 'buscarRFCRFC';
@@ -1385,14 +1359,8 @@
     
     const input = document.getElementById(inputId);
     let valor = input.value.trim();
-    
-    if (modo === 'rfc') {
-      valor = valor.toUpperCase();
-      input.value = valor;
-    } else {
-      valor = valor.replace(/[^0-9]/g, '');
-      input.value = valor;
-    }
+    if (modo === 'rfc') { valor = valor.toUpperCase(); input.value = valor; } 
+    else { valor = valor.replace(/[^0-9]/g, ''); input.value = valor; }
     
     const resultadoEl = document.getElementById(resultadoId);
     const containerEl = document.getElementById(containerId);
@@ -1401,19 +1369,14 @@
     containerEl.classList.remove('encontrado', 'no-encontrado');
     resultadoEl.classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
     btnEl.disabled = true;
-    
-    if (tipo === 'actualizar') rfcValidadoActualizar = null;
-    else rfcValidadoDocs = null;
+    if (tipo === 'actualizar') rfcValidadoActualizar = null; else rfcValidadoDocs = null;
     
     if (modo === 'rfc') {
-      if (valor.length < 12) {
-        if (valor.length > 0) {
-          resultadoEl.innerHTML = '<span class="icono">i</span><span>El RFC debe tener 12 (Moral) o 13 (Fisica) caracteres. Llevas ' + valor.length + '.</span>';
-          resultadoEl.classList.add('visible', 'buscar');
-        }
+      if (valor.length > 0 && valor.length < 12) {
+        resultadoEl.innerHTML = '<span class="icono">i</span><span>El RFC debe tener 12 (Moral) o 13 (Fisica) caracteres. Llevas ' + valor.length + '.</span>';
+        resultadoEl.classList.add('visible', 'buscar');
         return;
       }
-      
       if (valor.length !== 12 && valor.length !== 13) {
         resultadoEl.innerHTML = '<span class="icono">!</span><span>Longitud invalida. Debe ser 12 o 13 caracteres.</span>';
         resultadoEl.classList.add('visible', 'no-encontrado');
@@ -1421,14 +1384,11 @@
         return;
       }
     } else {
-      if (valor.length < 4) {
-        if (valor.length > 0) {
-          resultadoEl.innerHTML = '<span class="icono">i</span><span>El ID debe tener 4 digitos. Llevas ' + valor.length + '.</span>';
-          resultadoEl.classList.add('visible', 'buscar');
-        }
+      if (valor.length > 0 && valor.length < 4) {
+        resultadoEl.innerHTML = '<span class="icono">i</span><span>El ID debe tener 4 digitos. Llevas ' + valor.length + '.</span>';
+        resultadoEl.classList.add('visible', 'buscar');
         return;
       }
-      
       if (valor.length !== 4) {
         resultadoEl.innerHTML = '<span class="icono">!</span><span>El ID debe tener exactamente 4 digitos.</span>';
         resultadoEl.classList.add('visible', 'no-encontrado');
@@ -1445,35 +1405,18 @@
       const action = modo === 'rfc' ? 'verificarRFC' : 'verificarPorID';
       const param = modo === 'rfc' ? { action: action, rfc: valor } : { action: action, idCliente: valor };
       
-      fetch(SHEET_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(param)
-      })
+      fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(param) })
       .then(function(res) { return res.json(); })
       .then(function(result) {
         if (result.result === 'success' && result.existe) {
-          const nombreCliente = result.nombre || 'Cliente';
-          const tipoCliente = result.tipo || '';
-          
-          resultadoEl.innerHTML = '<span class="icono">OK</span><span>Registrado: <span class="nombre-cliente">' + nombreCliente + '</span> (' + tipoCliente + ')</span>';
+          resultadoEl.innerHTML = '<span class="icono">OK</span><span>Registrado: <span class="nombre-cliente">' + (result.nombre || 'Cliente') + '</span> (' + (result.tipo || '') + ')</span>';
           resultadoEl.classList.add('visible', 'encontrado');
           containerEl.classList.add('encontrado');
           containerEl.classList.remove('no-encontrado');
           btnEl.disabled = false;
           
-          const datosValidados = { 
-            identificador: valor, 
-            nombre: nombreCliente, 
-            tipo: tipoCliente, 
-            id: result.idCliente,
-            modo: modo
-          };
-          
-          if (tipo === 'actualizar') {
-            rfcValidadoActualizar = datosValidados;
-          } else {
-            rfcValidadoDocs = datosValidados;
-          }
+          const datosValidados = { identificador: valor, nombre: result.nombre || 'Cliente', tipo: result.tipo || '', id: result.idCliente, modo: modo };
+          if (tipo === 'actualizar') rfcValidadoActualizar = datosValidados; else rfcValidadoDocs = datosValidados;
         } else {
           const tipoBusqueda = modo === 'rfc' ? 'RFC' : 'ID';
           resultadoEl.innerHTML = '<span class="icono">X</span><span>El ' + tipoBusqueda + ' <strong>' + valor + '</strong> no esta registrado. Usa el formulario de alta.</span>';
@@ -1492,27 +1435,15 @@
     }, 500);
   }
 
-  function buscarRFCEnTiempoReal(tipo) {
-    buscarEnTiempoReal(tipo);
-  }
-
   function continuarActualizar() {
-    if (!rfcValidadoActualizar) {
-      alert('Primero debes ingresar un RFC o ID valido y registrado');
-      return;
-    }
+    if (!rfcValidadoActualizar) { alert('Primero debes ingresar un RFC o ID valido y registrado'); return; }
     cargarDatosParaEditar(rfcValidadoActualizar);
   }
 
   function continuarDocumentos() {
-    if (!rfcValidadoDocs) {
-      alert('Primero debes ingresar un RFC o ID valido y registrado');
-      return;
-    }
-    
+    if (!rfcValidadoDocs) { alert('Primero debes ingresar un RFC o ID valido y registrado'); return; }
     try {
       document.getElementById('modalBuscarRFC').classList.remove('activo');
-      
       if (rfcValidadoDocs.modo === 'id') {
         DocsManager.iniciarModal('ID_' + rfcValidadoDocs.identificador, rfcValidadoDocs.nombre, rfcValidadoDocs.tipo, rfcValidadoDocs.id);
       } else {
@@ -1525,15 +1456,8 @@
     }
   }
 
-  // ==========================================
-  // DOCS MANAGER
-  // ==========================================
   const DocsManager = {
-    rfc: '',
-    nombre: '',
-    tipo: '',
-    idCliente: '',
-    documentosSeleccionados: {},
+    rfc: '', nombre: '', tipo: '', idCliente: '', documentosSeleccionados: {},
     documentosRequeridos: [
       { id: 'constancia', label: 'Constancia de Situacion Fiscal' },
       { id: 'opinion', label: 'Opinion de cumplimiento positiva' },
@@ -1550,14 +1474,8 @@
     
     iniciarModal: function(identificador, nombre, tipo, idCliente) {
       try {
-        this.rfc = identificador;
-        this.nombre = nombre;
-        this.tipo = tipo;
-        this.idCliente = idCliente || '';
-        this.documentosSeleccionados = {};
-        
+        this.rfc = identificador; this.nombre = nombre; this.tipo = tipo; this.idCliente = idCliente || ''; this.documentosSeleccionados = {};
         document.getElementById('docModalNombre').textContent = nombre;
-        
         if (identificador.startsWith('ID_')) {
           document.getElementById('docModalIdLabel').textContent = 'ID:';
           document.getElementById('docModalId').textContent = identificador.replace('ID_', '');
@@ -1568,7 +1486,6 @@
         
         let docs = [];
         const esSinFactura = (tipo === 'Sin Factura' || identificador.startsWith('SIN_FACTURA_'));
-        
         if (esSinFactura) {
           docs = [...this.documentosSinFactura];
         } else {
@@ -1581,52 +1498,19 @@
         
         const contenedor = document.getElementById('listaDocumentosRequeridos');
         contenedor.innerHTML = '';
-        
         docs.forEach(function(doc) {
           const div = document.createElement('div');
           div.className = 'doc-item';
-          
-          const label = document.createElement('span');
-          label.className = 'doc-label';
-          label.textContent = doc.label;
-          
-          const actions = document.createElement('div');
-          actions.className = 'doc-actions';
-          
-          const fileInput = document.createElement('input');
-          fileInput.type = 'file';
-          fileInput.id = 'file_' + doc.id;
-          fileInput.accept = '.pdf';
-          fileInput.style.display = 'none';
-          fileInput.onchange = function() {
-            DocsManager.seleccionarArchivo(doc.id, doc.label);
-          };
-          
-          const btnSubir = document.createElement('button');
-          btnSubir.type = 'button';
-          btnSubir.className = 'btn-subir-archivo';
-          btnSubir.textContent = 'Subir PDF';
-          btnSubir.onclick = function() {
-            document.getElementById('file_' + doc.id).click();
-          };
-          
-          const status = document.createElement('span');
-          status.className = 'doc-status pendiente';
-          status.id = 'status_' + doc.id;
-          status.textContent = 'Pendiente';
-          
-          actions.appendChild(fileInput);
-          actions.appendChild(btnSubir);
-          actions.appendChild(status);
-          
-          div.appendChild(label);
-          div.appendChild(actions);
+          div.innerHTML = '<span class="doc-label">' + doc.label + '</span>' +
+            '<div class="doc-actions">' +
+            '<input type="file" id="file_' + doc.id + '" accept=".pdf" style="display:none;" onchange="DocsManager.seleccionarArchivo(\'' + doc.id + '\', \'' + doc.label + '\')">' +
+            '<button type="button" class="btn-subir-archivo" onclick="document.getElementById(\'file_' + doc.id + '\').click()">Subir PDF</button>' +
+            '<span class="doc-status pendiente" id="status_' + doc.id + '">Pendiente</span>' +
+            '</div>';
           contenedor.appendChild(div);
         });
-        
         this.actualizarBotonGuardar();
         document.getElementById('modalDocumentos').classList.add('activo');
-        
       } catch (error) {
         console.error('Error en iniciarModal:', error);
         alert('Error al cargar el formulario de documentos: ' + error.message);
@@ -1637,45 +1521,30 @@
       try {
         const fileInput = document.getElementById('file_' + id);
         const file = fileInput.files[0];
-        if (!file) return;
-        if (file.type !== 'application/pdf') {
-          alert('Solo se aceptan archivos PDF');
-          fileInput.value = '';
-          return;
-        }
+        if (!file || file.type !== 'application/pdf') { alert('Solo se aceptan archivos PDF'); fileInput.value = ''; return; }
         
         const statusEl = document.getElementById('status_' + id);
-        statusEl.textContent = 'Subiendo...';
-        statusEl.className = 'doc-status subiendo';
-        
+        statusEl.textContent = 'Subiendo...'; statusEl.className = 'doc-status subiendo';
         const self = this;
-        this.archivoABase64(file).then(function(base64) {
+        
+        new Promise(function(resolve, reject) {
+          const reader = new FileReader();
+          reader.onload = function() { resolve(reader.result); };
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        }).then(function(base64) {
           return fetch(SHEET_SCRIPT_URL, {
             method: 'POST',
-            body: JSON.stringify({
-              action: 'subirDocumento',
-              rfc: self.rfc,
-              nombreArchivo: id + '_' + label.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf',
-              base64Data: base64,
-              mimeType: 'application/pdf'
-            })
+            body: JSON.stringify({ action: 'subirDocumento', rfc: self.rfc, nombreArchivo: id + '_' + label.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf', base64Data: base64, mimeType: 'application/pdf' })
           }).then(function(r) { return r.json(); });
         }).then(function(result) {
           if (result.result === 'success') {
-            self.documentosSeleccionados[id] = {
-              nombre: label,
-              archivoId: result.archivoId,
-              url: result.archivoUrl
-            };
-            statusEl.textContent = 'Subido';
-            statusEl.className = 'doc-status subido';
-          } else {
-            throw new Error(result.message || 'Error desconocido');
-          }
+            self.documentosSeleccionados[id] = { nombre: label, archivoId: result.archivoId, url: result.archivoUrl };
+            statusEl.textContent = 'Subido'; statusEl.className = 'doc-status subido';
+          } else { throw new Error(result.message || 'Error desconocido'); }
           self.actualizarBotonGuardar();
         }).catch(function(e) {
-          statusEl.textContent = 'Error';
-          statusEl.className = 'doc-status error';
+          statusEl.textContent = 'Error'; statusEl.className = 'doc-status error';
           alert('Error al subir: ' + e.message);
           self.actualizarBotonGuardar();
         });
@@ -1685,66 +1554,39 @@
       }
     },
 
-    archivoABase64: function(file) {
-      return new Promise(function(resolve, reject) {
-        const reader = new FileReader();
-        reader.onload = function() { resolve(reader.result); };
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-    },
-
     actualizarBotonGuardar: function() {
       try {
         const esSinFactura = (this.tipo === 'Sin Factura' || this.rfc.startsWith('SIN_FACTURA_'));
         const docs = esSinFactura ? [...this.documentosSinFactura] : [...this.documentosRequeridos];
-        
         if (!esSinFactura && this.tipo === 'Persona Moral') {
           docs.push({ id: 'acta', label: 'Acta constitutiva' });
           docs.push({ id: 'poder', label: 'Poder Notarial' });
         }
-        
         const self = this;
-        const todosMarcados = docs.every(function(doc) {
-          return self.documentosSeleccionados[doc.id];
-        });
-        document.getElementById('btnGuardarDocs').disabled = !todosMarcados;
-      } catch (error) {
-        console.error('Error en actualizarBotonGuardar:', error);
-      }
+        document.getElementById('btnGuardarDocs').disabled = !docs.every(function(doc) { return self.documentosSeleccionados[doc.id]; });
+      } catch (error) { console.error('Error en actualizarBotonGuardar:', error); }
     },
     
     guardarDocumentos: function() {
       const esSinFactura = (this.tipo === 'Sin Factura' || this.rfc.startsWith('SIN_FACTURA_'));
       const docs = esSinFactura ? [...this.documentosSinFactura] : [...this.documentosRequeridos];
-      
       if (!esSinFactura && this.tipo === 'Persona Moral') {
         docs.push({ id: 'acta', label: 'Acta constitutiva' });
         docs.push({ id: 'poder', label: 'Poder Notarial' });
       }
-      
       const self = this;
-      const faltantes = docs.filter(function(doc) {
-        return !self.documentosSeleccionados[doc.id];
-      });
-      
+      const faltantes = docs.filter(function(doc) { return !self.documentosSeleccionados[doc.id]; });
       if (faltantes.length > 0) {
         alert('Debes completar la documentacion para poder enviar.\n\nFaltan:\n- ' + faltantes.map(function(d) { return d.label; }).join('\n- '));
         return;
       }
-      
       alert('Documentacion guardada exitosamente en la carpeta de Drive del cliente.');
       this.cerrarModal();
     },
     
-    cerrarModal: function() {
-      document.getElementById('modalDocumentos').classList.remove('activo');
-    }
+    cerrarModal: function() { document.getElementById('modalDocumentos').classList.remove('activo'); }
   };
 
-  // ==========================================
-  // ACTUALIZAR DATOS
-  // ==========================================
   let clienteActualEditando = null;
 
   function abrirModalActualizarDatos() {
@@ -1752,8 +1594,7 @@
     document.getElementById('containerActualizarRFC').classList.remove('encontrado', 'no-encontrado');
     document.getElementById('resultadoActualizarRFC').classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
     document.getElementById('btnContinuarActualizar').disabled = true;
-    rfcValidadoActualizar = null;
-    modoBusquedaActualizar = 'rfc';
+    rfcValidadoActualizar = null; modoBusquedaActualizar = 'rfc';
     cambiarModoBusqueda('actualizar', 'rfc');
     document.getElementById('modalBuscarRFCActualizar').classList.add('activo');
     setTimeout(function() { document.getElementById('buscarRFCActualizar').focus(); }, 100);
@@ -1768,43 +1609,23 @@
     try {
       const response = await fetch(SHEET_SCRIPT_URL);
       const resultLista = await response.json();
-      
       if (resultLista.result === 'success') {
         let clienteEncontrado = null;
-        
         if (datosValidados.modo === 'id') {
-          clienteEncontrado = resultLista.data.find(function(c) { 
-            return String(obtenerDato(c, 'ID Cliente')) === String(datosValidados.identificador); 
-          });
+          clienteEncontrado = resultLista.data.find(function(c) { return String(obtenerDato(c, 'ID Cliente')) === String(datosValidados.identificador); });
         } else {
-          clienteEncontrado = resultLista.data.find(function(c) { 
-            return obtenerDato(c, 'RFC') === datosValidados.identificador; 
-          });
+          clienteEncontrado = resultLista.data.find(function(c) { return obtenerDato(c, 'RFC') === datosValidados.identificador; });
         }
-        
         if (clienteEncontrado) {
           clienteActualEditando = clienteEncontrado;
           renderizarFormularioEditar(clienteEncontrado);
           document.getElementById('modalBuscarRFCActualizar').classList.remove('activo');
           document.getElementById('modalEditarDatos').classList.add('activo');
-          setTimeout(function() {
-            aplicarFechaHoyEnModalEditar();
-          }, 100);
         } else {
           alert('No se pudieron cargar los datos del cliente');
         }
       }
-    } catch (error) {
-      alert('Error al cargar datos: ' + error.message);
-    }
-  }
-
-  function aplicarFechaHoyEnModalEditar() {
-    const fecha = obtenerFechaHoy();
-    const campoEditar = document.getElementById('editLugarFecha');
-    if (campoEditar && !campoEditar.value.trim()) {
-      campoEditar.value = fecha;
-    }
+    } catch (error) { alert('Error al cargar datos: ' + error.message); }
   }
 
   function renderizarFormularioEditar(cliente) {
@@ -1818,15 +1639,12 @@
     document.getElementById('editarModalNombre').textContent = nombre;
     document.getElementById('editarModalId').textContent = idCliente;
     
-    const form = document.getElementById('formEditarDatos');
-    
     let html = '';
-    
     html += '<div class="seccion-form" style="background: #f0f0f0; border-left-color: #999;">';
     html += '<h3>Campos no editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>ID Cliente</label><input type="text" value="' + idCliente + '" disabled style="background:#eee;"></div>';
-    html += '<div><label>Tipo de Persona</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
+    html += '<div><label>Tipo</label><input type="text" value="' + tipo + '" disabled style="background:#eee;"></div>';
     html += '<div><label>RFC</label><input type="text" value="' + rfc + '" disabled style="background:#eee;"></div>';
     html += '<div><label>Nombre Comercial</label><input type="text" value="' + nombre + '" disabled style="background:#eee;"></div>';
     html += '</div></div>';
@@ -1835,102 +1653,66 @@
     html += '<h3>Datos editables</h3>';
     html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     
-    html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + obtenerDato(cliente, 'Lugar y Fecha') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    // FECHA: Siempre hoy y bloqueada (disabled)
+    const fechaValor = obtenerDato(cliente, 'Lugar y Fecha') || obtenerFechaHoy();
+    html += '<div><label>Fecha</label><input type="text" id="editLugarFecha" value="' + fechaValor + '" disabled style="background:#eee;"></div>';
     
     if (!esSinFactura) {
       if (tipo === 'Persona Moral') {
         html += '<div style="grid-column: span 2;"><label>Representante Legal</label><input type="text" id="editRepresentante" value="' + obtenerDato(cliente, 'Representante Legal') + '" oninput="this.value = this.value.toUpperCase()"></div>';
       }
-      
-      html += '<div><label>Regimen Fiscal</label><select id="editRegimen">';
-      html += '<option value="">Seleccione...</option>';
-      
-      const regimenes = [
-        '601 - General de Ley Personas Morales', '603 - Personas Morales con Fines No Lucrativos',
-        '605 - Sueldos y Salarios', '606 - Arrendamiento', '608 - Demas ingresos',
-        '611 - Ingresos por Dividendos', '612 - Actividades Empresariales y Profesionales',
-        '614 - Ingresos por intereses', '616 - Sin obligaciones fiscales',
-        '620 - Sociedades Cooperativas', '621 - Incorporacion Fiscal',
-        '622 - Actividades Agricolas, Ganaderas, Silvicultoras y Pesqueras',
-        '623 - Opcional para Grupos de Sociedades', '624 - Coordinados',
-        '625 - Actividades con plataformas tecnologicas', '626 - RESICO', '628 - Hidrocarburos'
-      ];
-      
-      const regimenCliente = obtenerDato(cliente, 'Régimen Fiscal');
-      regimenes.forEach(function(r) {
-        const selected = regimenCliente === r ? 'selected' : '';
-        html += '<option value="' + r + '" ' + selected + '>' + r + '</option>';
+      html += '<div><label>Regimen Fiscal</label><select id="editRegimen"><option value="">Seleccione...</option>';
+      ['601 - General de Ley Personas Morales', '603 - Personas Morales con Fines No Lucrativos', '605 - Sueldos y Salarios', '606 - Arrendamiento', '608 - Demas ingresos', '611 - Ingresos por Dividendos', '612 - Actividades Empresariales y Profesionales', '614 - Ingresos por intereses', '616 - Sin obligaciones fiscales', '620 - Sociedades Cooperativas', '621 - Incorporacion Fiscal', '622 - Actividades Agricolas, Ganaderas, Silvicultoras y Pesqueras', '623 - Opcional para Grupos de Sociedades', '624 - Coordinados', '625 - Actividades con plataformas tecnologicas', '626 - RESICO', '628 - Hidrocarburos'].forEach(function(r) {
+        html += '<option value="' + r + '" ' + (obtenerDato(cliente, 'Régimen Fiscal') === r ? 'selected' : '') + '>' + r + '</option>';
       });
       html += '</select></div>';
-      
       html += '<div><label>Codigo Postal</label><input type="text" id="editCP" value="' + obtenerDato(cliente, 'Código Postal') + '" maxlength="5"></div>';
-      html += '<div style="grid-column: span 2;"><label>Uso de CFDI</label><select id="editUsoCFDI">';
-      html += '<option value="">Seleccione...</option>';
-      
-      const usosCFDI = ['G01 - Adquisicion de mercancias', 'G02 - Devoluciones, descuentos o bonificaciones', 'G03 - Gastos en general', 'I01 - Construcciones', 'I02 - Mobilario y equipo de oficina', 'I03 - Equipo de transporte', 'I04 - Equipo de computo y accesorios', 'I05 - Dados, troqueles, moldes, matrices y herramental', 'I06 - Comunicaciones telefonicas', 'I07 - Comunicaciones satelitales', 'I08 - Otra maquinaria y equipo', 'P01 - Por definir'];
-      
-      const usoCliente = obtenerDato(cliente, 'Uso CFDI');
-      usosCFDI.forEach(function(u) {
-        const selected = usoCliente === u ? 'selected' : '';
-        html += '<option value="' + u + '" ' + selected + '>' + u + '</option>';
+      html += '<div style="grid-column: span 2;"><label>Uso de CFDI</label><select id="editUsoCFDI"><option value="">Seleccione...</option>';
+      ['G01 - Adquisicion de mercancias', 'G02 - Devoluciones, descuentos o bonificaciones', 'G03 - Gastos en general', 'I01 - Construcciones', 'I02 - Mobilario y equipo de oficina', 'I03 - Equipo de transporte', 'I04 - Equipo de computo y accesorios', 'I05 - Dados, troqueles, moldes, matrices y herramental', 'I06 - Comunicaciones telefonicas', 'I07 - Comunicaciones satelitales', 'I08 - Otra maquinaria y equipo', 'P01 - Por definir'].forEach(function(u) {
+        html += '<option value="' + u + '" ' + (obtenerDato(cliente, 'Uso CFDI') === u ? 'selected' : '') + '>' + u + '</option>';
       });
-      html += '</select></div>';
-    }
-    
-    html += '</div></div>';
-    
-    if (!esSinFactura) {
-      html += '<div class="seccion-form">';
-      html += '<h3>Datos de Facturacion</h3>';
-      html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
-      html += '<div><label>Forma de Pago</label><select id="editFormaPago">';
-      html += '<option value="">Seleccione...</option>';
-      const formaCliente = obtenerDato(cliente, 'Forma de Pago');
+      html += '</select></div></div></div>'; // Cierre grid y seccion
+      
+      html += '<div class="seccion-form"><h3>Datos de Facturacion</h3><div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
+      html += '<div><label>Forma de Pago</label><select id="editFormaPago"><option value="">Seleccione...</option>';
       ['01 - Efectivo', '02 - Cheque nominativo', '03 - Transferencia electronica de fondos', '04 - Tarjeta de credito', '05 - Monedero electronico', '06 - Dinero electronico', '28 - Tarjeta de debito', '99 - Por definir'].forEach(function(f) {
-        const selected = formaCliente === f ? 'selected' : '';
-        html += '<option value="' + f + '" ' + selected + '>' + f + '</option>';
+        html += '<option value="' + f + '" ' + (obtenerDato(cliente, 'Forma de Pago') === f ? 'selected' : '') + '>' + f + '</option>';
       });
       html += '</select></div>';
-      
-      html += '<div><label>Metodo de Pago</label><select id="editMetodoPago">';
-      html += '<option value="">Seleccione...</option>';
-      const metodoCliente = obtenerDato(cliente, 'Método de Pago');
+      html += '<div><label>Metodo de Pago</label><select id="editMetodoPago"><option value="">Seleccione...</option>';
       ['PUE - Pago en una sola exhibicion', 'PPD - Pago en parcialidades o diferido'].forEach(function(m) {
-        const selected = metodoCliente === m ? 'selected' : '';
-        html += '<option value="' + m + '" ' + selected + '>' + m + '</option>';
+        html += '<option value="' + m + '" ' + (obtenerDato(cliente, 'Método de Pago') === m ? 'selected' : '') + '>' + m + '</option>';
       });
       html += '</select></div>';
-      
       html += '<div style="grid-column: span 2;"><label>Correo Electronico</label><input type="email" id="editCorreo" value="' + obtenerDato(cliente, 'Correo Electrónico') + '"></div>';
       html += '</div></div>';
     }
     
-    html += '<div class="seccion-form">';
-    html += '<h3>Datos de Contacto</h3>';
-    html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
-    html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Contacto de Facturacion</label></div>';
-    html += '<div><label>Telefono Local</label><input type="text" id="editFactNumero" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
-    html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + obtenerDato(cliente, 'Facturacion Correo') + '"></div>';
-    html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + obtenerDato(cliente, 'Facturacion WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
-    
-    if (!esSinFactura) {
-      html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar</label></div>';
+    // Datos de Contacto (Simplificado para Sin Factura)
+    html += '<div class="seccion-form"><h3>Datos de Contacto</h3><div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
+    if (esSinFactura) {
+      html += '<div style="grid-column: span 2;"><label>Contacto Local</label><input type="text" id="editContactoLocal" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+      html += '<div style="grid-column: span 2;"><label>Mail</label><input type="email" id="editMail" value="' + obtenerDato(cliente, 'Facturacion Correo') + '"></div>';
+      html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editWhatsApp" value="' + obtenerDato(cliente, 'Facturacion WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+    } else {
+      html += '<div style="grid-column: span 2;"><label style="color: var(--azul-accion);">Contacto de Facturacion Telefono Local</label></div>';
+      html += '<div><label>Telefono Local</label><input type="text" id="editFactNumero" value="' + obtenerDato(cliente, 'Facturacion Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+      html += '<div><label>Correo</label><input type="email" id="editFactCorreo" value="' + obtenerDato(cliente, 'Facturacion Correo') + '"></div>';
+      html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editFactWhatsApp" value="' + obtenerDato(cliente, 'Facturacion WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
+      html += '<div style="grid-column: span 2; margin-top: 10px;"><label style="color: var(--naranja-accion);">Cuentas por Pagar - Contacto Local</label></div>';
       html += '<div><label>Telefono Local</label><input type="text" id="editCppNumero" value="' + obtenerDato(cliente, 'CuentasPorPagar Numero') + '" oninput="this.value = this.value.toUpperCase()"></div>';
       html += '<div><label>Correo</label><input type="email" id="editCppCorreo" value="' + obtenerDato(cliente, 'CuentasPorPagar Correo') + '"></div>';
       html += '<div style="grid-column: span 2;"><label>WhatsApp</label><input type="text" id="editCppWhatsApp" value="' + obtenerDato(cliente, 'CuentasPorPagar WhatsApp') + '" oninput="this.value = this.value.toUpperCase()"></div>';
     }
     html += '</div></div>';
     
-    html += '<div class="seccion-form">';
-    html += '<h3>Status</h3>';
-    html += '<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
+    html += '<div class="seccion-form"><h3>Status</h3><div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px;">';
     html += '<div><label>Status</label><select id="editStatus">';
     html += '<option value="ACTIVO" ' + (obtenerDato(cliente, 'Status') === 'ACTIVO' ? 'selected' : '') + '>Activo</option>';
     html += '<option value="INACTIVO" ' + (obtenerDato(cliente, 'Status') === 'INACTIVO' ? 'selected' : '') + '>Inactivo</option>';
-    html += '</select></div>';
-    html += '</div></div>';
+    html += '</select></div></div></div>';
     
-    form.innerHTML = html;
+    document.getElementById('formEditarDatos').innerHTML = html;
   }
 
   function cerrarModalEditarDatos() {
@@ -1939,91 +1721,66 @@
   }
 
   async function guardarActualizacion() {
-    if (!clienteActualEditando) {
-      alert('No hay cliente seleccionado');
-      return;
-    }
-    
+    if (!clienteActualEditando) { alert('No hay cliente seleccionado'); return; }
     const rfc = obtenerDato(clienteActualEditando, 'RFC');
-    const btn = document.getElementById('btnGuardarActualizacion');
-    btn.disabled = true;
-    btn.textContent = 'Guardando...';
-    
     const tipo = obtenerDato(clienteActualEditando, 'Tipo') || 'Persona Física';
     const esSinFactura = (tipo === 'Sin Factura' || rfc.startsWith('SIN_FACTURA_'));
+    const btn = document.getElementById('btnGuardarActualizacion');
+    btn.disabled = true; btn.textContent = 'Guardando...';
     
     const datos = {
-      action: 'actualizarCliente',
-      rfc: rfc,
+      action: 'actualizarCliente', rfc: rfc,
       'Lugar y Fecha': document.getElementById('editLugarFecha').value.trim(),
       'Status': document.getElementById('editStatus').value,
-      'Facturacion Numero': document.getElementById('editFactNumero').value.trim(),
-      'Facturacion Correo': document.getElementById('editFactCorreo').value.trim().toLowerCase(),
-      'Facturacion WhatsApp': document.getElementById('editFactWhatsApp').value.trim(),
-      'CuentasPorPagar Numero': document.getElementById('editCppNumero').value.trim(),
-      'CuentasPorPagar Correo': document.getElementById('editCppCorreo').value.trim().toLowerCase(),
-      'CuentasPorPagar WhatsApp': document.getElementById('editCppWhatsApp').value.trim()
+      'CuentasPorPagar Numero': document.getElementById('editCppNumero') ? document.getElementById('editCppNumero').value.trim() : '',
+      'CuentasPorPagar Correo': document.getElementById('editCppCorreo') ? document.getElementById('editCppCorreo').value.trim().toLowerCase() : '',
+      'CuentasPorPagar WhatsApp': document.getElementById('editCppWhatsApp') ? document.getElementById('editCppWhatsApp').value.trim() : ''
     };
     
-    if (!esSinFactura) {
+    if (esSinFactura) {
+      datos['Facturacion Numero'] = document.getElementById('editContactoLocal').value.trim();
+      datos['Facturacion Correo'] = document.getElementById('editMail').value.trim().toLowerCase();
+      datos['Facturacion WhatsApp'] = document.getElementById('editWhatsApp').value.trim();
+    } else {
       datos['Régimen Fiscal'] = document.getElementById('editRegimen').value;
       datos['Código Postal'] = document.getElementById('editCP').value.trim();
       datos['Uso CFDI'] = document.getElementById('editUsoCFDI').value;
       datos['Forma de Pago'] = document.getElementById('editFormaPago').value;
       datos['Método de Pago'] = document.getElementById('editMetodoPago').value;
       datos['Correo Electrónico'] = document.getElementById('editCorreo').value.trim().toLowerCase();
-      
-      if (tipo === 'Persona Moral') {
-        datos['Representante Legal'] = document.getElementById('editRepresentante').value.trim();
-      }
+      datos['Facturacion Numero'] = document.getElementById('editFactNumero').value.trim();
+      datos['Facturacion Correo'] = document.getElementById('editFactCorreo').value.trim().toLowerCase();
+      datos['Facturacion WhatsApp'] = document.getElementById('editFactWhatsApp').value.trim();
+      if (tipo === 'Persona Moral') datos['Representante Legal'] = document.getElementById('editRepresentante').value.trim();
     }
     
     try {
-      const response = await fetch(SHEET_SCRIPT_URL, {
-        method: 'POST',
-        body: JSON.stringify(datos)
-      });
+      const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
       const result = await response.json();
-      
       if (result.result === 'success') {
         alert('Datos actualizados correctamente.\n\nEl administrador vera los cambios marcados para revision.');
         cerrarModalEditarDatos();
-      } else {
-        alert('Error: ' + result.message);
-      }
-    } catch (error) {
-      alert('Error de conexion: ' + error.message);
-    } finally {
-      btn.disabled = false;
-      btn.textContent = 'Guardar Cambios';
-    }
+      } else { alert('Error: ' + result.message); }
+    } catch (error) { alert('Error de conexion: ' + error.message); }
+    finally { btn.disabled = false; btn.textContent = 'Guardar Cambios'; }
   }
 
   async function generarDocumentosDesdeEdicion() {
-    if (!clienteActualEditando) {
-      alert('No hay cliente seleccionado');
-      return;
-    }
-    
+    if (!clienteActualEditando) { alert('No hay cliente seleccionado'); return; }
     const cliente = clienteActualEditando;
     const rfc = obtenerDato(cliente, 'RFC');
     const tipo = obtenerDato(cliente, 'Tipo');
     const esSinFactura = (tipo === 'Sin Factura' || rfc.startsWith('SIN_FACTURA_'));
-    
     const lugarFecha = document.getElementById('editLugarFecha').value.trim();
-    
     ultimoIDGenerado = obtenerDato(cliente, 'ID Cliente');
     
     if (esSinFactura) {
       const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
-      const contacto = document.getElementById('editFactNumero').value.trim();
-      const mail = document.getElementById('editFactCorreo').value.trim();
-      const whatsapp = document.getElementById('editFactWhatsApp').value.trim();
+      const contacto = document.getElementById('editContactoLocal') ? document.getElementById('editContactoLocal').value.trim() : '';
+      const mail = document.getElementById('editMail') ? document.getElementById('editMail').value.trim() : '';
+      const whatsapp = document.getElementById('editWhatsApp') ? document.getElementById('editWhatsApp').value.trim() : '';
       
-      if (!lugarFecha || !nombre) { 
-        alert('Para generar documentos se requiere: Fecha y Nombre Comercial'); 
-        return; 
-      }
+      if (!lugarFecha || !nombre) { alert('Para generar documentos se requiere: Fecha y Nombre Comercial'); return; }
       
       document.getElementById('aSinFacturaID').textContent = ultimoIDGenerado;
       document.getElementById('aSinFacturaReferencia').textContent = ultimoIDGenerado;
@@ -2041,33 +1798,22 @@
       
     } else if (tipo === 'Persona Física') {
       const nombre = obtenerDato(cliente, 'Nombre/Razón Social') || obtenerDato(cliente, 'Nombre');
-      const regimen = document.getElementById('editRegimen').value;
-      const cp = document.getElementById('editCP').value.trim();
-      const usoCFDI = document.getElementById('editUsoCFDI').value;
-      const formaPago = document.getElementById('editFormaPago').value;
-      const metodoPago = document.getElementById('editMetodoPago').value;
-      const correo = document.getElementById('editCorreo').value.trim();
-      
-      if (!lugarFecha || !nombre || !rfc) { 
-        alert('Para generar documentos se requiere: Fecha, Nombre Comercial y RFC'); 
-        return; 
-      }
+      if (!lugarFecha || !nombre || !rfc) { alert('Para generar documentos se requiere: Fecha, Nombre Comercial y RFC'); return; }
       
       document.getElementById('mFisicaLugarFecha').textContent = lugarFecha;
       document.getElementById('mFisicaNombre').textContent = nombre;
       document.getElementById('mFisicaRFC').textContent = rfc;
       document.getElementById('mFisicaFirmaNombre').textContent = nombre;
-      
       document.getElementById('aFisicaID').textContent = ultimoIDGenerado;
       document.getElementById('aFisicaReferencia').textContent = ultimoIDGenerado;
       document.getElementById('aFisicaNombre').textContent = nombre;
       document.getElementById('aFisicaRFC').textContent = rfc;
-      document.getElementById('aFisicaRegimen').textContent = regimen;
-      document.getElementById('aFisicaCP').textContent = cp;
-      document.getElementById('aFisicaUsoCFDI').textContent = usoCFDI;
-      document.getElementById('aFisicaFormaPago').textContent = formaPago;
-      document.getElementById('aFisicaMetodoPago').textContent = metodoPago;
-      document.getElementById('aFisicaCorreo').textContent = correo;
+      document.getElementById('aFisicaRegimen').textContent = document.getElementById('editRegimen').value;
+      document.getElementById('aFisicaCP').textContent = document.getElementById('editCP').value.trim();
+      document.getElementById('aFisicaUsoCFDI').textContent = document.getElementById('editUsoCFDI').value;
+      document.getElementById('aFisicaFormaPago').textContent = document.getElementById('editFormaPago').value;
+      document.getElementById('aFisicaMetodoPago').textContent = document.getElementById('editMetodoPago').value;
+      document.getElementById('aFisicaCorreo').textContent = document.getElementById('editCorreo').value.trim();
       document.getElementById('aFisicaFirmaCliente').textContent = nombre;
       
       document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
@@ -2080,34 +1826,23 @@
     } else {
       const razonSocial = obtenerDato(cliente, 'Nombre/Razón Social');
       const representante = document.getElementById('editRepresentante') ? document.getElementById('editRepresentante').value.trim() : obtenerDato(cliente, 'Representante Legal');
-      const regimen = document.getElementById('editRegimen').value;
-      const cp = document.getElementById('editCP').value.trim();
-      const usoCFDI = document.getElementById('editUsoCFDI').value;
-      const formaPago = document.getElementById('editFormaPago').value;
-      const metodoPago = document.getElementById('editMetodoPago').value;
-      const correo = document.getElementById('editCorreo').value.trim();
-      
-      if (!lugarFecha || !representante || !razonSocial || !rfc) { 
-        alert('Para generar documentos se requiere: Fecha, Representante, Nombre Comercial y RFC'); 
-        return; 
-      }
+      if (!lugarFecha || !representante || !razonSocial || !rfc) { alert('Para generar documentos se requiere: Fecha, Representante, Nombre Comercial y RFC'); return; }
       
       document.getElementById('mMoralLugarFecha').textContent = lugarFecha;
       document.getElementById('mMoralRepresentante').textContent = representante;
       document.getElementById('mMoralRazonSocial').textContent = razonSocial;
       document.getElementById('mMoralRFC').textContent = rfc;
       document.getElementById('mMoralFirmaNombre').textContent = representante;
-      
       document.getElementById('aMoralID').textContent = ultimoIDGenerado;
       document.getElementById('aMoralReferencia').textContent = ultimoIDGenerado;
       document.getElementById('aMoralRazonSocial').textContent = razonSocial;
       document.getElementById('aMoralRFC').textContent = rfc;
-      document.getElementById('aMoralRegimen').textContent = regimen;
-      document.getElementById('aMoralCP').textContent = cp;
-      document.getElementById('aMoralUsoCFDI').textContent = usoCFDI;
-      document.getElementById('aMoralFormaPago').textContent = formaPago;
-      document.getElementById('aMoralMetodoPago').textContent = metodoPago;
-      document.getElementById('aMoralCorreo').textContent = correo;
+      document.getElementById('aMoralRegimen').textContent = document.getElementById('editRegimen').value;
+      document.getElementById('aMoralCP').textContent = document.getElementById('editCP').value.trim();
+      document.getElementById('aMoralUsoCFDI').textContent = document.getElementById('editUsoCFDI').value;
+      document.getElementById('aMoralFormaPago').textContent = document.getElementById('editFormaPago').value;
+      document.getElementById('aMoralMetodoPago').textContent = document.getElementById('editMetodoPago').value;
+      document.getElementById('aMoralCorreo').textContent = document.getElementById('editCorreo').value.trim();
       document.getElementById('aMoralFirmaCliente').textContent = representante;
       
       document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
@@ -2119,65 +1854,38 @@
     }
   }
 
-  // ==========================================
-  // MODAL RFC YA EXISTE
-  // ==========================================
-  function cerrarModalRFCExiste() {
-    document.getElementById('modalRFCExiste').classList.remove('activo');
-  }
-
+  function cerrarModalRFCExiste() { document.getElementById('modalRFCExiste').classList.remove('activo'); }
   function irAActualizarDesdeAlerta() {
     const rfc = document.getElementById('rfcExistenteMensaje').textContent;
     cerrarModalRFCExiste();
     abrirModalActualizarDatos();
-    setTimeout(function() {
-      document.getElementById('buscarRFCActualizar').value = rfc;
-      buscarEnTiempoReal('actualizar');
-    }, 300);
+    setTimeout(function() { document.getElementById('buscarRFCActualizar').value = rfc; buscarEnTiempoReal('actualizar'); }, 300);
   }
 
-  // ==========================================
-  // MODAL DOCUMENTOS
-  // ==========================================
   function abrirModalDocumentos() {
     document.getElementById('buscarRFCRFC').value = '';
     document.getElementById('containerDocsRFC').classList.remove('encontrado', 'no-encontrado');
     document.getElementById('resultadoDocsRFC').classList.remove('visible', 'encontrado', 'no-encontrado', 'buscar');
     document.getElementById('btnContinuarDocs').disabled = true;
-    rfcValidadoDocs = null;
-    modoBusquedaDocs = 'rfc';
+    rfcValidadoDocs = null; modoBusquedaDocs = 'rfc';
     cambiarModoBusqueda('documentos', 'rfc');
     document.getElementById('modalBuscarRFC').classList.add('activo');
     setTimeout(function() { document.getElementById('buscarRFCRFC').focus(); }, 100);
   }
 
-  function cerrarModalBuscarRFC() {
-    document.getElementById('modalBuscarRFC').classList.remove('activo');
-    rfcValidadoDocs = null;
-  }
+  function cerrarModalBuscarRFC() { document.getElementById('modalBuscarRFC').classList.remove('activo'); rfcValidadoDocs = null; }
 
-  // ==========================================
-  // LOGICA DEL FORMULARIO
-  // ==========================================
   function cambiarTipoPersona() {
     const radios = document.getElementsByName('tipoPersona');
     for (let i = 0; i < radios.length; i++) {
-      if (radios[i].checked) {
-        tipoSeleccionado = radios[i].value;
-        break;
-      }
+      if (radios[i].checked) { tipoSeleccionado = radios[i].value; break; }
     }
     document.getElementById('formFisica').classList.remove('activo');
     document.getElementById('formMoral').classList.remove('activo');
     document.getElementById('formSinFactura').classList.remove('activo');
-    
-    if (tipoSeleccionado === 'fisica') {
-      document.getElementById('formFisica').classList.add('activo');
-    } else if (tipoSeleccionado === 'moral') {
-      document.getElementById('formMoral').classList.add('activo');
-    } else if (tipoSeleccionado === 'sinfactura') {
-      document.getElementById('formSinFactura').classList.add('activo');
-    }
+    if (tipoSeleccionado === 'fisica') document.getElementById('formFisica').classList.add('activo');
+    else if (tipoSeleccionado === 'moral') document.getElementById('formMoral').classList.add('activo');
+    else if (tipoSeleccionado === 'sinfactura') document.getElementById('formSinFactura').classList.add('activo');
     aplicarFechaHoy();
   }
 
@@ -2186,13 +1894,8 @@
     const error = document.getElementById('errorFisicaRFC');
     const valor = input.value.trim().toUpperCase();
     input.value = valor;
-    if (valor.length > 0 && valor.length !== 13) {
-      input.classList.add('error');
-      error.classList.add('visible');
-    } else {
-      input.classList.remove('error');
-      error.classList.remove('visible');
-    }
+    if (valor.length > 0 && valor.length !== 13) { input.classList.add('error'); error.classList.add('visible'); } 
+    else { input.classList.remove('error'); error.classList.remove('visible'); }
   }
 
   function validarRFCMoral() {
@@ -2200,13 +1903,8 @@
     const error = document.getElementById('errorMoralRFC');
     const valor = input.value.trim().toUpperCase();
     input.value = valor;
-    if (valor.length > 0 && valor.length !== 12) {
-      input.classList.add('error');
-      error.classList.add('visible');
-    } else {
-      input.classList.remove('error');
-      error.classList.remove('visible');
-    }
+    if (valor.length > 0 && valor.length !== 12) { input.classList.add('error'); error.classList.add('visible'); } 
+    else { input.classList.remove('error'); error.classList.remove('visible'); }
   }
 
   function validarEmailFisica() {
@@ -2214,15 +1912,8 @@
     const error = document.getElementById('errorFisicaEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
-    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
-      input.classList.add('error');
-      error.classList.add('visible');
-      return false;
-    } else {
-      input.classList.remove('error');
-      error.classList.remove('visible');
-      return true;
-    }
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) { input.classList.add('error'); error.classList.add('visible'); return false; } 
+    else { input.classList.remove('error'); error.classList.remove('visible'); return true; }
   }
 
   function validarEmailMoral() {
@@ -2230,15 +1921,8 @@
     const error = document.getElementById('errorMoralEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
-    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
-      input.classList.add('error');
-      error.classList.add('visible');
-      return false;
-    } else {
-      input.classList.remove('error');
-      error.classList.remove('visible');
-      return true;
-    }
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) { input.classList.add('error'); error.classList.add('visible'); return false; } 
+    else { input.classList.remove('error'); error.classList.remove('visible'); return true; }
   }
 
   function validarEmailSinFactura() {
@@ -2246,15 +1930,8 @@
     const error = document.getElementById('errorSinFacturaEmail');
     const valor = input.value.trim().toLowerCase();
     input.value = valor;
-    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) {
-      input.classList.add('error');
-      error.classList.add('visible');
-      return false;
-    } else {
-      input.classList.remove('error');
-      error.classList.remove('visible');
-      return true;
-    }
+    if (valor.length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(valor)) { input.classList.add('error'); error.classList.add('visible'); return false; } 
+    else { input.classList.remove('error'); error.classList.remove('visible'); return true; }
   }
 
   async function obtenerNuevoID() {
@@ -2262,10 +1939,7 @@
       const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'obtenerSiguienteID' }) });
       const result = await response.json();
       return result.result === 'success' ? result.idCliente : null;
-    } catch (error) {
-      alert('Error de conexion al obtener ID: ' + error.message);
-      return null;
-    }
+    } catch (error) { alert('Error de conexion al obtener ID: ' + error.message); return null; }
   }
 
   async function guardarClienteFisica() {
@@ -2276,67 +1950,36 @@
     if (rfc.length !== 13) { alert('El RFC debe tener exactamente 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
-    btnGuardar.disabled = true;
-    btnGuardar.textContent = 'Verificando RFC...';
-
+    btnGuardar.disabled = true; btnGuardar.textContent = 'Verificando RFC...';
     let idCliente = null;
     try {
       const verifRes = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) });
       const verifResult = await verifRes.json();
-      
       if (verifResult.result === 'success' && verifResult.existe) {
         document.getElementById('rfcExistenteMensaje').textContent = rfc;
         document.getElementById('modalRFCExiste').classList.add('activo');
-        btnGuardar.disabled = false;
-        btnGuardar.textContent = 'Guardar Cliente';
-        return;
+        btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
       } else {
         idCliente = await obtenerNuevoID();
         if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
       }
-    } catch (error) {
-      alert('Error al verificar RFC: ' + error.message);
-      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
-    }
+    } catch (error) { alert('Error al verificar RFC: ' + error.message); btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
 
     btnGuardar.textContent = 'Guardando...';
-    const datos = {
-      action: 'guardar', tipo: 'fisica', idCliente: idCliente, rfc: rfc, nombre: nombre,
-      lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(),
-      regimen: document.getElementById('fisicaRegimen').value,
-      cp: document.getElementById('fisicaCP').value.trim(),
-      usoCFDI: document.getElementById('fisicaUsoCFDI').value,
-      formaPago: document.getElementById('fisicaFormaPago').value,
-      metodoPago: document.getElementById('fisicaMetodoPago').value,
-      correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(),
-      factNumero: document.getElementById('fisicaFactNumero').value.trim(),
-      factCorreo: document.getElementById('fisicaFactCorreo').value.trim().toLowerCase(),
-      factWhatsApp: document.getElementById('fisicaFactWhatsApp').value.trim(),
-      cppNumero: document.getElementById('fisicaCppNumero').value.trim(),
-      cppCorreo: document.getElementById('fisicaCppCorreo').value.trim().toLowerCase(),
-      cppWhatsApp: document.getElementById('fisicaCppWhatsApp').value.trim(),
-      fechaGuardado: new Date().toISOString()
-    };
+    const datos = { action: 'guardar', tipo: 'fisica', idCliente: idCliente, rfc: rfc, nombre: nombre, lugarFecha: document.getElementById('fisicaLugarFecha').value.trim(), regimen: document.getElementById('fisicaRegimen').value, cp: document.getElementById('fisicaCP').value.trim(), usoCFDI: document.getElementById('fisicaUsoCFDI').value, formaPago: document.getElementById('fisicaFormaPago').value, metodoPago: document.getElementById('fisicaMetodoPago').value, correo: document.getElementById('fisicaCorreo').value.trim().toLowerCase(), factNumero: document.getElementById('fisicaFactNumero').value.trim(), factCorreo: document.getElementById('fisicaFactCorreo').value.trim().toLowerCase(), factWhatsApp: document.getElementById('fisicaFactWhatsApp').value.trim(), cppNumero: document.getElementById('fisicaCppNumero').value.trim(), cppCorreo: document.getElementById('fisicaCppCorreo').value.trim().toLowerCase(), cppWhatsApp: document.getElementById('fisicaCppWhatsApp').value.trim(), fechaGuardado: new Date().toISOString() };
 
     try {
       const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
       const result = await response.json();
       if (result.result === 'success') {
-        const mensajeDiv = document.getElementById('mensajeGuardadoFisica');
-        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
-        mensajeDiv.classList.add('visible');
+        document.getElementById('mensajeGuardadoFisica').textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
+        document.getElementById('mensajeGuardadoFisica').classList.add('visible');
         document.getElementById('btnGenerarFisica').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
-        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
-      } else {
-        alert('Error al guardar: ' + result.message);
-      }
-    } catch (error) {
-      alert('Error de conexion: ' + error.message);
-    } finally {
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = 'Guardar Cliente';
-    }
+        setTimeout(function() { document.getElementById('mensajeGuardadoFisica').classList.remove('visible'); }, 5000);
+      } else { alert('Error al guardar: ' + result.message); }
+    } catch (error) { alert('Error de conexion: ' + error.message); }
+    finally { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; }
   }
 
   async function guardarClienteMoral() {
@@ -2348,140 +1991,72 @@
     if (rfc.length !== 12) { alert('El RFC debe tener exactamente 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
-    btnGuardar.disabled = true;
-    btnGuardar.textContent = 'Verificando RFC...';
-
+    btnGuardar.disabled = true; btnGuardar.textContent = 'Verificando RFC...';
     let idCliente = null;
     try {
       const verifRes = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify({ action: 'verificarRFC', rfc: rfc }) });
       const verifResult = await verifRes.json();
-      
       if (verifResult.result === 'success' && verifResult.existe) {
         document.getElementById('rfcExistenteMensaje').textContent = rfc;
         document.getElementById('modalRFCExiste').classList.add('activo');
-        btnGuardar.disabled = false;
-        btnGuardar.textContent = 'Guardar Cliente';
-        return;
+        btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
       } else {
         idCliente = await obtenerNuevoID();
         if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
       }
-    } catch (error) {
-      alert('Error al verificar RFC: ' + error.message);
-      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
-    }
+    } catch (error) { alert('Error al verificar RFC: ' + error.message); btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
 
     btnGuardar.textContent = 'Guardando...';
-    const datos = {
-      action: 'guardar', tipo: 'moral', idCliente: idCliente, rfc: rfc, razonSocial: razonSocial, representante: representante,
-      lugarFecha: document.getElementById('moralLugarFecha').value.trim(),
-      regimen: document.getElementById('moralRegimen').value,
-      cp: document.getElementById('moralCP').value.trim(),
-      usoCFDI: document.getElementById('moralUsoCFDI').value,
-      formaPago: document.getElementById('moralFormaPago').value,
-      metodoPago: document.getElementById('moralMetodoPago').value,
-      correo: document.getElementById('moralCorreo').value.trim().toLowerCase(),
-      factNumero: document.getElementById('moralFactNumero').value.trim(),
-      factCorreo: document.getElementById('moralFactCorreo').value.trim().toLowerCase(),
-      factWhatsApp: document.getElementById('moralFactWhatsApp').value.trim(),
-      cppNumero: document.getElementById('moralCppNumero').value.trim(),
-      cppCorreo: document.getElementById('moralCppCorreo').value.trim().toLowerCase(),
-      cppWhatsApp: document.getElementById('moralCppWhatsApp').value.trim(),
-      fechaGuardado: new Date().toISOString()
-    };
+    const datos = { action: 'guardar', tipo: 'moral', idCliente: idCliente, rfc: rfc, razonSocial: razonSocial, representante: representante, lugarFecha: document.getElementById('moralLugarFecha').value.trim(), regimen: document.getElementById('moralRegimen').value, cp: document.getElementById('moralCP').value.trim(), usoCFDI: document.getElementById('moralUsoCFDI').value, formaPago: document.getElementById('moralFormaPago').value, metodoPago: document.getElementById('moralMetodoPago').value, correo: document.getElementById('moralCorreo').value.trim().toLowerCase(), factNumero: document.getElementById('moralFactNumero').value.trim(), factCorreo: document.getElementById('moralFactCorreo').value.trim().toLowerCase(), factWhatsApp: document.getElementById('moralFactWhatsApp').value.trim(), cppNumero: document.getElementById('moralCppNumero').value.trim(), cppCorreo: document.getElementById('moralCppCorreo').value.trim().toLowerCase(), cppWhatsApp: document.getElementById('moralCppWhatsApp').value.trim(), fechaGuardado: new Date().toISOString() };
 
     try {
       const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
       const result = await response.json();
       if (result.result === 'success') {
-        const mensajeDiv = document.getElementById('mensajeGuardadoMoral');
-        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
-        mensajeDiv.classList.add('visible');
+        document.getElementById('mensajeGuardadoMoral').textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
+        document.getElementById('mensajeGuardadoMoral').classList.add('visible');
         document.getElementById('btnGenerarMoral').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
-        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
-      } else {
-        alert('Error al guardar: ' + result.message);
-      }
-    } catch (error) {
-      alert('Error de conexion: ' + error.message);
-    } finally {
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = 'Guardar Cliente';
-    }
+        setTimeout(function() { document.getElementById('mensajeGuardadoMoral').classList.remove('visible'); }, 5000);
+      } else { alert('Error al guardar: ' + result.message); }
+    } catch (error) { alert('Error de conexion: ' + error.message); }
+    finally { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; }
   }
 
-  // ==========================================
-  // GUARDAR CLIENTE SIN FACTURA
-  // ==========================================
   async function guardarClienteSinFactura() {
     const btnGuardar = document.getElementById('btnGuardarSinFactura');
     const nombre = document.getElementById('sinfacturaNombre').value.trim();
-    
     if (!nombre) { alert('Por favor, ingresa el Nombre Comercial.'); return; }
     if (!validarEmailSinFactura()) { alert('El correo electronico no tiene un formato valido.'); return; }
 
-    btnGuardar.disabled = true;
-    btnGuardar.textContent = 'Obteniendo ID...';
-
+    btnGuardar.disabled = true; btnGuardar.textContent = 'Obteniendo ID...';
     let idCliente = null;
     try {
       idCliente = await obtenerNuevoID();
       if (!idCliente) { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
-    } catch (error) {
-      alert('Error al obtener ID: ' + error.message);
-      btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return;
-    }
+    } catch (error) { alert('Error al obtener ID: ' + error.message); btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; return; }
 
     btnGuardar.textContent = 'Guardando...';
-    const datos = {
-      action: 'guardar',
-      tipo: 'sinfactura',
-      idCliente: idCliente,
-      rfc: 'SIN_FACTURA_' + idCliente,
-      nombre: nombre,
-      lugarFecha: document.getElementById('sinfacturaLugarFecha').value.trim(),
-      regimen: '',
-      cp: '',
-      usoCFDI: '',
-      formaPago: '99 - Por definir',
-      metodoPago: 'PUE - Pago en una sola exhibicion',
-      correo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(),
-      factNumero: document.getElementById('sinfacturaContactoLocal').value.trim(),
-      factCorreo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(),
-      factWhatsApp: document.getElementById('sinfacturaWhatsApp').value.trim(),
-      cppNumero: '',
-      cppCorreo: '',
-      cppWhatsApp: '',
-      fechaGuardado: new Date().toISOString()
-    };
+    const datos = { action: 'guardar', tipo: 'sinfactura', idCliente: idCliente, rfc: 'SIN_FACTURA_' + idCliente, nombre: nombre, lugarFecha: document.getElementById('sinfacturaLugarFecha').value.trim(), regimen: '', cp: '', usoCFDI: '', formaPago: '99 - Por definir', metodoPago: 'PUE - Pago en una sola exhibicion', correo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(), factNumero: document.getElementById('sinfacturaContactoLocal').value.trim(), factCorreo: document.getElementById('sinfacturaMail').value.trim().toLowerCase(), factWhatsApp: document.getElementById('sinfacturaWhatsApp').value.trim(), cppNumero: '', cppCorreo: '', cppWhatsApp: '', fechaGuardado: new Date().toISOString() };
 
     try {
       const response = await fetch(SHEET_SCRIPT_URL, { method: 'POST', body: JSON.stringify(datos) });
       const result = await response.json();
       if (result.result === 'success') {
-        const mensajeDiv = document.getElementById('mensajeGuardadoSinFactura');
-        mensajeDiv.textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
-        mensajeDiv.classList.add('visible');
+        document.getElementById('mensajeGuardadoSinFactura').textContent = 'Cliente guardado exitosamente. ID: ' + idCliente;
+        document.getElementById('mensajeGuardadoSinFactura').classList.add('visible');
         document.getElementById('btnGenerarSinFactura').classList.remove('oculto');
         ultimoIDGenerado = idCliente;
-        setTimeout(function() { mensajeDiv.classList.remove('visible'); }, 5000);
-      } else {
-        alert('Error al guardar: ' + result.message);
-      }
-    } catch (error) {
-      alert('Error de conexion: ' + error.message);
-    } finally {
-      btnGuardar.disabled = false;
-      btnGuardar.textContent = 'Guardar Cliente';
-    }
+        setTimeout(function() { document.getElementById('mensajeGuardadoSinFactura').classList.remove('visible'); }, 5000);
+      } else { alert('Error al guardar: ' + result.message); }
+    } catch (error) { alert('Error de conexion: ' + error.message); }
+    finally { btnGuardar.disabled = false; btnGuardar.textContent = 'Guardar Cliente'; }
   }
 
   function generarDocumentosFisica() {
     const lugarFecha = document.getElementById('fisicaLugarFecha').value.trim();
     const nombre = document.getElementById('fisicaNombre').value.trim();
     const rfc = document.getElementById('fisicaRFC').value.trim().toUpperCase();
-
     if (!lugarFecha || !nombre || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
     if (rfc.length !== 13) { alert('El RFC debe tener 13 caracteres.'); return; }
     if (!validarEmailFisica()) { alert('Correo invalido.'); return; }
@@ -2490,7 +2065,6 @@
     document.getElementById('mFisicaNombre').textContent = nombre;
     document.getElementById('mFisicaRFC').textContent = rfc;
     document.getElementById('mFisicaFirmaNombre').textContent = nombre;
-
     const idMostrar = ultimoIDGenerado || '__________';
     document.getElementById('aFisicaID').textContent = idMostrar;
     document.getElementById('aFisicaReferencia').textContent = idMostrar;
@@ -2516,7 +2090,6 @@
     const representante = document.getElementById('moralRepresentante').value.trim();
     const razonSocial = document.getElementById('moralRazonSocial').value.trim();
     const rfc = document.getElementById('moralRFC').value.trim().toUpperCase();
-
     if (!lugarFecha || !representante || !razonSocial || !rfc) { alert('Por favor, complete los campos obligatorios.'); return; }
     if (rfc.length !== 12) { alert('El RFC debe tener 12 caracteres.'); return; }
     if (!validarEmailMoral()) { alert('Correo invalido.'); return; }
@@ -2526,7 +2099,6 @@
     document.getElementById('mMoralRazonSocial').textContent = razonSocial;
     document.getElementById('mMoralRFC').textContent = rfc;
     document.getElementById('mMoralFirmaNombre').textContent = representante;
-
     const idMostrar = ultimoIDGenerado || '__________';
     document.getElementById('aMoralID').textContent = idMostrar;
     document.getElementById('aMoralReferencia').textContent = idMostrar;
@@ -2554,10 +2126,7 @@
     const mail = document.getElementById('sinfacturaMail').value.trim();
     const whatsapp = document.getElementById('sinfacturaWhatsApp').value.trim();
 
-    if (!lugarFecha || !nombre) { 
-      alert('Por favor, complete Fecha y Nombre Comercial.'); 
-      return; 
-    }
+    if (!lugarFecha || !nombre) { alert('Por favor, complete Fecha y Nombre Comercial.'); return; }
 
     const idMostrar = ultimoIDGenerado || '__________';
     document.getElementById('aSinFacturaID').textContent = idMostrar;
@@ -2575,7 +2144,6 @@
   }
 
   function imprimirDocumentos() { window.print(); }
-  
   function editarDocumentos() {
     document.getElementById('formulario').style.display = 'block';
     document.querySelectorAll('.hoja-documento').forEach(function(doc) { doc.classList.remove('activo'); });
@@ -2602,10 +2170,7 @@
     window.scrollTo(0, 0);
   }
 
-  // Aplicar fecha automaticamente al cargar la pagina
-  document.addEventListener('DOMContentLoaded', function() {
-    aplicarFechaHoy();
-  });
+  document.addEventListener('DOMContentLoaded', function() { aplicarFechaHoy(); });
 </script>
 
 </body>
