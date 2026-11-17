@@ -20,7 +20,6 @@
   
   .page-break { page-break-before: always; }
   
-  /* PORTADA */
   .portada {
     height: 100vh;
     display: flex;
@@ -31,10 +30,7 @@
     padding: 40px;
   }
   
-  .portada-logo {
-    max-width: 280px;
-    margin-bottom: 40px;
-  }
+  .portada-logo { max-width: 280px; margin-bottom: 40px; }
   
   .portada-titulo {
     font-size: 32pt;
@@ -55,15 +51,9 @@
     font-weight: 600;
   }
   
-  .portada-info {
-    font-size: 11pt;
-    color: #555;
-    line-height: 2;
-  }
-  
+  .portada-info { font-size: 11pt; color: #555; line-height: 2; }
   .portada-info strong { color: #007A3D; }
   
-  /* CONTENIDO */
   .contenido { padding: 20px 0; }
   
   .indice {
@@ -80,16 +70,8 @@
     text-transform: uppercase;
   }
   
-  .indice ol {
-    margin-left: 25px;
-    font-size: 11pt;
-  }
-  
-  .indice li {
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px dotted #ccc;
-  }
+  .indice ol { margin-left: 25px; font-size: 11pt; }
+  .indice li { margin-bottom: 8px; padding-bottom: 4px; border-bottom: 1px dotted #ccc; }
   
   h1 {
     color: #007A3D;
@@ -119,7 +101,6 @@
   }
   
   p { margin-bottom: 12px; text-align: justify; }
-  
   ul, ol { margin-left: 25px; margin-bottom: 15px; }
   li { margin-bottom: 6px; }
   
@@ -152,11 +133,7 @@
     border-radius: 4px;
   }
   
-  .alerta-titulo {
-    font-weight: 700;
-    color: #856404;
-    margin-bottom: 5px;
-  }
+  .alerta-titulo { font-weight: 700; color: #856404; margin-bottom: 5px; }
   
   .importante {
     background: #f8d7da;
@@ -166,11 +143,7 @@
     border-radius: 4px;
   }
   
-  .importante-titulo {
-    font-weight: 700;
-    color: #721c24;
-    margin-bottom: 5px;
-  }
+  .importante-titulo { font-weight: 700; color: #721c24; margin-bottom: 5px; }
   
   .tabla {
     width: 100%;
@@ -187,11 +160,7 @@
     font-weight: 700;
   }
   
-  .tabla td {
-    padding: 8px 10px;
-    border: 1px solid #ddd;
-  }
-  
+  .tabla td { padding: 8px 10px; border: 1px solid #ddd; }
   .tabla tr:nth-child(even) { background: #f5f5f5; }
   
   .campo {
@@ -228,7 +197,6 @@
   
   strong { color: #007A3D; }
   
-  /* CAPTURAS DE PANTALLA */
   .captura {
     margin: 20px 0;
     text-align: center;
@@ -237,6 +205,7 @@
     padding: 15px;
     background: white;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    page-break-inside: avoid;
   }
   
   .captura-titulo {
@@ -251,15 +220,7 @@
     max-width: 100%;
     height: auto;
     border: 1px solid #ddd;
-  }
-  
-  .captura-placeholder {
-    background: #f5f5f5;
-    padding: 40px 20px;
-    border: 2px dashed #007A3D;
-    border-radius: 6px;
-    color: #666;
-    font-style: italic;
+    border-radius: 4px;
   }
   
   @media print {
@@ -274,7 +235,7 @@
 
 <!-- PORTADA -->
 <div class="portada">
-  <img src="logo.png" alt="Grupo SIBRÜ" class="portada-logo" onerror="this.style.display='none'">
+  <img src="https://mediossibru-2026.github.io/formato/logo.png" alt="Grupo SIBRÜ" class="portada-logo" onerror="this.style.display='none'">
   <div class="portada-titulo">Manual de Usuario</div>
   <div class="portada-subtitulo">Alta y Registro de Clientes</div>
   <div class="portada-info">
@@ -325,9 +286,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 1: Pantalla principal del formulario</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Pantalla inicial con logo SIBRÜ, título "MANIFESTACIÓN Y ALTA DE CLIENTE", botones "ACTUALIZAR DATOS" y "SUBIR DOCUMENTACION", y opciones de tipo de cliente]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura1-pantalla-principal.png" alt="Pantalla principal del formulario">
   </div>
 
   <!-- SECCION 3 -->
@@ -412,9 +371,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 2: Formulario de Persona Fisica completo</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Formulario con secciones Datos Generales, Datos Fiscales, Datos para Facturacion y Datos de Contacto]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura2-formulario-fisica.png" alt="Formulario de Persona Fisica">
   </div>
 
   <h2>4.5 Guardar el registro</h2>
@@ -430,9 +387,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 3: Mensaje de exito al guardar</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Barra verde con mensaje "Cliente guardado exitosamente. ID: 1001"]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura3-mensaje-exito.png" alt="Mensaje de guardado exitoso">
   </div>
 
   <!-- SECCION 5 -->
@@ -477,9 +432,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 4: Modal de busqueda para subir documentacion</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Modal "Subir Documentacion" con botones "Buscar por RFC" y "CON ID", campo de entrada y botones Cancelar/Continuar]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura4-modal-documentos.png" alt="Modal de subir documentacion">
   </div>
 
   <h2>7.1 Buscar el cliente</h2>
@@ -551,9 +504,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 5: Modal de Actualizar Datos del Cliente</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Modal "Actualizar Datos del Cliente" con botones "Buscar por RFC" y "CON ID", campo de entrada y botones Cancelar/Continuar]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura5-modal-actualizar.png" alt="Modal de actualizar datos">
   </div>
 
   <h2>8.1 Localizar el cliente</h2>
@@ -601,9 +552,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 6: Documento de Alta de Cliente</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Encabezado "ALTA DE CLIENTE" con "N° DE CLIENTE: 1001"]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura6-alta-cliente.png" alt="Documento de Alta de Cliente">
   </div>
 
   <h2>9.2 Para Sin Factura</h2>
@@ -616,9 +565,7 @@
 
   <div class="captura">
     <div class="captura-titulo">Figura 7: Seccion de Referencia de Pagos</div>
-    <div class="captura-placeholder">
-      [Insertar captura: Seccion verde "REFERENCIA DE PAGOS" con numero grande "1001" y texto explicativo]
-    </div>
+    <img src="https://mediossibru-2026.github.io/formato/captura7-referencia-pago.png" alt="Seccion de Referencia de Pagos">
   </div>
 
   <h2>9.4 Imprimir o guardar como PDF</h2>
