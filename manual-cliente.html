@@ -19,7 +19,6 @@
     padding-top: 70px;
   }
   
-  /* BARRA DE ACCIONES (se oculta al imprimir) */
   .barra-acciones {
     position: fixed;
     top: 0;
@@ -280,7 +279,6 @@
     border-radius: 4px;
   }
   
-  /* REGLAS DE IMPRESIÓN: ocultan la barra de acciones */
   @media print {
     body { font-size: 10.5pt; padding-top: 0; }
     .page-break { page-break-before: always; }
@@ -294,7 +292,6 @@
 </head>
 <body>
 
-<!-- BARRA DE ACCIONES (solo visible en pantalla) -->
 <div class="barra-acciones">
   <div class="barra-acciones-logo">GRUPO SIBRÜ | Manual de Usuario</div>
   <div class="barra-acciones-botones">
@@ -303,7 +300,6 @@
   </div>
 </div>
 
-<!-- PORTADA -->
 <div class="portada">
   <img src="https://mediossibru-2026.github.io/formato/logo.png" alt="Grupo SIBRÜ" class="portada-logo" onerror="this.style.display='none'">
   <div class="portada-titulo">Manual de Usuario</div>
@@ -312,24 +308,23 @@
     <strong>Grupo SIBRÜ</strong><br>
     Contacto: Lic. Samantha Olivera<br>
     Celular: 55 3493 0585<br><br>
-    Version 1.2 - Noviembre 2026<br><br>
+    Versión 1.2 - Noviembre 2026<br><br>
     Documento confidencial para uso de clientes
   </div>
 </div>
 
-<!-- INDICE -->
 <div class="page-break"></div>
 <div class="contenido">
   <div class="indice">
     <h2>Contenido</h2>
     <ol>
-      <li>Introduccion</li>
+      <li>Introducción</li>
       <li>Acceso al formulario</li>
-      <li>Seleccion del tipo de cliente</li>
-      <li>Registro de Persona Fisica</li>
+      <li>Selección del tipo de cliente</li>
+      <li>Registro de Persona Física</li>
       <li>Registro de Persona Moral</li>
       <li>Registro Sin Factura</li>
-      <li>Subir documentacion</li>
+      <li>Subir documentación</li>
       <li>Actualizar datos de un cliente existente</li>
       <li>Generar e imprimir documentos</li>
       <li>Preguntas frecuentes</li>
@@ -337,8 +332,8 @@
     </ol>
   </div>
 
-  <h1>1. Introduccion</h1>
-  <p>Este manual le guiara paso a paso en el uso del formulario de <strong>Alta y Registro de Clientes</strong> de Grupo SIBRÜ. El sistema le permitira registrar sus datos fiscales, subir la documentacion requerida y generar los documentos de alta de manera automatica.</p>
+  <h1>1. Introducción</h1>
+  <p>Este manual le guiará paso a paso en el uso del formulario de <strong>Alta y Registro de Clientes</strong> de Grupo SIBRÜ. El sistema le permitirá registrar sus datos fiscales, subir la documentación requerida y generar los documentos de alta de manera automática.</p>
   
   <div class="alerta">
     <div class="alerta-titulo">Nota importante</div>
@@ -346,27 +341,27 @@
   </div>
 
   <h1>2. Acceso al formulario</h1>
-  <p>Para acceder al formulario de alta, abra su navegador web (Chrome, Edge, Firefox o Safari) e ingrese la siguiente direccion:</p>
+  <p>Para acceder al formulario de alta, abra su navegador web (Chrome, Edge, Firefox o Safari) e ingrese la siguiente dirección:</p>
   
   <div class="url-box">https://mediossibru-2026.github.io/formato/</div>
   
-  <p>Tambien puede acceder directamente al enlace que le haya sido proporcionado por su vendedor o representante de Grupo SIBRÜ.</p>
+  <p>También puede acceder directamente al enlace que le haya sido proporcionado por su vendedor o representante de Grupo SIBRÜ.</p>
 
   <div class="captura">
     <div class="captura-titulo">Figura 1: Pantalla principal del formulario</div>
     <img src="https://mediossibru-2026.github.io/formato/captura1-pantalla-principal.png" alt="Pantalla principal del formulario">
   </div>
 
-  <h1>3. Seleccion del tipo de cliente</h1>
-  <p>Al ingresar al formulario, vera tres opciones de tipo de cliente. Seleccione la que corresponda a su situacion fiscal:</p>
+  <h1>3. Selección del tipo de cliente</h1>
+  <p>Al ingresar al formulario, verá tres opciones de tipo de cliente. Seleccione la que corresponda a su situación fiscal:</p>
   
   <table class="tabla">
     <tr>
       <th>Tipo de cliente</th>
-      <th>Para quien aplica</th>
+      <th>Para quién aplica</th>
     </tr>
     <tr>
-      <td><strong>Persona Fisica</strong></td>
+      <td><strong>Persona Física</strong></td>
       <td>Individuos con actividad empresarial o profesional que cuentan con RFC de 13 caracteres</td>
     </tr>
     <tr>
@@ -375,149 +370,149 @@
     </tr>
     <tr>
       <td><strong>Sin Factura</strong></td>
-      <td>Clientes que no requieren facturacion formal ni cuentan con RFC</td>
+      <td>Clientes que no requieren facturación formal ni cuentan con RFC</td>
     </tr>
   </table>
 
   <div class="importante">
-    <div class="importante-titulo">Atencion</div>
-    <p style="margin: 0;">La seleccion del tipo de cliente es definitiva para el registro. Si se equivoca, debera iniciar un nuevo registro con el tipo correcto.</p>
+    <div class="importante-titulo">Atención</div>
+    <p style="margin: 0;">La selección del tipo de cliente es definitiva para el registro. Si se equivoca, deberá iniciar un nuevo registro con el tipo correcto.</p>
   </div>
 
-  <h1>4. Registro de Persona Fisica</h1>
+  <h1>4. Registro de Persona Física</h1>
   
   <h2>4.1 Datos Generales</h2>
   <div class="paso">
     <span class="paso-numero">1</span>
-    <strong>Fecha:</strong> Se llena automaticamente con la fecha del dia. Este campo no es editable.
+    <strong>Fecha:</strong> Se llena automáticamente con la fecha del día. Este campo no es editable.
   </div>
   <div class="paso">
     <span class="paso-numero">2</span>
-    <strong>Nombre Comercial:</strong> Capture su nombre completo tal como aparece en su identificacion oficial. El texto se convertira automaticamente a mayusculas.
+    <strong>Nombre Comercial:</strong> Capture su nombre completo tal como aparece en su identificación oficial. El texto se convertirá automáticamente a mayúsculas.
   </div>
   <div class="paso">
     <span class="paso-numero">3</span>
-    <strong>RFC:</strong> Capture su RFC de exactamente <strong>13 caracteres</strong> (4 letras, 6 numeros, 3 caracteres alfanumericos). Ejemplo: <span class="campo">PEGJ800101HDFRRL09</span>
+    <strong>RFC:</strong> Capture su RFC de exactamente <strong>13 caracteres</strong> (4 letras, 6 números, 3 caracteres alfanuméricos). Ejemplo: <span class="campo">PEGJ800101HDFRRL09</span>
   </div>
 
   <h2>4.2 Datos Fiscales</h2>
   <div class="paso">
     <span class="paso-numero">4</span>
-    <strong>Regimen Fiscal:</strong> Seleccione de la lista desplegable el regimen que le corresponde segun su Constancia de Situacion Fiscal.
+    <strong>Régimen Fiscal:</strong> Seleccione de la lista desplegable el régimen que le corresponde según su Constancia de Situación Fiscal.
   </div>
   <div class="paso">
     <span class="paso-numero">5</span>
-    <strong>Codigo Postal:</strong> Capture los 5 digitos de su domicilio fiscal.
+    <strong>Código Postal:</strong> Capture los 5 dígitos de su domicilio fiscal.
   </div>
   <div class="paso">
     <span class="paso-numero">6</span>
-    <strong>Uso de CFDI:</strong> Seleccione el uso que dara a las facturas que le emita Grupo SIBRÜ (ej. G03 - Gastos en general).
+    <strong>Uso de CFDI:</strong> Seleccione el uso que dará a las facturas que le emita Grupo SIBRÜ (ej. G03 - Gastos en general).
   </div>
 
-  <h2>4.3 Datos para Facturacion</h2>
+  <h2>4.3 Datos para Facturación</h2>
   <div class="paso">
     <span class="paso-numero">7</span>
-    <strong>Forma de pago:</strong> Seleccione como realizara sus pagos (Efectivo, Transferencia, Tarjeta, etc.).
+    <strong>Forma de pago:</strong> Seleccione cómo realizará sus pagos (Efectivo, Transferencia, Tarjeta, etc.).
   </div>
   <div class="paso">
     <span class="paso-numero">8</span>
-    <strong>Metodo de pago:</strong> Seleccione PUE (pago en una sola exhibicion) o PPD (pago en parcialidades).
+    <strong>Método de pago:</strong> Seleccione PUE (pago en una sola exhibición) o PPD (pago en parcialidades).
   </div>
   <div class="paso">
     <span class="paso-numero">9</span>
-    <strong>Correo para envio de facturas:</strong> Capture el correo electronico donde recibira sus facturas. Debe tener un formato valido.
+    <strong>Correo para envío de facturas:</strong> Capture el correo electrónico donde recibirá sus facturas. Debe tener un formato válido.
   </div>
 
   <h2>4.4 Datos de Contacto</h2>
-  <p>Capture la informacion de contacto para dos areas:</p>
+  <p>Capture la información de contacto para dos áreas:</p>
   <ul>
-    <li><strong>Contacto de Facturacion Telefono Local:</strong> Numero, correo y WhatsApp del area que recibe las facturas.</li>
-    <li><strong>Cuentas por Pagar - Contacto Local:</strong> Numero, correo y WhatsApp del area que realiza los pagos.</li>
+    <li><strong>Contacto de Facturación Teléfono Local:</strong> Número, correo y WhatsApp del área que recibe las facturas.</li>
+    <li><strong>Cuentas por Pagar - Contacto Local:</strong> Número, correo y WhatsApp del área que realiza los pagos.</li>
   </ul>
 
   <div class="captura">
-    <div class="captura-titulo">Figura 2: Formulario de Persona Fisica completo</div>
-    <img src="https://mediossibru-2026.github.io/formato/captura2-formulario-fisica.png" alt="Formulario de Persona Fisica">
+    <div class="captura-titulo">Figura 2: Formulario de Persona Física completo</div>
+    <img src="https://mediossibru-2026.github.io/formato/captura2-formulario-fisica.png" alt="Formulario de Persona Física">
   </div>
 
   <h2>4.5 Guardar el registro</h2>
   <div class="paso">
     <span class="paso-numero">10</span>
-    Haga clic en el boton <strong>"Guardar Cliente"</strong>. El sistema verificara que el RFC no este registrado previamente.
+    Haga clic en el botón <strong>"Guardar Cliente"</strong>. El sistema verificará que el RFC no esté registrado previamente.
   </div>
   
   <div class="alerta">
     <div class="alerta-titulo">Si el RFC ya existe</div>
-    <p style="margin: 0;">Aparecera un aviso indicando que el cliente ya esta registrado. En ese caso, utilice la opcion <strong>"Actualizar Datos"</strong> para modificar la informacion existente.</p>
+    <p style="margin: 0;">Aparecerá un aviso indicando que el cliente ya está registrado. En ese caso, utilice la opción <strong>"Actualizar Datos"</strong> para modificar la información existente.</p>
   </div>
 
   <div class="captura">
-    <div class="captura-titulo">Figura 3: Mensaje de exito al guardar</div>
+    <div class="captura-titulo">Figura 3: Mensaje de éxito al guardar</div>
     <img src="https://mediossibru-2026.github.io/formato/captura3-mensaje-exito.png" alt="Mensaje de guardado exitoso">
   </div>
 
   <h1>5. Registro de Persona Moral</h1>
-  <p>El proceso es similar al de Persona Fisica, con las siguientes diferencias:</p>
+  <p>El proceso es similar al de Persona Física, con las siguientes diferencias:</p>
   
-  <h2>5.1 Campos especificos</h2>
+  <h2>5.1 Campos específicos</h2>
   <ul>
     <li><strong>Nombre del Representante Legal:</strong> Nombre completo de la persona que representa a la empresa.</li>
-    <li><strong>Nombre Comercial (Razon Social):</strong> Nombre legal de la empresa tal como aparece en el Acta Constitutiva.</li>
+    <li><strong>Nombre Comercial (Razón Social):</strong> Nombre legal de la empresa tal como aparece en el Acta Constitutiva.</li>
     <li><strong>RFC:</strong> Debe tener exactamente <strong>12 caracteres</strong>. Ejemplo: <span class="campo">EMP800101ABC</span></li>
   </ul>
 
-  <h2>5.2 Documentacion adicional requerida</h2>
-  <p>Al subir la documentacion, las Personas Morales deberan proporcionar, ademas de los documentos estandar:</p>
+  <h2>5.2 Documentación adicional requerida</h2>
+  <p>Al subir la documentación, las Personas Morales deberán proporcionar, además de los documentos estándar:</p>
   <ul>
     <li>Acta Constitutiva</li>
     <li>Poder Notarial del representante legal</li>
   </ul>
 
   <h1>6. Registro Sin Factura</h1>
-  <p>Este tipo de registro esta diseñado para clientes que no requieren facturacion formal.</p>
+  <p>Este tipo de registro está diseñado para clientes que no requieren facturación formal.</p>
 
   <h2>6.1 Campos requeridos</h2>
   <ul>
-    <li><strong>Fecha:</strong> Se llena automaticamente (no editable).</li>
+    <li><strong>Fecha:</strong> Se llena automáticamente (no editable).</li>
     <li><strong>Nombre Comercial:</strong> Nombre de la persona o negocio.</li>
-    <li><strong>Contacto Local:</strong> Numero de telefono fijo o celular.</li>
-    <li><strong>Mail:</strong> Correo electronico de contacto.</li>
-    <li><strong>WhatsApp:</strong> Numero de WhatsApp para comunicacion.</li>
+    <li><strong>Contacto Local:</strong> Número de teléfono fijo o celular.</li>
+    <li><strong>Mail:</strong> Correo electrónico de contacto.</li>
+    <li><strong>WhatsApp:</strong> Número de WhatsApp para comunicación.</li>
   </ul>
 
   <div class="importante">
     <div class="importante-titulo">Limitaciones del registro Sin Factura</div>
-    <p style="margin: 0;">Este tipo de cliente <strong>no genera</strong> Manifestacion Escrita ni documentos fiscales. Solo se genera el formato de Alta de Cliente simplificado.</p>
+    <p style="margin: 0;">Este tipo de cliente <strong>no genera</strong> Manifestación Escrita ni documentos fiscales. Solo se genera el formato de Alta de Cliente simplificado.</p>
   </div>
 
-  <h1>7. Subir documentacion</h1>
-  <p>Una vez guardado el registro, debera subir la documentacion soporte. Haga clic en el boton <strong>"SUBIR DOCUMENTACION"</strong> en la parte superior del formulario.</p>
+  <h1>7. Subir documentación</h1>
+  <p>Una vez guardado el registro, deberá subir la documentación soporte. Haga clic en el botón <strong>"SUBIR DOCUMENTACIÓN"</strong> en la parte superior del formulario.</p>
 
   <div class="captura">
-    <div class="captura-titulo">Figura 4: Modal de busqueda para subir documentacion</div>
-    <img src="https://mediossibru-2026.github.io/formato/captura4-modal-documentos.png" alt="Modal de subir documentacion">
+    <div class="captura-titulo">Figura 4: Modal de búsqueda para subir documentación</div>
+    <img src="https://mediossibru-2026.github.io/formato/captura4-modal-documentos.png" alt="Modal de subir documentación">
   </div>
 
   <h2>7.1 Buscar el cliente</h2>
-  <p>El sistema le pedira identificar al cliente. Puede hacerlo de dos formas:</p>
+  <p>El sistema le pedirá identificar al cliente. Puede hacerlo de dos formas:</p>
   <ul>
-    <li><strong>Por RFC:</strong> Capture el RFC de 12 o 13 caracteres. El sistema validara que exista en la base de datos.</li>
-    <li><strong>Por ID:</strong> Haga clic en el boton <strong>"CON ID"</strong> y capture el numero de 4 digitos que le fue asignado al guardar el registro.</li>
+    <li><strong>Por RFC:</strong> Capture el RFC de 12 o 13 caracteres. El sistema validará que exista en la base de datos.</li>
+    <li><strong>Por ID:</strong> Haga clic en el botón <strong>"CON ID"</strong> y capture el número de 4 dígitos que le fue asignado al guardar el registro.</li>
   </ul>
 
-  <h2>7.2 Documentos requeridos para Persona Fisica y Moral</h2>
+  <h2>7.2 Documentos requeridos para Persona Física y Moral</h2>
   <table class="tabla">
     <tr>
       <th>No.</th>
       <th>Documento</th>
       <th>Formato</th>
     </tr>
-    <tr><td>1</td><td>Constancia de Situacion Fiscal</td><td>PDF</td></tr>
-    <tr><td>2</td><td>Opinion de cumplimiento positiva</td><td>PDF</td></tr>
+    <tr><td>1</td><td>Constancia de Situación Fiscal</td><td>PDF</td></tr>
+    <tr><td>2</td><td>Opinión de cumplimiento positiva</td><td>PDF</td></tr>
     <tr><td>3</td><td>Comprobante de domicilio vigente</td><td>PDF</td></tr>
-    <tr><td>4</td><td>Caratula de estado de cuenta (CLABE visible)</td><td>PDF</td></tr>
+    <tr><td>4</td><td>Carátula de estado de cuenta (CLABE visible)</td><td>PDF</td></tr>
     <tr><td>5</td><td>Alta de cliente (generada por el sistema)</td><td>PDF</td></tr>
-    <tr><td>6</td><td>Manifestacion escrita (generada por el sistema)</td><td>PDF</td></tr>
+    <tr><td>6</td><td>Manifestación escrita (generada por el sistema)</td><td>PDF</td></tr>
   </table>
 
   <p><strong>Adicional para Persona Moral:</strong> Acta Constitutiva y Poder Notarial.</p>
@@ -531,13 +526,13 @@
     </tr>
     <tr><td>1</td><td>Comprobante de domicilio</td><td>PDF</td></tr>
     <tr><td>2</td><td>Alta de cliente</td><td>PDF</td></tr>
-    <tr><td>3</td><td>Identificacion oficial</td><td>PDF</td></tr>
+    <tr><td>3</td><td>Identificación oficial</td><td>PDF</td></tr>
   </table>
 
-  <h2>7.4 Como subir cada documento</h2>
+  <h2>7.4 Cómo subir cada documento</h2>
   <div class="paso">
     <span class="paso-numero">1</span>
-    Haga clic en el boton <strong>"Subir PDF"</strong> junto al documento correspondiente.
+    Haga clic en el botón <strong>"Subir PDF"</strong> junto al documento correspondiente.
   </div>
   <div class="paso">
     <span class="paso-numero">2</span>
@@ -553,16 +548,16 @@
   </div>
   <div class="paso">
     <span class="paso-numero">5</span>
-    Cuando todos los documentos esten subidos, el boton <strong>"Guardar Documentacion"</strong> se habilitara. Haga clic para finalizar.
+    Cuando todos los documentos estén subidos, el botón <strong>"Guardar Documentación"</strong> se habilitará. Haga clic para finalizar.
   </div>
 
   <div class="alerta">
     <div class="alerta-titulo">Sobre archivos duplicados</div>
-    <p style="margin: 0;">Si vuelve a subir un documento con el mismo nombre, el sistema reemplazara automaticamente la version anterior. No se acumularan archivos duplicados.</p>
+    <p style="margin: 0;">Si vuelve a subir un documento con el mismo nombre, el sistema reemplazará automáticamente la versión anterior. No se acumularán archivos duplicados.</p>
   </div>
 
   <h1>8. Actualizar datos de un cliente existente</h1>
-  <p>Si necesita modificar informacion de un cliente ya registrado, utilice el boton <strong>"ACTUALIZAR DATOS"</strong> en la parte superior del formulario.</p>
+  <p>Si necesita modificar información de un cliente ya registrado, utilice el botón <strong>"ACTUALIZAR DATOS"</strong> en la parte superior del formulario.</p>
 
   <div class="captura">
     <div class="captura-titulo">Figura 5: Modal de Actualizar Datos del Cliente</div>
@@ -570,21 +565,21 @@
   </div>
 
   <h2>8.1 Localizar el cliente</h2>
-  <p>Al igual que en la seccion de documentacion, puede buscar por:</p>
+  <p>Al igual que en la sección de documentación, puede buscar por:</p>
   <ul>
     <li><strong>RFC:</strong> Modo predeterminado. Capture 12 o 13 caracteres.</li>
-    <li><strong>ID:</strong> Haga clic en <strong>"CON ID"</strong> y capture los 4 digitos.</li>
+    <li><strong>ID:</strong> Haga clic en <strong>"CON ID"</strong> y capture los 4 dígitos.</li>
   </ul>
 
   <h2>8.2 Campos editables</h2>
-  <p>Una vez localizado el cliente, podra modificar los siguientes datos:</p>
+  <p>Una vez localizado el cliente, podrá modificar los siguientes datos:</p>
   <ul>
     <li>Fecha de registro</li>
-    <li>Regimen Fiscal, Codigo Postal y Uso de CFDI</li>
-    <li>Forma y Metodo de Pago</li>
-    <li>Correo Electronico</li>
-    <li>Datos de contacto (Facturacion y Cuentas por Pagar)</li>
-    <li>Status (Activo / Inactivo)</li>
+    <li>Régimen Fiscal, Código Postal y Uso de CFDI</li>
+    <li>Forma y Método de Pago</li>
+    <li>Correo Electrónico</li>
+    <li>Datos de contacto (Facturación y Cuentas por Pagar)</li>
+    <li>Estatus (Activo / Inactivo)</li>
     <li>Representante Legal (solo Persona Moral)</li>
   </ul>
 
@@ -592,23 +587,23 @@
   <p>Los siguientes datos no pueden modificarse desde este formulario:</p>
   <ul>
     <li>ID Cliente</li>
-    <li>Tipo de Persona (Fisica, Moral o Sin Factura)</li>
+    <li>Tipo de Persona (Física, Moral o Sin Factura)</li>
     <li>RFC</li>
-    <li>Nombre Comercial / Razon Social</li>
+    <li>Nombre Comercial / Razón Social</li>
   </ul>
 
   <div class="importante">
-    <div class="importante-titulo">Revision administrativa</div>
-    <p style="margin: 0;">Cualquier modificacion quedara marcada para revision por el administrador de Grupo SIBRÜ antes de ser considerada definitiva.</p>
+    <div class="importante-titulo">Revisión administrativa</div>
+    <p style="margin: 0;">Cualquier modificación quedará marcada para revisión por el administrador de Grupo SIBRÜ antes de ser considerada definitiva.</p>
   </div>
 
   <h1>9. Generar e imprimir documentos</h1>
-  <p>Despues de guardar un registro exitosamente, aparecera el boton <strong>"Generar Documentos"</strong>. Al hacer clic, el sistema generara:</p>
+  <p>Después de guardar un registro exitosamente, aparecerá el botón <strong>"Generar Documentos"</strong>. Al hacer clic, el sistema generará:</p>
 
-  <h2>9.1 Para Persona Fisica y Moral</h2>
+  <h2>9.1 Para Persona Física y Moral</h2>
   <ul>
-    <li><strong>Manifestacion Escrita:</strong> Documento legal donde el cliente manifiesta no estar incluido en los listados del articulo 69, 69-B y 69-B Bis del Codigo Fiscal de la Federacion.</li>
-    <li><strong>Alta de Cliente:</strong> Formato interno de Grupo SIBRÜ con los datos fiscales, de facturacion y referencia de pagos.</li>
+    <li><strong>Manifestación Escrita:</strong> Documento legal donde el cliente manifiesta no estar incluido en los listados del artículo 69, 69-B y 69-B Bis del Código Fiscal de la Federación.</li>
+    <li><strong>Alta de Cliente:</strong> Formato interno de Grupo SIBRÜ con los datos fiscales, de facturación y referencia de pagos.</li>
   </ul>
 
   <div class="captura">
@@ -618,21 +613,21 @@
 
   <h2>9.2 Para Sin Factura</h2>
   <ul>
-    <li><strong>Alta de Cliente simplificada:</strong> Formato con datos de contacto basicos y referencia de pagos.</li>
+    <li><strong>Alta de Cliente simplificada:</strong> Formato con datos de contacto básicos y referencia de pagos.</li>
   </ul>
 
   <h2>9.3 Referencia de Pagos</h2>
-  <p>Todos los documentos incluyen una seccion de <strong>Referencia de Pagos</strong> con un numero unico que debe utilizarse en todas las operaciones bancarias:</p>
+  <p>Todos los documentos incluyen una sección de <strong>Referencia de Pagos</strong> con un número único que debe utilizarse en todas las operaciones bancarias:</p>
 
   <div class="captura">
-    <div class="captura-titulo">Figura 7: Seccion de Referencia de Pagos</div>
-    <img src="https://mediossibru-2026.github.io/formato/captura7-referencia-pago.png" alt="Seccion de Referencia de Pagos">
+    <div class="captura-titulo">Figura 7: Sección de Referencia de Pagos</div>
+    <img src="https://mediossibru-2026.github.io/formato/captura7-referencia-pago.png" alt="Sección de Referencia de Pagos">
   </div>
 
   <h2>9.4 Imprimir o guardar como PDF</h2>
   <div class="paso">
     <span class="paso-numero">1</span>
-    Los documentos se mostraran en pantalla con formato de impresion.
+    Los documentos se mostrarán en pantalla con formato de impresión.
   </div>
   <div class="paso">
     <span class="paso-numero">2</span>
@@ -640,35 +635,35 @@
   </div>
   <div class="paso">
     <span class="paso-numero">3</span>
-    En el dialogo de impresion, seleccione <strong>"Guardar como PDF"</strong> como destino, o seleccione su impresora fisica.
+    En el diálogo de impresión, seleccione <strong>"Guardar como PDF"</strong> como destino, o seleccione su impresora física.
   </div>
   <div class="paso">
     <span class="paso-numero">4</span>
-    Los documentos deberan ser firmados por el cliente y devueltos a Grupo SIBRÜ junto con la documentacion soporte.
+    Los documentos deberán ser firmados por el cliente y devueltos a Grupo SIBRÜ junto con la documentación soporte.
   </div>
 
   <h1>10. Preguntas frecuentes</h1>
 
-  <h3>¿Que hago si el sistema me dice que el RFC ya esta registrado?</h3>
-  <p>Utilice el boton <strong>"ACTUALIZAR DATOS"</strong> para modificar la informacion existente. No es posible crear un nuevo registro con un RFC que ya existe en el sistema.</p>
+  <h3>¿Qué hago si el sistema me dice que el RFC ya está registrado?</h3>
+  <p>Utilice el botón <strong>"ACTUALIZAR DATOS"</strong> para modificar la información existente. No es posible crear un nuevo registro con un RFC que ya existe en el sistema.</p>
 
-  <h3>¿Puedo cambiar el tipo de cliente despues de guardar?</h3>
-  <p>No. El tipo de cliente (Fisica, Moral o Sin Factura) se define al momento del registro y no puede modificarse. Si necesita cambiar el tipo, debera solicitarlo al administrador de Grupo SIBRÜ.</p>
+  <h3>¿Puedo cambiar el tipo de cliente después de guardar?</h3>
+  <p>No. El tipo de cliente (Física, Moral o Sin Factura) se define al momento del registro y no puede modificarse. Si necesita cambiar el tipo, deberá solicitarlo al administrador de Grupo SIBRÜ.</p>
 
-  <h3>¿Que formato deben tener los documentos que subo?</h3>
-  <p>Solo se aceptan archivos en formato <strong>PDF</strong>. Asegurese de que los archivos sean legibles y esten completos antes de subirlos.</p>
+  <h3>¿Qué formato deben tener los documentos que subo?</h3>
+  <p>Solo se aceptan archivos en formato <strong>PDF</strong>. Asegúrese de que los archivos sean legibles y estén completos antes de subirlos.</p>
 
-  <h3>¿Que pasa si subo un documento equivocado?</h3>
-  <p>Simplemente vuelva a subir el documento correcto con el mismo nombre. El sistema reemplazara automaticamente el archivo anterior.</p>
+  <h3>¿Qué pasa si subo un documento equivocado?</h3>
+  <p>Simplemente vuelva a subir el documento correcto con el mismo nombre. El sistema reemplazará automáticamente el archivo anterior.</p>
 
-  <h3>¿Puedo usar el formulario desde mi telefono?</h3>
-  <p>Si. El formulario es responsivo y funciona en dispositivos moviles. Sin embargo, para subir documentos se recomienda usar una computadora por la facilidad de seleccion de archivos.</p>
+  <h3>¿Puedo usar el formulario desde mi teléfono?</h3>
+  <p>Sí. El formulario es responsivo y funciona en dispositivos móviles. Sin embargo, para subir documentos se recomienda usar una computadora por la facilidad de selección de archivos.</p>
 
-  <h3>¿Cuanto tiempo tarda en guardarse la informacion?</h3>
-  <p>El guardado es inmediato. Sin embargo, la subida de documentos depende del tamaño del archivo y la velocidad de su conexion a internet.</p>
+  <h3>¿Cuánto tiempo tarda en guardarse la información?</h3>
+  <p>El guardado es inmediato. Sin embargo, la subida de documentos depende del tamaño del archivo y la velocidad de su conexión a internet.</p>
 
-  <h3>¿Mis datos estan seguros?</h3>
-  <p>Si. La informacion se almacena en servidores seguros de Google y solo el personal autorizado de Grupo SIBRÜ tiene acceso a ella mediante autenticacion con usuario y contraseña.</p>
+  <h3>¿Mis datos están seguros?</h3>
+  <p>Sí. La información se almacena en servidores seguros de Google y solo el personal autorizado de Grupo SIBRÜ tiene acceso a ella mediante autenticación con usuario y contraseña.</p>
 
   <h1>11. Contacto de soporte</h1>
   <p>Si tiene dudas o problemas durante el uso del formulario, contacte a:</p>
@@ -676,7 +671,7 @@
   <table class="tabla">
     <tr>
       <th>Concepto</th>
-      <th>Informacion</th>
+      <th>Información</th>
     </tr>
     <tr>
       <td>Empresa</td>
@@ -691,8 +686,8 @@
       <td>55 3493 0585</td>
     </tr>
     <tr>
-      <td>Ubicacion</td>
-      <td>Cuautitlan Izcalli, Estado de Mexico, C.P. 54740</td>
+      <td>Ubicación</td>
+      <td>Cuautitlán Izcalli, Estado de México, C.P. 54740</td>
     </tr>
     <tr>
       <td>URL del formulario</td>
@@ -702,7 +697,7 @@
 
   <div class="footer-pagina">
     <strong>Grupo SIBRÜ</strong> - Calidad y Frescura<br>
-    Documento generado automaticamente - Version 1.2 - Noviembre 2026<br>
+    Documento generado automáticamente - Versión 1.2 - Noviembre 2026<br>
     Contacto: Lic. Samantha Olivera | 55 3493 0585
   </div>
 </div>
