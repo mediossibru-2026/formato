@@ -16,12 +16,69 @@
     color: #1a1a1a;
     line-height: 1.6;
     font-size: 11pt;
+    padding-top: 70px;
+  }
+  
+  /* BARRA DE ACCIONES (se oculta al imprimir) */
+  .barra-acciones {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #007A3D, #6BAE3E);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  
+  .barra-acciones-logo {
+    color: white;
+    font-weight: 800;
+    font-size: 14pt;
+    letter-spacing: 1px;
+  }
+  
+  .barra-acciones-botones {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-barra {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 11pt;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  
+  .btn-barra:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  }
+  
+  .btn-imprimir {
+    background: #D94F3D;
+    color: white;
+  }
+  
+  .btn-volver {
+    background: white;
+    color: #007A3D;
   }
   
   .page-break { page-break-before: always; }
   
   .portada {
-    height: 100vh;
+    min-height: calc(100vh - 70px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,7 +111,7 @@
   .portada-info { font-size: 11pt; color: #555; line-height: 2; }
   .portada-info strong { color: #007A3D; }
   
-  .contenido { padding: 20px 0; }
+  .contenido { padding: 20px 40px; }
   
   .indice {
     background: #f5f5f5;
@@ -223,15 +280,28 @@
     border-radius: 4px;
   }
   
+  /* REGLAS DE IMPRESIÓN: ocultan la barra de acciones */
   @media print {
-    body { font-size: 10.5pt; }
+    body { font-size: 10.5pt; padding-top: 0; }
     .page-break { page-break-before: always; }
     a { color: #007A3D; text-decoration: none; }
     .captura { break-inside: avoid; }
+    .barra-acciones { display: none !important; }
+    .contenido { padding: 0; }
+    .portada { min-height: auto; page-break-after: always; }
   }
 </style>
 </head>
 <body>
+
+<!-- BARRA DE ACCIONES (solo visible en pantalla) -->
+<div class="barra-acciones">
+  <div class="barra-acciones-logo">GRUPO SIBRÜ | Manual de Usuario</div>
+  <div class="barra-acciones-botones">
+    <a href="https://mediossibru-2026.github.io/formato/" class="btn-barra btn-volver">← Volver al Formulario</a>
+    <button onclick="window.print()" class="btn-barra btn-imprimir">📄 Imprimir / Guardar como PDF</button>
+  </div>
+</div>
 
 <!-- PORTADA -->
 <div class="portada">
@@ -242,7 +312,7 @@
     <strong>Grupo SIBRÜ</strong><br>
     Contacto: Lic. Samantha Olivera<br>
     Celular: 55 3493 0585<br><br>
-    Version 1.1 - Noviembre 2026<br><br>
+    Version 1.2 - Noviembre 2026<br><br>
     Documento confidencial para uso de clientes
   </div>
 </div>
@@ -267,7 +337,6 @@
     </ol>
   </div>
 
-  <!-- SECCION 1 -->
   <h1>1. Introduccion</h1>
   <p>Este manual le guiara paso a paso en el uso del formulario de <strong>Alta y Registro de Clientes</strong> de Grupo SIBRÜ. El sistema le permitira registrar sus datos fiscales, subir la documentacion requerida y generar los documentos de alta de manera automatica.</p>
   
@@ -276,7 +345,6 @@
     <p style="margin: 0;">Todos los datos capturados en el formulario se almacenan de forma segura y son utilizados exclusivamente para el alta formal de su cliente en nuestro sistema.</p>
   </div>
 
-  <!-- SECCION 2 -->
   <h1>2. Acceso al formulario</h1>
   <p>Para acceder al formulario de alta, abra su navegador web (Chrome, Edge, Firefox o Safari) e ingrese la siguiente direccion:</p>
   
@@ -289,7 +357,6 @@
     <img src="https://mediossibru-2026.github.io/formato/captura1-pantalla-principal.png" alt="Pantalla principal del formulario">
   </div>
 
-  <!-- SECCION 3 -->
   <h1>3. Seleccion del tipo de cliente</h1>
   <p>Al ingresar al formulario, vera tres opciones de tipo de cliente. Seleccione la que corresponda a su situacion fiscal:</p>
   
@@ -317,7 +384,6 @@
     <p style="margin: 0;">La seleccion del tipo de cliente es definitiva para el registro. Si se equivoca, debera iniciar un nuevo registro con el tipo correcto.</p>
   </div>
 
-  <!-- SECCION 4 -->
   <h1>4. Registro de Persona Fisica</h1>
   
   <h2>4.1 Datos Generales</h2>
@@ -390,7 +456,6 @@
     <img src="https://mediossibru-2026.github.io/formato/captura3-mensaje-exito.png" alt="Mensaje de guardado exitoso">
   </div>
 
-  <!-- SECCION 5 -->
   <h1>5. Registro de Persona Moral</h1>
   <p>El proceso es similar al de Persona Fisica, con las siguientes diferencias:</p>
   
@@ -408,7 +473,6 @@
     <li>Poder Notarial del representante legal</li>
   </ul>
 
-  <!-- SECCION 6 -->
   <h1>6. Registro Sin Factura</h1>
   <p>Este tipo de registro esta diseñado para clientes que no requieren facturacion formal.</p>
 
@@ -426,7 +490,6 @@
     <p style="margin: 0;">Este tipo de cliente <strong>no genera</strong> Manifestacion Escrita ni documentos fiscales. Solo se genera el formato de Alta de Cliente simplificado.</p>
   </div>
 
-  <!-- SECCION 7 -->
   <h1>7. Subir documentacion</h1>
   <p>Una vez guardado el registro, debera subir la documentacion soporte. Haga clic en el boton <strong>"SUBIR DOCUMENTACION"</strong> en la parte superior del formulario.</p>
 
@@ -498,7 +561,6 @@
     <p style="margin: 0;">Si vuelve a subir un documento con el mismo nombre, el sistema reemplazara automaticamente la version anterior. No se acumularan archivos duplicados.</p>
   </div>
 
-  <!-- SECCION 8 -->
   <h1>8. Actualizar datos de un cliente existente</h1>
   <p>Si necesita modificar informacion de un cliente ya registrado, utilice el boton <strong>"ACTUALIZAR DATOS"</strong> en la parte superior del formulario.</p>
 
@@ -540,7 +602,6 @@
     <p style="margin: 0;">Cualquier modificacion quedara marcada para revision por el administrador de Grupo SIBRÜ antes de ser considerada definitiva.</p>
   </div>
 
-  <!-- SECCION 9 -->
   <h1>9. Generar e imprimir documentos</h1>
   <p>Despues de guardar un registro exitosamente, aparecera el boton <strong>"Generar Documentos"</strong>. Al hacer clic, el sistema generara:</p>
 
@@ -586,7 +647,6 @@
     Los documentos deberan ser firmados por el cliente y devueltos a Grupo SIBRÜ junto con la documentacion soporte.
   </div>
 
-  <!-- SECCION 10 -->
   <h1>10. Preguntas frecuentes</h1>
 
   <h3>¿Que hago si el sistema me dice que el RFC ya esta registrado?</h3>
@@ -610,7 +670,6 @@
   <h3>¿Mis datos estan seguros?</h3>
   <p>Si. La informacion se almacena en servidores seguros de Google y solo el personal autorizado de Grupo SIBRÜ tiene acceso a ella mediante autenticacion con usuario y contraseña.</p>
 
-  <!-- SECCION 11 -->
   <h1>11. Contacto de soporte</h1>
   <p>Si tiene dudas o problemas durante el uso del formulario, contacte a:</p>
   
@@ -643,7 +702,7 @@
 
   <div class="footer-pagina">
     <strong>Grupo SIBRÜ</strong> - Calidad y Frescura<br>
-    Documento generado automaticamente - Version 1.1 - Noviembre 2026<br>
+    Documento generado automaticamente - Version 1.2 - Noviembre 2026<br>
     Contacto: Lic. Samantha Olivera | 55 3493 0585
   </div>
 </div>
